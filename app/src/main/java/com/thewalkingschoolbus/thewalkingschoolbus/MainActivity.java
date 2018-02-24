@@ -6,15 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 
 /**
- * LoginActivity
+ * MainActivity
  * Description here.
  */
-public class LoginActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_main);
 
         setupLoginButton();
     }
@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.loginButtonid).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = MonitoringActivity.makeIntent(LoginActivity.this);
+                Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
                 startActivity(intent);
             }
         });
