@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/registerid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -101,8 +101,8 @@
             android:id="@+id/loginButtonid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/button2"
-            android:layout_alignBottom="@+id/button2"
+            android:layout_alignBaseline="@+id/registerid"
+            android:layout_alignBottom="@+id/registerid"
             android:layout_alignEnd="@+id/passwordid"
             android:layout_marginEnd="54dp"
             android:text="Log in" />
