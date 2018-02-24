@@ -35,8 +35,8 @@ public class DBAdapter {
 	
 	// TODO: Setup your field numbers here (0 = KEY_ROWID, 1=...)
 	public static final int COL_NAME = 1;
-	public static final int COL_STUDENTNUM = 2;
-	public static final int COL_FAVCOLOUR = 3;
+	public static final int COL_EMAIL = 2;
+	public static final int COL_PASSWORD = 3;
 
 	
 	public static final String[] ALL_KEYS = new String[] {KEY_ROWID, KEY_NAME, KEY_EAMIL, KEY_PASSWORD};
@@ -72,7 +72,7 @@ public class DBAdapter {
 	private final Context context;
 	
 	private DatabaseHelper myDBHelper;
-	private SQLiteDatabase db;
+	private static SQLiteDatabase db;
 
 	/////////////////////////////////////////////////////////////////////
 	//	Public methods:
@@ -95,7 +95,7 @@ public class DBAdapter {
 	}
 	
 	// Add a new set of values to the database.
-	public long insertRow(String name, int email, String password) {
+	public long insertRow(String name, String email, String password) {
 		/*
 		 * CHANGE 3:
 		 */		
@@ -142,7 +142,7 @@ public class DBAdapter {
 	// Get a specific row (by rowId)
 	public Cursor getRow(long rowId) {
 		String where = KEY_ROWID + "=" + rowId;
-		Cursor c = 	db.query(true, DATABASE_TABLE, ALL_KEYS, 
+		Cursor c = 	db.query(true, DATABASE_TABLE, ALL_KEYS,
 						where, null, null, null, null, null);
 		if (c != null) {
 			c.moveToFirst();

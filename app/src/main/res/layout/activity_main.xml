@@ -74,8 +74,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginEnd="32dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
+            android:hint="Name"
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/emailid"
@@ -84,8 +84,8 @@
             android:layout_alignEnd="@+id/nameid"
             android:layout_alignTop="@+id/textView2"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="email" />
+            android:hint="email"
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/passwordid"
@@ -94,8 +94,8 @@
             android:layout_alignEnd="@+id/emailid"
             android:layout_alignTop="@+id/textView3"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="passowrd" />
+            android:hint="passowrd"
+            android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/loginButtonid"
@@ -106,6 +106,23 @@
             android:layout_alignEnd="@+id/passwordid"
             android:layout_marginEnd="54dp"
             android:text="Log in" />
+
+        <Button
+            android:id="@+id/displayid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/registerid"
+            android:layout_below="@+id/registerid"
+            android:layout_marginStart="11dp"
+            android:text="display" />
+
+        <Button
+            android:id="@+id/cleanID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/displayid"
+            android:layout_alignEnd="@+id/loginButtonid"
+            android:text="clean" />
 
     </RelativeLayout>
 
