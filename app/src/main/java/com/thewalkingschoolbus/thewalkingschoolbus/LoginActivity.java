@@ -16,12 +16,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        SetupTempLogin();
+        setupLoginButton();
     }
 
     // Temporary - delete after proper login is written.
-    private void SetupTempLogin() {
-        findViewById(R.id.btnTempLogin).setOnClickListener(new View.OnClickListener() {
+    private void setupLoginButton() {
+        findViewById(R.id.loginButtonid).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = MonitoringActivity.makeIntent(LoginActivity.this);
