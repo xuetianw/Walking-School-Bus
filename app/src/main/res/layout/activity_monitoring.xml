@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.thewalkingschoolbus.thewalkingschoolbus.MonitoringActivity">
 
+    <Button
+        android:id="@+id/logoutid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="logout"
+        tools:layout_editor_absoluteX="252dp"
+        tools:layout_editor_absoluteY="428dp" />
 </android.support.constraint.ConstraintLayout>
