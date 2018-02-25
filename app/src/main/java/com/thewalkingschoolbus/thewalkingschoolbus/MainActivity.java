@@ -1,6 +1,8 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +17,9 @@ import android.widget.Toast;
  */
 public class MainActivity extends AppCompatActivity {
 
+    public static final String REGISTER_EMAIL = "registerEmail";
+    public static final String LOGIN_NAME = "loginName";
+    public static final String LOGIN_PASSWORD = "loginPassword";
     DBAdapter myDb;
     EditText nameET;
     EditText emailET;
@@ -22,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     String loginName;
     String loginPassword;
     String registerEmail;
+    public static final String AppStates = "UUERLOGIN";
 
 
     @Override
@@ -36,6 +42,28 @@ public class MainActivity extends AppCompatActivity {
         setupRegisterButton();
         setUpDisplayButton();
         setUpCleanButton();
+        getUserLastState(getApplicationContext());
+    }
+
+    private void getUserLastState(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(AppStates, MODE_PRIVATE);
+        registerEmail = preferences.getString(MainActivity.REGISTER_EMAIL, null);
+        loginName = preferences.getString(MainActivity.LOGIN_NAME, null);
+        loginPassword = preferences.getString(MainActivity.LOGIN_PASSWORD, null);
+        if(registerEmail != null && loginName != null && registerEmail != null){
+            if(isEmailInDb(registerEmail)){
+                login();
+            }
+        }
+
+    }
+
+    private void login() {
+        int rid = findRecordIDFromemail(registerEmail);
+        Cursor cursor = myDb.getRow(rid);
+        String password = getPassword(cursor);
+        String name = getLoginName(cursor);
+        checkLoginNameAndPasswordCorrect(name, password);
     }
 
     private void setUpCleanButton() {
@@ -119,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private int findRecordIDfromemail(String registerEmail) {
+    private int findRecordIDFromemail(String registerEmail) {
         Cursor cursor = myDb.getAllRows();
         if (cursor.moveToFirst()){
             do{
@@ -141,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Temporary - delete after proper login is written.
     private void setupLoginButton() {
-        Button loginButton = (Button) findViewById(R.id.loginButtonid);
+        Button loginButton = (Button) findViewById(R.id.logoutid);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,18 +185,31 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"that account does not exist", Toast.LENGTH_SHORT)
                                 .show();
                     } else {
-                        int rid = findRecordIDfromemail(registerEmail);
-                        checkLoginNameAndPasswordCorrect(rid, loginPassword, loginName);
+                        int rid = findRecordIDFromemail(registerEmail);
+                        Cursor cursor = myDb.getRow(rid);
+                        String password = getPassword(cursor);
+                        String name = getLoginName(cursor);
+                        checkLoginNameAndPasswordCorrect(name, password);
+                        storeUserInfoToSharePreferences();
                     }
                 }
             }
         });
     }
 
-    private void checkLoginNameAndPasswordCorrect(int rid, String loginPassword, String loginName) {
-        Cursor cursor = myDb.getRow(rid);
-        String password = getPassword(cursor);
-        String name = getLoginName(cursor);
+    private void storeUserInfoToSharePreferences() {
+        SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString(REGISTER_EMAIL, registerEmail );
+        editor.putString(LOGIN_NAME, loginName );
+        editor.putString(LOGIN_PASSWORD, loginPassword );
+        editor.commit();
+
+    }
+
+    private void checkLoginNameAndPasswordCorrect(String name, String password) {
+
         if(!password.equals(loginPassword) && !name.equals(loginName)){
             Toast.makeText(getApplicationContext(),"password and name both are not correct", Toast.LENGTH_SHORT)
                     .show();

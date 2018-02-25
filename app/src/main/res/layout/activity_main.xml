@@ -98,7 +98,7 @@
             android:inputType="textPersonName" />
 
         <Button
-            android:id="@+id/loginButtonid"
+            android:id="@+id/logoutid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/registerid"
@@ -121,7 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/displayid"
-            android:layout_alignEnd="@+id/loginButtonid"
+            android:layout_alignEnd="@+id/logoutid"
             android:text="clean" />
 
     </RelativeLayout>
