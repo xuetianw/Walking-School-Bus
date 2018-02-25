@@ -20,6 +20,14 @@ public class MainActivity extends AppCompatActivity {
     public static final String REGISTER_EMAIL = "registerEmail";
     public static final String LOGIN_NAME = "loginName";
     public static final String LOGIN_PASSWORD = "loginPassword";
+    public static final String FIELD_NOT_EMPTY_MESSAGE = "none of the field can be empty";
+    public static final String ACCOUNT_HAS_BEEN_REGISTERED_MESSAGE = "this account has been registered";
+    public static final String REGISTER_SUCCESSFULLY_MESSAGE = "register succesfully";
+    public static final String ACCOUNT_DOES_NOT_EXIST_MESSAGE = "that account does not exist";
+    public static final String PASSWORD_AND_NAME_NOT_CORRECT_MESSAGE = "password and name both are not correct";
+    public static final String PASSWORD_NOT_CORRECT_MESSAGE = "password is not correct";
+    public static final String LOGIN_NAME_NOT_CORRECT_MESSAGE = "login name is not correct";
+    public static final String SUCCESSFUL_LOGIN_MESSAGE = "login successfully";
     DBAdapter myDb;
     EditText nameET;
     EditText emailET;
@@ -110,11 +118,11 @@ public class MainActivity extends AppCompatActivity {
                 registerEmail = emailET.getText().toString();
                 loginPassword = passwordET.getText().toString();
                 if(loginName.isEmpty()|| registerEmail.isEmpty()|| loginPassword.isEmpty()){
-                    Toast.makeText(getApplicationContext(),"none of the field can be empty", Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), FIELD_NOT_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
                 } else {
                     if (isEmailInDb(registerEmail)){
-                        Toast.makeText(getApplicationContext(),"this account has been registered", Toast.LENGTH_SHORT)
+                        Toast.makeText(getApplicationContext(), ACCOUNT_HAS_BEEN_REGISTERED_MESSAGE, Toast.LENGTH_SHORT)
                                 .show();
                     } else {
                         onClick_AddRecord(loginName, registerEmail, loginPassword);
@@ -154,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void onClick_AddRecord(String loginName, String loginEnail, String loginPassword) {
         long newId = myDb.insertRow(loginName, loginEnail, loginPassword);
-        Toast.makeText(getApplicationContext(),"register succesfully", Toast.LENGTH_SHORT)
+        Toast.makeText(getApplicationContext(), REGISTER_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
                 .show();
     }
 
@@ -169,11 +177,11 @@ public class MainActivity extends AppCompatActivity {
                 registerEmail = emailET.getText().toString();
                 loginPassword = passwordET.getText().toString();
                 if(loginName.isEmpty() || registerEmail.isEmpty()|| loginPassword.isEmpty()){
-                    Toast.makeText(getApplicationContext(),"none of the field can be empty", Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(),FIELD_NOT_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
                 } else {
                     if (!isEmailInDb(registerEmail)){
-                        Toast.makeText(getApplicationContext(),"that account does not exist", Toast.LENGTH_SHORT)
+                        Toast.makeText(getApplicationContext(), ACCOUNT_DOES_NOT_EXIST_MESSAGE, Toast.LENGTH_SHORT)
                                 .show();
                     } else {
                         if (ifLoginNameAndPasswordCorrect(registerEmail, loginName, loginPassword)){
@@ -205,19 +213,19 @@ public class MainActivity extends AppCompatActivity {
         String name = getLoginName(cursor);
 
         if(!password.equals(loginPassword) && !name.equals(loginName)){
-            Toast.makeText(getApplicationContext(),"password and name both are not correct", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), PASSWORD_AND_NAME_NOT_CORRECT_MESSAGE, Toast.LENGTH_SHORT)
                     .show();
             return false;
         } else if(!password.equals(loginPassword)){
-            Toast.makeText(getApplicationContext(),"password is not correct", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), PASSWORD_NOT_CORRECT_MESSAGE, Toast.LENGTH_SHORT)
                     .show();
             return false;
         } else if(!name.equals(loginName)){
-            Toast.makeText(getApplicationContext(),"login name is not correct", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), LOGIN_NAME_NOT_CORRECT_MESSAGE, Toast.LENGTH_SHORT)
                     .show();
             return false;
         } else {
-            Toast.makeText(getApplicationContext(),"login successfully", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
                     .show();
             return true;
         }
