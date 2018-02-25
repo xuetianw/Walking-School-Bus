@@ -50,21 +50,13 @@ public class MainActivity extends AppCompatActivity {
         registerEmail = preferences.getString(MainActivity.REGISTER_EMAIL, null);
         loginName = preferences.getString(MainActivity.LOGIN_NAME, null);
         loginPassword = preferences.getString(MainActivity.LOGIN_PASSWORD, null);
-        if(registerEmail != null && loginName != null && registerEmail != null){
-            if(isEmailInDb(registerEmail)){
-                login();
-            }
+        if(registerEmail != null && loginName != null &&
+                ifLoginNameAndPasswordCorrect(registerEmail,loginName,loginPassword )) {
+            Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
+            startActivity(intent);
         }
-
     }
 
-    private void login() {
-        int rid = findRecordIDFromemail(registerEmail);
-        Cursor cursor = myDb.getRow(rid);
-        String password = getPassword(cursor);
-        String name = getLoginName(cursor);
-        checkLoginNameAndPasswordCorrect(name, password);
-    }
 
     private void setUpCleanButton() {
         Button cleanBtn = (Button) findViewById(R.id.cleanID);
@@ -128,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
                         onClick_AddRecord(loginName, registerEmail, loginPassword);
                     }
                 }
-
             }
         });
     }
@@ -147,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private int findRecordIDFromemail(String registerEmail) {
+    private int findRecordIDFromEmail(String registerEmail) {
         Cursor cursor = myDb.getAllRows();
         if (cursor.moveToFirst()){
             do{
@@ -161,8 +152,8 @@ public class MainActivity extends AppCompatActivity {
         return -1;
     }
 
-    private void onClick_AddRecord(String loginName, String loginenail, String loginPassword) {
-        long newId = myDb.insertRow(loginName, loginenail, loginPassword);
+    private void onClick_AddRecord(String loginName, String loginEnail, String loginPassword) {
+        long newId = myDb.insertRow(loginName, loginEnail, loginPassword);
         Toast.makeText(getApplicationContext(),"register succesfully", Toast.LENGTH_SHORT)
                 .show();
     }
@@ -185,12 +176,11 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"that account does not exist", Toast.LENGTH_SHORT)
                                 .show();
                     } else {
-                        int rid = findRecordIDFromemail(registerEmail);
-                        Cursor cursor = myDb.getRow(rid);
-                        String password = getPassword(cursor);
-                        String name = getLoginName(cursor);
-                        checkLoginNameAndPasswordCorrect(name, password);
-                        storeUserInfoToSharePreferences();
+                        if (ifLoginNameAndPasswordCorrect(registerEmail, loginName, loginPassword)){
+                            Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
+                            startActivity(intent);
+                            storeUserInfoToSharePreferences();
+                        }
                     }
                 }
             }
@@ -208,23 +198,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void checkLoginNameAndPasswordCorrect(String name, String password) {
+    private boolean ifLoginNameAndPasswordCorrect(String registerEmail, String loginName, String loginPassword) {
+        int rid = findRecordIDFromEmail(registerEmail);
+        Cursor cursor = myDb.getRow(rid);
+        String password = getPassword(cursor);
+        String name = getLoginName(cursor);
 
         if(!password.equals(loginPassword) && !name.equals(loginName)){
             Toast.makeText(getApplicationContext(),"password and name both are not correct", Toast.LENGTH_SHORT)
                     .show();
+            return false;
         } else if(!password.equals(loginPassword)){
             Toast.makeText(getApplicationContext(),"password is not correct", Toast.LENGTH_SHORT)
                     .show();
+            return false;
         } else if(!name.equals(loginName)){
             Toast.makeText(getApplicationContext(),"login name is not correct", Toast.LENGTH_SHORT)
                     .show();
+            return false;
         } else {
             Toast.makeText(getApplicationContext(),"login successfully", Toast.LENGTH_SHORT)
                     .show();
-
-            Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
-            startActivity(intent);
+            return true;
         }
     }
 
