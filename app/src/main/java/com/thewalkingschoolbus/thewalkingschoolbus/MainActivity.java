@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private int findrecordIDfromemail(String registerEmail) {
+    private int findRecordIDfromemail(String registerEmail) {
         Cursor cursor = myDb.getAllRows();
         if (cursor.moveToFirst()){
             do{
@@ -154,19 +154,13 @@ public class MainActivity extends AppCompatActivity {
                             .show();
                 } else {
                     if (!isEmailInDb(registerEmail)){
-                        Toast.makeText(getApplicationContext(),"that acoount does not exist", Toast.LENGTH_SHORT)
+                        Toast.makeText(getApplicationContext(),"that account does not exist", Toast.LENGTH_SHORT)
                                 .show();
                     } else {
-                        int rid = findrecordIDfromemail(registerEmail);
+                        int rid = findRecordIDfromemail(registerEmail);
                         checkLoginNameAndPasswordCorrect(rid, loginPassword, loginName);
-
                     }
                 }
-
-
-
-                Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
-                startActivity(intent);
             }
         });
     }
@@ -178,8 +172,7 @@ public class MainActivity extends AppCompatActivity {
         if(!password.equals(loginPassword) && !name.equals(loginName)){
             Toast.makeText(getApplicationContext(),"password and name both are not correct", Toast.LENGTH_SHORT)
                     .show();
-        }
-        else if(!password.equals(loginPassword)){
+        } else if(!password.equals(loginPassword)){
             Toast.makeText(getApplicationContext(),"password is not correct", Toast.LENGTH_SHORT)
                     .show();
         } else if(!name.equals(loginName)){
@@ -188,6 +181,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(getApplicationContext(),"login successfully", Toast.LENGTH_SHORT)
                     .show();
+
+            Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
+            startActivity(intent);
         }
     }
 
