@@ -25,6 +25,11 @@ public class MonitoringActivity extends AppCompatActivity {
 
     private static final String TAG = "MonitoringActivity";
 
+    /**
+     * SectionsPageAdapter
+     * Used to build tabs.
+     * From "Android Tab Tutorial" by "CodingWithMitch"
+     */
     private class SectionsPageAdapter extends FragmentPagerAdapter {
 
         private final List<Fragment> fragmentList = new ArrayList<>();
