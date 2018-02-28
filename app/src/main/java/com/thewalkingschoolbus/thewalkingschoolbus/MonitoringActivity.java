@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.model.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,20 @@ import java.util.List;
 public class MonitoringActivity extends AppCompatActivity {
 
     private static final String TAG = "MonitoringActivity";
+
+    // TEST - MOCK DATABASE
+    public static List<User> registeredUsers;
+    public static List<User> monitoringUsers;
+    private void setupTest() {
+        registeredUsers = new ArrayList<>();
+        registeredUsers.add(new User(0, "John", "john@email.com"));
+        registeredUsers.add(new User(1, "Jane", "jane@email.com"));
+
+        monitoringUsers = new ArrayList<>();
+        monitoringUsers.add(new User(2, "Max", "max@email.com"));
+        monitoringUsers.add(new User(3, "Terry", "terry@email.com"));
+    }
+    // TEST
 
     /**
      * SectionsPageAdapter
@@ -66,6 +82,7 @@ public class MonitoringActivity extends AppCompatActivity {
         setContentView(R.layout.activity_monitoring);
         Log.d(TAG, "Starting.");
 
+        setupTest();
         setupLogoutBtn();
 
         // Set up the viewPager with the sections adapter.
