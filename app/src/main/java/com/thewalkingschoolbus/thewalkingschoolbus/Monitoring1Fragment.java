@@ -41,6 +41,13 @@ public class Monitoring1Fragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateListView();
+    }
+
     private void updateListView() {
         // create list of items
         List<String> monitoringList = new ArrayList<>();
