@@ -60,8 +60,7 @@ public class MainActivity extends AppCompatActivity {
         loginPassword = preferences.getString(MainActivity.LOGIN_PASSWORD, null);
         if(registerEmail != null && loginName != null &&
                 ifLoginNameAndPasswordCorrect(registerEmail,loginName,loginPassword )) {
-            Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
-            startActivity(intent);
+            proceedLogin();
         }
     }
 
@@ -185,8 +184,7 @@ public class MainActivity extends AppCompatActivity {
                                 .show();
                     } else {
                         if (ifLoginNameAndPasswordCorrect(registerEmail, loginName, loginPassword)){
-                            Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
-                            startActivity(intent);
+                            proceedLogin();
                             storeUserInfoToSharePreferences();
                         }
                     }
@@ -269,5 +267,10 @@ public class MainActivity extends AppCompatActivity {
 
         System.out.println(message);
         System.out.println("1111111111111111111111111111111111111111111111111111111111111111");
+    }
+
+    private void proceedLogin() {
+        Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
+        startActivity(intent);
     }
 }
