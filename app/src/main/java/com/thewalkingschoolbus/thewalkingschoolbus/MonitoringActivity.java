@@ -47,3 +47,4 @@ public class MonitoringActivity extends AppCompatActivity {
         return new Intent(context, MonitoringActivity.class);
     }
 }
+   
