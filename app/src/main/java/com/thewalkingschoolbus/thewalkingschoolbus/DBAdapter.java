@@ -30,7 +30,7 @@ public class DBAdapter {
 	 */
 	// TODO: Setup your fields here:
 	public static final String KEY_NAME = "name";
-	public static final String KEY_EAMIL = "email";
+	public static final String KEY_EMAIL = "email";
 	public static final String KEY_PASSWORD = "password";
 	
 	// TODO: Setup your field numbers here (0 = KEY_ROWID, 1=...)
@@ -39,7 +39,7 @@ public class DBAdapter {
 	public static final int COL_PASSWORD = 3;
 
 	
-	public static final String[] ALL_KEYS = new String[] {KEY_ROWID, KEY_NAME, KEY_EAMIL, KEY_PASSWORD};
+	public static final String[] ALL_KEYS = new String[] {KEY_ROWID, KEY_NAME, KEY_EMAIL, KEY_PASSWORD};
 	
 	// DB info: it's name, and the table we are using (just one).
 	public static final String DATABASE_NAME = "MyDb";
@@ -62,7 +62,7 @@ public class DBAdapter {
 			//  - "not null" means it is a required field (must be given a value).
 			// NOTE: All must be comma separated (end of line!) Last one must have NO comma!!
 			+ KEY_NAME + " text not null, "
-			+ KEY_EAMIL + " integer not null, "
+			+ KEY_EMAIL + " integer not null, "
 			+ KEY_PASSWORD + " string not null"
 			
 			// Rest  of creation:
@@ -104,7 +104,7 @@ public class DBAdapter {
 		// Create row's data:
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_NAME, name);
-		initialValues.put(KEY_EAMIL, email);
+		initialValues.put(KEY_EMAIL, email);
 		initialValues.put(KEY_PASSWORD, password);
 		
 		// Insert it into the database.
@@ -162,7 +162,7 @@ public class DBAdapter {
 		// Create row's data:
 		ContentValues newValues = new ContentValues();
 		newValues.put(KEY_NAME, name);
-		newValues.put(KEY_EAMIL, studentNum);
+		newValues.put(KEY_EMAIL, studentNum);
 		newValues.put(KEY_PASSWORD, favColour);
 		
 		// Insert it into the database.
