@@ -35,7 +35,7 @@ public class AddMonitoringActivity extends AppCompatActivity {
     public static User getUserFromIntent(Intent data) {
         // TODO: RETURN USER BASED ON CORRECT DATABASE
         String email = data.getStringExtra(RESULT_EMAIL).trim();
-        for (User user:MonitoringActivity.registeredUsers) {
+        for (User user:MainMenuActivity.registeredUsers) {
             if (user.getEmail().trim().equalsIgnoreCase(email)) {
                 return user;
             }
@@ -66,7 +66,7 @@ public class AddMonitoringActivity extends AppCompatActivity {
             return false;
         }
         // TODO: CHECK IF EMAIL IS IN DATABASE, OR IF EMAIL IS ALREADY IN MONITORING LIST
-        for (User user:MonitoringActivity.registeredUsers) {
+        for (User user:MainMenuActivity.registeredUsers) {
             if (user.getEmail().trim().equalsIgnoreCase(field.getText().toString().trim())) {
                 return true;
             }

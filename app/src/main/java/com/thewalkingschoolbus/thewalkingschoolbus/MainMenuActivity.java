@@ -15,8 +15,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
+
+import com.thewalkingschoolbus.thewalkingschoolbus.model.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainMenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -58,6 +62,9 @@ public class MainMenuActivity extends AppCompatActivity
 
         // OPEN DEFAULT FRAGMENT //
         openDefaultFragment();
+
+        // SET UP TEST //
+        setupTest();
     }
 
     private void openDefaultFragment() {
@@ -69,7 +76,7 @@ public class MainMenuActivity extends AppCompatActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                toolbar.setTitle("Profile");
+
             }
         }, 1);
     }
@@ -150,4 +157,23 @@ public class MainMenuActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    // TEST - MOCK DATABASE - DELETE AFTER DATABASE MANAGER IS WRITTEN
+    public static List<User> registeredUsers;
+    public static List<User> monitoringUsers;
+    public static List<User> monitoredByUsers;
+    private void setupTest() {
+        registeredUsers = new ArrayList<>();
+        registeredUsers.add(new User(0, "John", "john@email.com"));
+        registeredUsers.add(new User(1, "Jane", "jane@email.com"));
+
+        monitoringUsers = new ArrayList<>();
+        monitoringUsers.add(new User(2, "Josh", "josh@email.com"));
+        monitoringUsers.add(new User(3, "Fred", "fred@email.com"));
+
+        monitoredByUsers = new ArrayList<>();
+        monitoredByUsers.add(new User(4, "Jacky", "jacky@email.com"));
+        monitoredByUsers.add(new User(5, "Benny", "benny@email.com"));
+    }
+    // TEST
 }
