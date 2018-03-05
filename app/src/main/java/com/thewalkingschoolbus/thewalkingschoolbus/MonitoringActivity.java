@@ -23,7 +23,7 @@ public class MonitoringActivity extends AppCompatActivity {
     }
 
     private void setupLogoutBtn() {
-        Button logouButton = (Button) findViewById(R.id.logoutid);
+        Button logouButton = (Button) findViewById(R.id.loginid);
         logouButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
