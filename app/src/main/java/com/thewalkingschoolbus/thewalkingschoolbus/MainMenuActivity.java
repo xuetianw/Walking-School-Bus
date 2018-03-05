@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.Menu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -76,7 +77,7 @@ public class MainMenuActivity extends AppCompatActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
+                toolbar.setTitle("Profile");
             }
         }, 1);
     }
@@ -91,6 +92,7 @@ public class MainMenuActivity extends AppCompatActivity
         }
     }
 
+    // Code used to generate overflow button.
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
@@ -107,6 +109,8 @@ public class MainMenuActivity extends AppCompatActivity
 //
 //        //noinspection SimplifiableIfStatement
 //        if (id == R.id.action_settings) {
+//            return true;
+//        } else if (id == R.id.action_logout) {
 //            return true;
 //        }
 //
