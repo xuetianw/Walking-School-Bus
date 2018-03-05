@@ -3,7 +3,9 @@ package com.thewalkingschoolbus.thewalkingschoolbus;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -19,6 +21,8 @@ import android.view.MenuItem;
 public class MainMenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private Toolbar toolbar;
+    private NavigationView navigationView;
 
     public static Intent makeIntent(Context context) {
         return new Intent(context, MainMenuActivity.class);
@@ -28,7 +32,9 @@ public class MainMenuActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Color.BLACK); // Set title text color to black.
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -44,10 +50,28 @@ public class MainMenuActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
+        toggle.getDrawerArrowDrawable().setColor(Color.BLACK); // Set hamburger color to black.
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // OPEN DEFAULT FRAGMENT //
+        openDefaultFragment();
+    }
+
+    private void openDefaultFragment() {
+        navigationView.setCheckedItem(R.id.nav_fragment_profile);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, new ProfileFragment())
+                .commit();
+        // Brief delay to prevent new title from being over written by default title.
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toolbar.setTitle("Profile");
+            }
+        }, 1);
     }
 
     @Override
@@ -60,27 +84,27 @@ public class MainMenuActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -93,14 +117,27 @@ public class MainMenuActivity extends AppCompatActivity
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, new ProfileFragment())
                     .commit();
+            toolbar.setTitle("Profile");
         } else if (id == R.id.nav_fragment_group) {
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, new GroupFragment())
                     .commit();
+            toolbar.setTitle("Group");
         } else if (id == R.id.nav_fragment_map) {
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, new MapFragment())
                     .commit();
+            toolbar.setTitle("Map");
+        } else if (id == R.id.nav_fragment_monitoring) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, new MonitoringFragment())
+                    .commit();
+            toolbar.setTitle("Monitoring");
+        } else if (id == R.id.nav_fragment_monitored_by) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, new MonitoredByFragment())
+                    .commit();
+            toolbar.setTitle("Monitored By");
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
