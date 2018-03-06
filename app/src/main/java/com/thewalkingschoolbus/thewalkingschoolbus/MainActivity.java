@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                             .show();
                 } else {
                     if (ifLoginNameAndPasswordCorrect(registerEmail, loginName, loginPassword)){
-                        Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
+                        Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
                         startActivity(intent);
                         storeUserInfoToSharePreferences();
                     }
