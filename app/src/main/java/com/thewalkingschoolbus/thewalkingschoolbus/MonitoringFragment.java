@@ -26,7 +26,7 @@ import java.util.List;
 
 public class MonitoringFragment extends android.app.Fragment {
 
-    private static final String TAG = "Tab1Fragment";
+    private static final String TAG = "MonitoringFragment";
     private static final int REQUEST_CODE_GET_EMAIL = 42;
     private View view;
 
