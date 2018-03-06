@@ -9,92 +9,117 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.OutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.URL;
 
 
 public class ServerManager {
 
+    private String GET = "GET";
+    private String POST = "POST";
+    private String DELETE = "DELETE";
+
     private String API_KEY = "BB390E20-F40E-40D1-BE2D-2F99AAF8E449";
+    private String BASE_URL = "https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
+    private String LOGIN = "/login";
+    private String CREATE_USER = "/users/signup";
+    private String LIST_USER = "/users";
+    private String USER_MONITORING_LIST = "/users/";
+    private String CREATE_MONITORING = "";
+    private String STOP_MONITORING = "";
 
-    public String loginRequest(String enteredEmail,String enteredPassword)throws Exception{
-
-        String url = "https://cmpt276-1177-bf.cmpt.sfu.ca:8443/login";
+    private HttpsURLConnection httpRequest(String url,String requestMethod) throws Exception{
         URL obj = new URL(url);
         HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
-        connection.setRequestMethod("GET");
+        connection.setRequestMethod(requestMethod);
         connection.setDoOutput(true);
         connection.setRequestProperty("Content-Type","application/json");
         connection.setRequestProperty("apiKey",API_KEY);
+        return connection;
+    }
+
+    private void sendJson(HttpsURLConnection connection,JSONObject jsonObject)throws Exception{
+        PrintStream printStream = new PrintStream(connection.getOutputStream());
+        printStream.println(jsonObject.toString());
+        printStream.close();
+    }
+
+
+
+    public String loginRequest(String enteredEmail,String enteredPassword)throws Exception{
+        String url = BASE_URL+LOGIN;
+        HttpsURLConnection connection = httpRequest(url,GET);
+        connection.setDoOutput(true);
+
         // create json file here
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("email",enteredEmail);
         jsonObject.put("password",enteredPassword);
 
-        OutputStream os = connection.getOutputStream();
-        os.write(jsonObject.toString().getBytes());
-        os.flush();
+        sendJson(connection,jsonObject);
 
         int responseCode = connection.getResponseCode();
         if(responseCode != 200) {
-            // failed
-            return null;
+            return "Login Unsuccessful";
         }
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            return null;
+        // save token
+        String token = connection.getResponseMessage();
+        User user = User.getInstance();
+        user.setToken(token);
+        return "Login Successful";
     }
 
     public String createUser(String enteredEmail,String enteredPassword, String enteredName)throws Exception{
 
-        String url = "https://cmpt276-1177-bf.cmpt.sfu.ca:8443/users/signup";
-        URL obj = new URL(url);
-        HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
+        String url = BASE_URL+CREATE_USER;
+        HttpsURLConnection connection = httpRequest(url,POST);
         connection.setDoOutput(true);
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("apiKey",API_KEY);
-
+        // send json file
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("name",enteredName);
         jsonObject.put("email",enteredEmail);
         jsonObject.put("password",enteredPassword);
 
-        OutputStream os = connection.getOutputStream();
-        os.write(jsonObject.toString().getBytes());
-        os.flush();
+        sendJson(connection,jsonObject);
 
         if (connection.getResponseCode() != 201) {
             // failed
-            return null;
+            return "Error creating user";
         }
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(
-                (connection.getInputStream())));
+        // read json file and save in User
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(connection.getInputStream()));
+        StringBuffer response = new StringBuffer();
+        String inputLine;
 
-        String output;
-        System.out.println("Output from Server .... \n");
-        while ((output = br.readLine()) != null) {
-            System.out.println(output);
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
         }
-        return null;
+        in.close();
+
+        User user = User.getInstance();
+        JSONObject returnJson = new JSONObject(response.toString());
+        user.setId(returnJson.getString("id"));
+        user.setName(returnJson.getString("name"));
+        user.setEmail(returnJson.getString("email"));
+
+        return "Successfully created User";
 
     }
-    public void getUsers()throws Exception {
-        String url = "https://cmpt276-1177-bf.cmpt.sfu.ca:8443/users";
-        URL obj = new URL(url);
-        HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Content-Type","application/json");
-        connection.setRequestProperty("apiKey",API_KEY);
+
+    public String getUsers()throws Exception {
+        String url = BASE_URL+LIST_USER;
+        HttpsURLConnection connection = httpRequest(url,GET);
 
         if (connection.getResponseCode() != 200) {
             // failed
-            return;
+            return null;
         }
-
+        return null;
     }
 
-    public void getSingleUser(String id) throws Exception {
+    public String getSingleUser(String id) throws Exception {
 
         String url = "https://cmpt276-1177-bf.cmpt.sfu.ca:8443/users/"+id;
         URL obj = new URL(url);
@@ -105,12 +130,12 @@ public class ServerManager {
 
         if (connection.getResponseCode() != 200) {
             // failed
-            return;
+            return null;
         }
-
+        return null;
     }
 
-    public void userMonitoring(String id) throws Exception {
+    public String userMonitoring(String id) throws Exception {
         String url = "https://cmpt276-1177-bf.cmpt.sfu.ca:8443/users/"+id+"/monitorsUsers";
         URL obj = new URL(url);
         HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
@@ -120,11 +145,12 @@ public class ServerManager {
 
         if (connection.getResponseCode() != 200) {
             // failed
-            return;
+            return null;
         }
+        return null;
     }
 
-    public void CreateMonitoring(String idForMonitoring, String idForMonitoringBy) throws Exception {
+    public String CreateMonitoring(String idForMonitoring, String idForMonitoringBy) throws Exception {
         String url = "https://cmpt276-1177-bf.cmpt.sfu.ca:8443/users/"+idForMonitoring+"/monitorsUsers";
         URL obj = new URL(url);
         HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
@@ -135,17 +161,18 @@ public class ServerManager {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id",idForMonitoringBy);
 
-        OutputStream os = connection.getOutputStream();
-        os.write(jsonObject.toString().getBytes());
-        os.flush();
+        PrintStream printStream = new PrintStream(connection.getOutputStream());
+        printStream.println(jsonObject.toString());
+        printStream.close();
 
         if (connection.getResponseCode() != 201) {
             // failed
-            return;
+            return null;
         }
+        return null;
     }
 
-    public void stopMonitoring (String idForMonitoring, String idForMonitoringBy)throws Exception{
+    public String stopMonitoring (String idForMonitoring, String idForMonitoringBy)throws Exception{
         String url = "https://cmpt276-1177-bf.cmpt.sfu.ca:8443/users/"+idForMonitoring+
                 "/monitorsUsers/"+
                 idForMonitoringBy;
@@ -157,8 +184,9 @@ public class ServerManager {
 
         if (connection.getResponseCode() != 204) {
             // failed
-            return;
+            return null;
         }
+        return null;
     }
 
 }

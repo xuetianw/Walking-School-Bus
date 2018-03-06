@@ -2,55 +2,97 @@ package com.thewalkingschoolbus.thewalkingschoolbus.Models;
 
 import android.os.AsyncTask;
 
-import java.net.URL;
-
-/**
- * Created by Jackyx on 2018-03-04.
- */
-
-public class GetUserAsyncTask extends AsyncTask<String, Void, Void>{
+public class GetUserAsyncTask extends AsyncTask<Void, Void, String>{
 
     private int functionNum;
-    private String name;
-    private String email;
-    private String password;
+    User mainUser;
+    String userWithID;
+    String passwordEntered;
 
-    public GetUserAsyncTask(int functionNumEntered,
-                            String nameEntered,
-                            String emailEntered,
-                            String passwordEntered){
-        if(functionNumEntered > 0) {
-            functionNum = functionNumEntered;
-            name = nameEntered;
-            email = emailEntered;
-            password = passwordEntered;
-        }
+    private OnErrorListener mOnErrorListener;
+    private OnSuccessListener mOnSuccessListener;
 
+    private Exception mException;
+
+
+    public GetUserAsyncTask(int task, String userTwo,String password){
+        functionNum = task;
+        mainUser = User.getInstance();
+        userWithID = userTwo;
+        passwordEntered = password;
     }
 
     protected String doInBackground(Void... urls){
         try {
+            ServerManager server = new ServerManager();
+            String returnMessage;
             switch (functionNum) {
                 case 1:
-                    return ServerManager.loginRequest(email,password);
+                    returnMessage = server.loginRequest(mainUser.getEmail(),passwordEntered);
                     break;
                 case 2:
-                    return ServerManager.createUser(email,password,name);
+                    returnMessage = server.createUser(mainUser.getEmail(),passwordEntered,mainUser.getName());
                     break;
+                case 3:
+                    returnMessage = server.getUsers();
+                    break;
+                case 4:
+                    returnMessage = server.getSingleUser(userWithID);
+                    break;
+                case 5:
+                    returnMessage = server.userMonitoring(userWithID);
+                    break;
+                case 6:
+                    returnMessage = server.CreateMonitoring(mainUser.getId(),userWithID);
+                    break;
+                case 7:
+                    returnMessage = server.stopMonitoring(mainUser.getId(),userWithID);
+                    break;
+                default:
+                    returnMessage = "Function Not Found";
             }
-            } catch (Exception e) {
-            //mException = e;
+            return returnMessage;
+
+        } catch (Exception e) {
+            mException = e;
         }
-        return null;
+        return "Function Not Found";
     }
 
 
-    protected void onProgressUpdate(Void... progress) {
+    //protected String onProgressUpdate(Void... progress) {
+    //}
 
-    }
+    protected void onPostExecute(String returnMessage) {
+        if (mException != null && mOnErrorListener != null) {
+            mOnErrorListener.onError(mException);
+            return;
+        }
 
-    protected void onPostExecute(long result) {
+        if (mOnSuccessListener != null) {
+            mOnSuccessListener.onSuccess();
+        }
         // for result
+    }
+
+    public interface OnTaskCompleted{
+        void onTaskCompleted();
+    }
+
+    public void setOnErrorListener(OnErrorListener l) {
+        mOnErrorListener = l;
+    }
+
+    public void setOnSuccessListener(OnSuccessListener l) {
+        mOnSuccessListener = l;
+    }
+
+    public interface OnErrorListener {
+        void onError(Exception e);
+    }
+
+    public interface OnSuccessListener {
+        void onSuccess();
     }
 
 }
