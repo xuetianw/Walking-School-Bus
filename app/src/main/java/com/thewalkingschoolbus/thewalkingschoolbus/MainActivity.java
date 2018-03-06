@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         loginName = preferences.getString(MainActivity.LOGIN_NAME, null);
         loginPassword = preferences.getString(MainActivity.LOGIN_PASSWORD, null);
         if(registerEmail != null && loginName != null) {
-            Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
+            Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
             startActivity(intent);
         }
     }
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                             .show();
                 } else {
                     if (ifLoginNameAndPasswordCorrect(registerEmail, loginName, loginPassword)){
-                        Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
+                        Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
                         startActivity(intent);
                         storeUserInfoToSharePreferences();
                     }

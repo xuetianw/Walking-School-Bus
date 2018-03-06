@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_fragment_profile"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Profile" />
+        <item
+            android:id="@+id/nav_fragment_group"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Group" />
+        <item
+            android:id="@+id/nav_fragment_map"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Map" />
+        <item
+            android:id="@+id/nav_fragment_monitoring"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Monitoring" />
+        <item
+            android:id="@+id/nav_fragment_monitored_by"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Monitored By" />
+
+    </group>
+
+    <item
+        android:title="Communicate"
+        android:visible="false">
+        <menu>
+            <item
+                android:id="@+id/nav_manage"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Tools" />
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+        </menu>
+    </item>
+
+</menu>
