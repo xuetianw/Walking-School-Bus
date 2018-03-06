@@ -2,20 +2,25 @@ package com.thewalkingschoolbus.thewalkingschoolbus.Models;
 
 import android.os.AsyncTask;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
+
 public class GetUserAsyncTask extends AsyncTask<Void, Void, String>{
 
+    private OnTaskComplete mlistener;
+    private String returnMessage;
     private int functionNum;
-    User mainUser;
-    String userWithID;
-    String passwordEntered;
+    private User mainUser;
+    private String userWithID;
+    private String passwordEntered;
 
-    private OnErrorListener mOnErrorListener;
-    private OnSuccessListener mOnSuccessListener;
+    //private OnErrorListener mOnErrorListener;
+    //private OnSuccessListener mOnSuccessListener;
 
     private Exception mException;
 
 
-    public GetUserAsyncTask(int task, String userTwo,String password){
+    public GetUserAsyncTask(int task, String userTwo,String password,OnTaskComplete listener){
+        mlistener= listener;
         functionNum = task;
         mainUser = User.getInstance();
         userWithID = userTwo;
@@ -25,7 +30,6 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, String>{
     protected String doInBackground(Void... urls){
         try {
             ServerManager server = new ServerManager();
-            String returnMessage;
             switch (functionNum) {
                 case 1:
                     returnMessage = server.loginRequest(mainUser.getEmail(),passwordEntered);
@@ -64,35 +68,13 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, String>{
     //}
 
     protected void onPostExecute(String returnMessage) {
-        if (mException != null && mOnErrorListener != null) {
-            mOnErrorListener.onError(mException);
-            return;
+        if (mlistener != null) {
+            if (mException == null) {
+                mlistener.onSuccess(returnMessage);
+            } else {
+                mlistener.onFailure(mException);
+            }
         }
-
-        if (mOnSuccessListener != null) {
-            mOnSuccessListener.onSuccess();
-        }
-        // for result
-    }
-
-    public interface OnTaskCompleted{
-        void onTaskCompleted();
-    }
-
-    public void setOnErrorListener(OnErrorListener l) {
-        mOnErrorListener = l;
-    }
-
-    public void setOnSuccessListener(OnSuccessListener l) {
-        mOnSuccessListener = l;
-    }
-
-    public interface OnErrorListener {
-        void onError(Exception e);
-    }
-
-    public interface OnSuccessListener {
-        void onSuccess();
     }
 
 }

@@ -5,10 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.GetUserAsyncTask;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
 /**
  * MainActivity
@@ -97,16 +102,34 @@ public class MainActivity extends AppCompatActivity {
                 loginName = nameET.getText().toString();
                 registerEmail = emailET.getText().toString();
                 loginPassword = passwordET.getText().toString();
+
                 if(loginName.isEmpty() || registerEmail.isEmpty()|| loginPassword.isEmpty()){
                     Toast.makeText(getApplicationContext(),FIELD_NOT_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
-                } else {
+                }
+
+                User user = User.getInstance();
+                user.setEmail(registerEmail);
+                new GetUserAsyncTask(1, "", loginPassword, new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(String result) {
+                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }).execute();
+
+                /*else {
                     if (ifLoginNameAndPasswordCorrect(registerEmail, loginName, loginPassword)){
                         Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
                         startActivity(intent);
                         storeUserInfoToSharePreferences();
                     }
                 }
+                */
             }
         });
     }
