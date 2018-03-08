@@ -1,6 +1,9 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.Models;
+package com.thewalkingschoolbus.thewalkingschoolbus.Api_Binding;
 
 import android.util.Log;
+
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import javax.net.ssl.HttpsURLConnection;
@@ -46,7 +49,7 @@ public class ServerManager {
     }
 
     private void authorizationWithOutBody(HttpsURLConnection connection) throws Exception{
-        connection.setRequestProperty("Bearer <token>",User.getToken());
+        connection.setRequestProperty("Bearer <token>", User.getToken());
         PrintStream printStream = new PrintStream(connection.getOutputStream());
         printStream.close();
     }
@@ -114,6 +117,8 @@ public class ServerManager {
         }
         // save token
         String token = connection.getResponseMessage();
+        Log.i(TAG, "token: "+responseCode );
+
         User.setToken(token);
         return SUCCESS;
     }
