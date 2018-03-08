@@ -15,6 +15,9 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
+import static com.thewalkingschoolbus.thewalkingschoolbus.Models.GetUserAsyncTask.functionType.LOGIN_REQUEST;
+
+
 /**
  * MainActivity
  * Description here.
@@ -108,19 +111,25 @@ public class MainActivity extends AppCompatActivity {
                             .show();
                 }
 
-                User user = User.getInstance();
+                User user = new User();
                 user.setEmail(registerEmail);
-                new GetUserAsyncTask(1, "", loginPassword, new OnTaskComplete() {
+
+                new GetUserAsyncTask(LOGIN_REQUEST, user,null, null, new OnTaskComplete() {
                     @Override
                     public void onSuccess(String result) {
                         Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-                    }
+                        if(result.equals("SUCCESSFUL")){
 
+                            Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
+                            startActivity(intent);
+                        }
+                    }
                     @Override
                     public void onFailure(Exception e) {
                         Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }).execute();
+
 
                 /*else {
                     if (ifLoginNameAndPasswordCorrect(registerEmail, loginName, loginPassword)){

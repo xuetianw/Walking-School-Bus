@@ -7,50 +7,49 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 public class GetUserAsyncTask extends AsyncTask<Void, Void, String>{
 
     private OnTaskComplete mlistener;
-    private String returnMessage;
-    private int functionNum;
-    private User mainUser;
-    private String userWithID;
-    private String passwordEntered;
 
-    //private OnErrorListener mOnErrorListener;
-    //private OnSuccessListener mOnSuccessListener;
+    private functionType functionChoice;
+
+    private String returnMessage;
+    private User mainUser;
+    private User interactUser;
+    private String passwordEntered;
 
     private Exception mException;
 
 
-    public GetUserAsyncTask(int task, String userTwo,String password,OnTaskComplete listener){
+    public GetUserAsyncTask(functionType functionType, User userA, User userB,String password,OnTaskComplete listener){
+        functionChoice = functionType;
         mlistener= listener;
-        functionNum = task;
-        mainUser = User.getInstance();
-        userWithID = userTwo;
+        mainUser = userA;
+        interactUser = userB;
         passwordEntered = password;
     }
 
     protected String doInBackground(Void... urls){
         try {
             ServerManager server = new ServerManager();
-            switch (functionNum) {
-                case 1:
-                    returnMessage = server.loginRequest(mainUser.getEmail(),passwordEntered);
+            switch (functionChoice) {
+                case LOGIN_REQUEST:
+                    returnMessage = server.loginRequest(mainUser,passwordEntered);
                     break;
-                case 2:
-                    returnMessage = server.createUser(mainUser.getEmail(),passwordEntered,mainUser.getName());
+                case CREATE_USER:
+                    returnMessage = server.createUser(mainUser,passwordEntered);
                     break;
-                case 3:
-                    returnMessage = server.getUsers();
+                case ALL_USERS:
+                    returnMessage = server.getUsers(mainUser);
                     break;
-                case 4:
-                    returnMessage = server.getSingleUser(userWithID);
+                case SINGLE_USER:
+                    returnMessage = server.getSingleUser(interactUser);
                     break;
-                case 5:
-                    returnMessage = server.userMonitoring(userWithID);
+                case LIST_MONITORING:
+                    returnMessage = server.userMonitoring(mainUser);
                     break;
-                case 6:
-                    returnMessage = server.CreateMonitoring(mainUser.getId(),userWithID);
+                case CREATE_MONITORING:
+                    returnMessage = server.CreateMonitoring(mainUser,interactUser);
                     break;
-                case 7:
-                    returnMessage = server.stopMonitoring(mainUser.getId(),userWithID);
+                case STOP_MONITORING:
+                    returnMessage = server.stopMonitoring(mainUser,interactUser);
                     break;
                 default:
                     returnMessage = "Function Not Found";
@@ -75,6 +74,10 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, String>{
                 mlistener.onFailure(mException);
             }
         }
+    }
+    public enum functionType {
+        LOGIN_REQUEST, CREATE_USER, ALL_USERS, SINGLE_USER,
+        LIST_MONITORING, CREATE_MONITORING, STOP_MONITORING
     }
 
 }
