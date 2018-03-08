@@ -83,7 +83,7 @@ public class ServerManager {
         }
     }
 
-    private void saveJsonArrays(JSONArray responseJson,User user,int flag)throws Exception{
+    private void saveJsonArrays(JSONArray responseJson,User user)throws Exception{
         for (int i = 0; i < responseJson.length();i++){
             JSONObject tmpJsonObject = responseJson.getJSONObject(i);
             User tmpUser = new User();
@@ -190,7 +190,7 @@ public class ServerManager {
 
         StringBuffer response = readJsonIntoString(connection);
         JSONArray responseJson = new JSONArray(response.toString());
-        saveJsonArrays(responseJson,user,0);
+        saveJsonArrays(responseJson,user);
 
         return SUCCESS;
     }
@@ -213,7 +213,7 @@ public class ServerManager {
         }
         StringBuffer response = readJsonIntoString(connection);
         JSONArray responseJson = new JSONArray(response.toString());
-        saveJsonArrays(responseJson,mainUser,0);
+        saveJsonArrays(responseJson,mainUser);
         return SUCCESS;
     }
 
