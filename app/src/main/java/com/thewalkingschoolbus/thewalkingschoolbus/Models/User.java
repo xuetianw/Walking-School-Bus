@@ -50,8 +50,13 @@ public class User {
         return monitoringByUser;
     }
 
-    public void appendMonitoringByUser(User user){
-        monitoringByUser.add(user);
+    public void appendMonitoringByUser(int position,User user){
+        monitoringByUser.add(position,user);
+    }
+
+    public void appendMonitoringUser(int position,User user){
+        monitoringUser.add(position,user);
+
     }
 
     public void setId(String id) {

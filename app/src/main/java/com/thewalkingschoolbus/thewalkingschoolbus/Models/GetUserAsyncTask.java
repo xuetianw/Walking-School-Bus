@@ -37,7 +37,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, String>{
                     returnMessage = server.createUser(mainUser,passwordEntered);
                     break;
                 case ALL_USERS:
-                    returnMessage = server.getUsers(mainUser);
+                    returnMessage = server.getUsers();
                     break;
                 case SINGLE_USER:
                     returnMessage = server.getSingleUser(interactUser);

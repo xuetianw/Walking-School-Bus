@@ -1,12 +1,7 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.Models;
 
-/**
- * Created by Jackyx on 2018-03-04.
- */
 import android.util.Log;
-
-import com.thewalkingschoolbus.thewalkingschoolbus.MainActivity;
-
+import org.json.JSONArray;
 import org.json.JSONObject;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -50,8 +45,8 @@ public class ServerManager {
         printStream.close();
     }
 
-    private void authorizationWithOutBody(HttpsURLConnection connection, User user) throws Exception{
-        connection.setRequestProperty("Bearer <token>",user.getToken());
+    private void authorizationWithOutBody(HttpsURLConnection connection) throws Exception{
+        connection.setRequestProperty("Bearer <token>",User.getToken());
         PrintStream printStream = new PrintStream(connection.getOutputStream());
         printStream.close();
     }
@@ -67,6 +62,38 @@ public class ServerManager {
         }
         in.close();
         return response;
+    }
+
+    private void saveJsonArraysWithIds(JSONObject returnJson,User user)throws Exception{
+        JSONArray monitorsUsers = returnJson.getJSONArray("monitorsUsers");
+        JSONArray monitoredByUsers = returnJson.getJSONArray("monitoredByUsers");
+        // save monitors Users
+        for (int i = 0;i < monitorsUsers.length(); i++){
+            JSONObject tmpJsonObject = monitorsUsers.getJSONObject(i);
+            User tmpUser = new User();
+            tmpUser.setId(tmpJsonObject.getString("id"));
+            user.appendMonitoringUser(i,tmpUser);
+        }
+
+        for (int i = 0;i < monitoredByUsers.length(); i++){
+            JSONObject tmpJsonObject = monitoredByUsers.getJSONObject(i);
+            User tmpUser = new User();
+            tmpUser.setId(tmpJsonObject.getString("id"));
+            user.appendMonitoringByUser(i,tmpUser);
+        }
+    }
+
+    private void saveJsonArrays(JSONArray responseJson,User user,int flag)throws Exception{
+        for (int i = 0; i < responseJson.length();i++){
+            JSONObject tmpJsonObject = responseJson.getJSONObject(i);
+            User tmpUser = new User();
+            tmpUser.setId(tmpJsonObject.getString("id"));
+            tmpUser.setName(tmpJsonObject.getString("name"));
+            tmpUser.setId(tmpJsonObject.getString("email"));
+            saveJsonArraysWithIds(tmpJsonObject,tmpUser);
+            user.appendMonitoringUser(i, tmpUser);
+
+        }
     }
 
     public String loginRequest(User user,String enteredPassword)throws Exception{
@@ -87,7 +114,7 @@ public class ServerManager {
         }
         // save token
         String token = connection.getResponseMessage();
-        user.setToken(token);
+        User.setToken(token);
         return SUCCESS;
     }
 
@@ -118,10 +145,10 @@ public class ServerManager {
 
     }
 
-    public String getUsers(User user)throws Exception {
+    public String getUsers()throws Exception {
         String url = BASE_URL+LIST_USER;
         HttpsURLConnection connection = httpRequest(url,GET);
-        authorizationWithOutBody(connection,user);
+        authorizationWithOutBody(connection);
 
         if (connection.getResponseCode() != 200) {
             // failed
@@ -137,31 +164,41 @@ public class ServerManager {
 
         String url = BASE_URL+GET_USER+user.getId();
         HttpsURLConnection connection = httpRequest(url,GET);
-        authorizationWithOutBody(connection,user);
+        authorizationWithOutBody(connection);
 
         if (connection.getResponseCode() != 200) {
             // failed
             return UNSUCCESSFUL;
         }
+
+        StringBuffer response = readJsonIntoString(connection);
+        JSONObject returnJson = new JSONObject(response.toString());
+        saveJsonArraysWithIds(returnJson,user);
+
         return SUCCESS;
     }
 
     public String userMonitoring(User user) throws Exception {
         String url = BASE_URL+GET_USER+user.getId()+USER_MONITORING_LIST;
         HttpsURLConnection connection = httpRequest(url,GET);
-        authorizationWithOutBody(connection,user);
+        authorizationWithOutBody(connection);
 
         if (connection.getResponseCode() != 200) {
             // failed
             return UNSUCCESSFUL;
         }
+
+        StringBuffer response = readJsonIntoString(connection);
+        JSONArray responseJson = new JSONArray(response.toString());
+        saveJsonArrays(responseJson,user,0);
+
         return SUCCESS;
     }
 
     public String CreateMonitoring(User mainUser, User interactUser) throws Exception {
         String url = BASE_URL+GET_USER+mainUser.getId()+USER_MONITORING_LIST;
         HttpsURLConnection connection = httpRequest(url,POST);
-        connection.setRequestProperty("Bearer <token>", mainUser.getToken());
+        connection.setRequestProperty("Bearer <token>", User.getToken());
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id",interactUser.getId());
@@ -174,8 +211,9 @@ public class ServerManager {
             // failed
             return UNSUCCESSFUL;
         }
-
-
+        StringBuffer response = readJsonIntoString(connection);
+        JSONArray responseJson = new JSONArray(response.toString());
+        saveJsonArrays(responseJson,mainUser,0);
         return SUCCESS;
     }
 
@@ -184,7 +222,7 @@ public class ServerManager {
                 USER_MONITORING_LIST+
                 interactUser.getId();
         HttpsURLConnection connection = httpRequest(url,DELETE);
-        authorizationWithOutBody(connection,mainUser);
+        authorizationWithOutBody(connection);
 
         if (connection.getResponseCode() != 204) {
             // failed
