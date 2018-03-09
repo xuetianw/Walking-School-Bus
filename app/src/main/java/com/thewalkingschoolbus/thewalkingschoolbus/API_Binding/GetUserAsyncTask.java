@@ -38,23 +38,23 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
                 case CREATE_USER:
                     returnObject = server.createUser(mainUser,passwordEntered);
                     break;
-                case ALL_USERS:
-                    returnObject = server.getUsers(mainUser);
+                case LIST_USERS:
+                    returnObject = server.listUsers(mainUser);
                     break;
-                case SINGLE_USER:
+                case GET_SINGLE_USER:
                     returnObject = server.getSingleUser(mainUser);
                     break;
-                case LIST_MONITORING:
-                    returnObject = server.userMonitoring(mainUser);
+                case USR_MONITORING_LIST:
+                    returnObject = server.userMonitoringList(mainUser);
                     break;
                 case CREATE_MONITORING:
                     returnObject = server.createMonitoring(mainUser,interactUser);
                     break;
-                case STOP_MONITORING:
-                    returnObject = server.stopMonitoring(mainUser,interactUser);
+                case DELETE_MONITORING:
+                    returnObject = server.deleteMonitoring(mainUser,interactUser);
                     break;
                 case LIST_GROUPS:
-                    returnObject = server.listGroups(mGroup);
+                    returnObject = server.listGroups();
                     break;
                 case CREATE_GROUP:
                     returnObject = server.createGroup(mGroup);
@@ -62,7 +62,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
                 case GET_ONE_GROUP:
                     returnObject = server.getOneGroup(mGroup);
                     break;
-                case UPDATE_GROUP:
+                case UPDATE_EXISTING_GROUP:
                     returnObject = server.updateExistingGroup(mGroup);
                     break;
                 case DELETE_GROUP:
@@ -92,9 +92,9 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
         }
     }
     public enum functionType {
-        LOGIN_REQUEST, CREATE_USER, ALL_USERS, SINGLE_USER,
-        LIST_MONITORING, CREATE_MONITORING, STOP_MONITORING,
-        LIST_GROUPS,CREATE_GROUP,GET_ONE_GROUP,UPDATE_GROUP,
+        LOGIN_REQUEST, CREATE_USER, LIST_USERS, GET_SINGLE_USER,
+        USR_MONITORING_LIST, CREATE_MONITORING, DELETE_MONITORING,
+        LIST_GROUPS,CREATE_GROUP,GET_ONE_GROUP,UPDATE_EXISTING_GROUP,
         DELETE_GROUP
     }
 
