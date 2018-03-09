@@ -41,7 +41,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, String>{
                     returnMessage = server.getUsers(mainUser);
                     break;
                 case SINGLE_USER:
-                    returnMessage = server.getSingleUser(interactUser);
+                    returnMessage = server.getSingleUser(mainUser);
                     break;
                 case LIST_MONITORING:
                     returnMessage = server.userMonitoring(mainUser);
@@ -78,7 +78,9 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, String>{
     }
     public enum functionType {
         LOGIN_REQUEST, CREATE_USER, ALL_USERS, SINGLE_USER,
-        LIST_MONITORING, CREATE_MONITORING, STOP_MONITORING
+        LIST_MONITORING, CREATE_MONITORING, STOP_MONITORING,
+        LIST_GROUPS,CREATE_GROUP,GET_ONE_GROUP,UPDATE_GROUP,
+        DELETE_GROUP
     }
 
 }

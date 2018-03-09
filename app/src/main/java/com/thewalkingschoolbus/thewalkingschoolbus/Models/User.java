@@ -19,6 +19,7 @@ public class User {
     private List<User> monitoredByUsers;
     private List<User> allUsers;
     private List<Group> walkingGroups;
+    private List<Group> allGroups;
 
 
     public User(){

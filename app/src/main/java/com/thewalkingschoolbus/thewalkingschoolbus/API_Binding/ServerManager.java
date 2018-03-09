@@ -2,24 +2,17 @@ package com.thewalkingschoolbus.thewalkingschoolbus.Api_Binding;
 
 import android.util.Log;
 
-import com.google.gson.reflect.TypeToken;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
 import com.google.gson.Gson;
 
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
@@ -76,42 +69,6 @@ public class ServerManager {
         in.close();
         return response;
     }
-    /*
-    private void saveJsonArraysWithIds(JSONObject returnJson,User user)throws Exception{
-        JSONArray monitorsUsers = returnJson.getJSONArray("monitorsUsers");
-        JSONArray monitoredByUsers = returnJson.getJSONArray("monitoredByUsers");
-        // save monitors Users
-        for (int i = 0;i < monitorsUsers.length(); i++){
-            JSONObject tmpJsonObject = monitorsUsers.getJSONObject(i);
-            User tmpUser = new User();
-            tmpUser.setId(tmpJsonObject.getString("id"));
-            user.appendMonitoringUser(i,tmpUser);
-        }
-
-        for (int i = 0;i < monitoredByUsers.length(); i++){
-            JSONObject tmpJsonObject = monitoredByUsers.getJSONObject(i);
-            User tmpUser = new User();
-            tmpUser.setId(tmpJsonObject.getString("id"));
-            user.appendMonitoringByUser(i,tmpUser);
-        }
-    }
-
-    private void saveJsonArrays(JSONArray responseJson,User user,int flag)throws Exception{
-        for (int i = 0; i < responseJson.length();i++){
-            JSONObject tmpJsonObject = responseJson.getJSONObject(i);
-            User tmpUser = new User();
-            tmpUser.setId(tmpJsonObject.getString("id"));
-            tmpUser.setName(tmpJsonObject.getString("name"));
-            tmpUser.setId(tmpJsonObject.getString("email"));
-            saveJsonArraysWithIds(tmpJsonObject,tmpUser);
-            if(flag == 0) {
-                user.appendMonitoringUser(i, tmpUser);
-            }else if(flag == 1){
-                user.appendAllUsers(i,tmpUser);
-            }
-        }
-    }
-    */
 
     public String loginRequest(User user,String enteredPassword)throws Exception{
         String url = BASE_URL+LOGIN;
@@ -246,6 +203,66 @@ public class ServerManager {
         return SUCCESS;
     }
 
+    public String listGroups(User user){
+
+        return null;
+    }
+
+    public String createGroup(User user){
+        return null;
+    }
+
+    public String getOneGroup(User user){
+        return null;
+    }
+
+    public String updateExistingGroup(User user){
+        return null;
+    }
+
+    public String deleteGroup(User user){
+        return null;
+    }
 
 
 }
+
+
+
+/*
+    garbage for now... i do hope this stay as garbage...
+    private void saveJsonArraysWithIds(JSONObject returnJson,User user)throws Exception{
+        JSONArray monitorsUsers = returnJson.getJSONArray("monitorsUsers");
+        JSONArray monitoredByUsers = returnJson.getJSONArray("monitoredByUsers");
+        // save monitors Users
+        for (int i = 0;i < monitorsUsers.length(); i++){
+            JSONObject tmpJsonObject = monitorsUsers.getJSONObject(i);
+            User tmpUser = new User();
+            tmpUser.setId(tmpJsonObject.getString("id"));
+            user.appendMonitoringUser(i,tmpUser);
+        }
+
+        for (int i = 0;i < monitoredByUsers.length(); i++){
+            JSONObject tmpJsonObject = monitoredByUsers.getJSONObject(i);
+            User tmpUser = new User();
+            tmpUser.setId(tmpJsonObject.getString("id"));
+            user.appendMonitoringByUser(i,tmpUser);
+        }
+    }
+
+    private void saveJsonArrays(JSONArray responseJson,User user,int flag)throws Exception{
+        for (int i = 0; i < responseJson.length();i++){
+            JSONObject tmpJsonObject = responseJson.getJSONObject(i);
+            User tmpUser = new User();
+            tmpUser.setId(tmpJsonObject.getString("id"));
+            tmpUser.setName(tmpJsonObject.getString("name"));
+            tmpUser.setId(tmpJsonObject.getString("email"));
+            saveJsonArraysWithIds(tmpJsonObject,tmpUser);
+            if(flag == 0) {
+                user.appendMonitoringUser(i, tmpUser);
+            }else if(flag == 1){
+                user.appendAllUsers(i,tmpUser);
+            }
+        }
+    }
+    */
