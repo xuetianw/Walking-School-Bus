@@ -113,10 +113,10 @@ public class MainActivity extends AppCompatActivity {
                 User user = new User();
                 user.setEmail(registerEmail);
 
-                new GetUserAsyncTask<String>(LOGIN_REQUEST, user,null, null,"", new OnTaskComplete() {
+                new GetUserAsyncTask(LOGIN_REQUEST, user,null, null,"", new OnTaskComplete() {
                     @Override
-                    public void onSuccess(String result) {
-                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+                    public void onSuccess(Object result) {
+                        Toast.makeText(getApplicationContext(), (String)result, Toast.LENGTH_LONG).show();
                         if(result.equals("SUCCESSFUL")){
                             //Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
                             //startActivity(intent);
