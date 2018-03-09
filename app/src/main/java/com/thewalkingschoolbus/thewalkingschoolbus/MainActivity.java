@@ -119,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                         if(result.equals("SUCCESSFUL")){
 
-                            Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
-                            startActivity(intent);
+                            //Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
+                            //startActivity(intent);
                         }
                     }
                     @Override
