@@ -1,7 +1,7 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.Api_Binding;
+package com.thewalkingschoolbus.thewalkingschoolbus.API_Binding;
+
 
 import android.os.AsyncTask;
-
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
@@ -38,7 +38,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, String>{
                     returnMessage = server.createUser(mainUser,passwordEntered);
                     break;
                 case ALL_USERS:
-                    returnMessage = server.getUsers();
+                    returnMessage = server.getUsers(mainUser);
                     break;
                 case SINGLE_USER:
                     returnMessage = server.getSingleUser(interactUser);
@@ -47,7 +47,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, String>{
                     returnMessage = server.userMonitoring(mainUser);
                     break;
                 case CREATE_MONITORING:
-                    returnMessage = server.CreateMonitoring(mainUser,interactUser);
+                    returnMessage = server.createMonitoring(mainUser,interactUser);
                     break;
                 case STOP_MONITORING:
                     returnMessage = server.stopMonitoring(mainUser,interactUser);

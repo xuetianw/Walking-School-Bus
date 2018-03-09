@@ -11,10 +11,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.Api_Binding.GetUserAsyncTask;
+import com.thewalkingschoolbus.thewalkingschoolbus.API_Binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.Api_Binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
+import static com.thewalkingschoolbus.thewalkingschoolbus.API_Binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
 
 
 /**
