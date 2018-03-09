@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus;
+package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,12 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.thewalkingschoolbus.Interface.OnTaskComplete;
-import com.thewalkingschoolbus.API_Binding.GetUserAsyncTask;
-import com.thewalkingschoolbus.Models.User;
-import com.thewalkingschoolbus.thewalkingschoolbus.R;
+import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
+import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
-import static com.thewalkingschoolbus.API_Binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
 
 
 /**
@@ -114,12 +113,11 @@ public class MainActivity extends AppCompatActivity {
                 User user = new User();
                 user.setEmail(registerEmail);
 
-                new GetUserAsyncTask(LOGIN_REQUEST, user,null, null, new OnTaskComplete() {
+                new GetUserAsyncTask(LOGIN_REQUEST, user,null, null,"", new OnTaskComplete() {
                     @Override
-                    public void onSuccess(String result) {
-                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-                        if(result.equals("SUCCESSFUL")){
-
+                    public void onSuccess(Object result) {
+                        Toast.makeText(getApplicationContext(), (String)result, Toast.LENGTH_LONG).show();
+                        if(result != null){
                             //Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
                             //startActivity(intent);
                         }

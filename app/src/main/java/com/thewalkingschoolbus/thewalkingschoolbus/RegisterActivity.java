@@ -1,10 +1,8 @@
-package com.thewalkingschoolbus;
+package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import com.thewalkingschoolbus.thewalkingschoolbus.R;
 
 public class RegisterActivity extends AppCompatActivity {
 

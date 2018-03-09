@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus;
+package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.app.FragmentManager;
 import android.content.Context;
@@ -18,7 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
-import com.thewalkingschoolbus.model.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.model.User;
 
 import java.util.ArrayList;
 import java.util.List;

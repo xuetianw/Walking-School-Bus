@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.thewalkingschoolbus.MainActivity"
+            android:name="com.thewalkingschoolbus.thewalkingschoolbus.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,13 +19,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".MonitoringActivity" />
-        <activity android:name="com.thewalkingschoolbus.RegisterActivity"></activity>
+        <activity android:name="com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity"></activity>
         <activity
-            android:name="com.thewalkingschoolbus.MainMenuActivity"
+            android:name="com.thewalkingschoolbus.thewalkingschoolbus.MainMenuActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name="com.thewalkingschoolbus.AddMonitoringActivity"
+            android:name="com.thewalkingschoolbus.thewalkingschoolbus.AddMonitoringActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>

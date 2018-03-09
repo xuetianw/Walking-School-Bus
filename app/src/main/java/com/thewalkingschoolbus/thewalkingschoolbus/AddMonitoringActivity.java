@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus;
+package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
-import com.thewalkingschoolbus.model.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.model.User;
 
 public class AddMonitoringActivity extends AppCompatActivity {
 

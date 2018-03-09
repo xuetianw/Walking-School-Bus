@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus;
+package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
