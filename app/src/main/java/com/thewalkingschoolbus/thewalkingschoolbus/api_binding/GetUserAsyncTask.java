@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.API_Binding;
+package com.thewalkingschoolbus.thewalkingschoolbus.api_binding;
 
 import android.os.AsyncTask;
 
