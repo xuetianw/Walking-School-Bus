@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.Models;
+package com.thewalkingschoolbus.Models;
 
 import java.util.ArrayList;
 import java.util.List;
