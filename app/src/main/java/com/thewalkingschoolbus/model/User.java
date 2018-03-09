@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.model;
+package com.thewalkingschoolbus.model;
 
 public class User {
     private int id;

@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus;
+package com.thewalkingschoolbus;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,11 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.API_Binding.GetUserAsyncTask;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.Interface.OnTaskComplete;
+import com.thewalkingschoolbus.API_Binding.GetUserAsyncTask;
+import com.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.R;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.API_Binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
+import static com.thewalkingschoolbus.API_Binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
 
 
 /**

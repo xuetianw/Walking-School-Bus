@@ -1,24 +1,22 @@
-package com.thewalkingschoolbus.thewalkingschoolbus;
+package com.thewalkingschoolbus;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.model.User;
-
-import java.util.Objects;
+import com.thewalkingschoolbus.thewalkingschoolbus.R;
+import com.thewalkingschoolbus.model.User;
 
 public class AddMonitoringActivity extends AppCompatActivity {
 
-    private static final String RESULT_EMAIL = "com.thewalkingschoolbus.thewalkingschoolbus.AddMonitoringActivity - email";
+    private static final String RESULT_EMAIL = "com.thewalkingschoolbus.AddMonitoringActivity - email";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

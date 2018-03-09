@@ -1,8 +1,8 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.API_Binding;
+package com.thewalkingschoolbus.API_Binding;
 
 import android.util.Log;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.Models.User;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

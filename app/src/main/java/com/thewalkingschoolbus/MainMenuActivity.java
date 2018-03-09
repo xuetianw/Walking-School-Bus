@@ -1,9 +1,8 @@
-package com.thewalkingschoolbus.thewalkingschoolbus;
+package com.thewalkingschoolbus;
 
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -18,7 +17,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.model.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.R;
+import com.thewalkingschoolbus.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
