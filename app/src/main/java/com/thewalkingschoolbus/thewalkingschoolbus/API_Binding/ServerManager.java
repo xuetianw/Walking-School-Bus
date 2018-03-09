@@ -2,7 +2,11 @@ package com.thewalkingschoolbus.thewalkingschoolbus.Api_Binding;
 
 import android.util.Log;
 
+import com.google.gson.reflect.TypeToken;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+
+import com.google.gson.Gson;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,7 +14,12 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
@@ -54,6 +63,7 @@ public class ServerManager {
         printStream.close();
     }
 
+
     private StringBuffer readJsonIntoString (HttpsURLConnection connection) throws Exception{
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(connection.getInputStream()));
@@ -66,7 +76,7 @@ public class ServerManager {
         in.close();
         return response;
     }
-
+    /*
     private void saveJsonArraysWithIds(JSONObject returnJson,User user)throws Exception{
         JSONArray monitorsUsers = returnJson.getJSONArray("monitorsUsers");
         JSONArray monitoredByUsers = returnJson.getJSONArray("monitoredByUsers");
@@ -101,6 +111,7 @@ public class ServerManager {
             }
         }
     }
+    */
 
     public String loginRequest(User user,String enteredPassword)throws Exception{
         String url = BASE_URL+LOGIN;
@@ -145,10 +156,7 @@ public class ServerManager {
 
         // read json file and save in User
         StringBuffer response = readJsonIntoString(connection);
-        JSONObject returnJson = new JSONObject(response.toString());
-
-        user.setId(returnJson.getString("id"));
-
+        user = new Gson().fromJson(response.toString(),User.class);
         return SUCCESS;
 
     }
@@ -164,9 +172,8 @@ public class ServerManager {
         }
 
         StringBuffer response = readJsonIntoString(connection);
-        JSONArray responseJson = new JSONArray(response.toString());
-        int flag = 1;
-        saveJsonArrays(responseJson,user,flag);
+        User [] allUsers = new Gson().fromJson(response.toString(),User[].class);
+        user.setAllUsers(Arrays.asList(allUsers));
         return SUCCESS;
     }
 
@@ -182,9 +189,9 @@ public class ServerManager {
         }
 
         StringBuffer response = readJsonIntoString(connection);
-        JSONObject returnJson = new JSONObject(response.toString());
-        saveJsonArraysWithIds(returnJson,user);
-
+        //JSONObject returnJson = new JSONObject(response.toString());
+        //saveJsonArraysWithIds(returnJson,user);
+        user = new Gson().fromJson(response.toString(),User.class);
         return SUCCESS;
     }
 
@@ -199,9 +206,10 @@ public class ServerManager {
         }
 
         StringBuffer response = readJsonIntoString(connection);
-        JSONArray responseJson = new JSONArray(response.toString());
-        saveJsonArrays(responseJson,user,0);
-
+        //JSONArray responseJson = new JSONArray(response.toString());
+        //saveJsonArrays(responseJson,user,0);
+        User[] listMonitoring = new Gson().fromJson(response.toString(), User[].class);
+        user.setMonitorsUsers(Arrays.asList(listMonitoring));
         return SUCCESS;
     }
 
@@ -213,17 +221,14 @@ public class ServerManager {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id",interactUser.getId());
 
-        PrintStream printStream = new PrintStream(connection.getOutputStream());
-        printStream.println(jsonObject.toString());
-        printStream.close();
+        sendJson(connection,jsonObject);
 
         if (connection.getResponseCode() != 201) {
-            // failed
             return UNSUCCESSFUL;
         }
+
         StringBuffer response = readJsonIntoString(connection);
-        JSONArray responseJson = new JSONArray(response.toString());
-        saveJsonArrays(responseJson,mainUser,0);
+        mainUser = new Gson().fromJson(response.toString(),User.class);
         return SUCCESS;
     }
 
@@ -240,5 +245,7 @@ public class ServerManager {
         }
         return SUCCESS;
     }
+
+
 
 }

@@ -18,15 +18,16 @@ public class User {
     private List<User> monitorsUsers;
     private List<User> monitoredByUsers;
     private List<User> allUsers;
-    //private list<Group> Group = new ArrayList<>();
+    private List<Group> walkingGroups;
+
 
     public User(){
         id = null;
         name = null;
         email = null;
-        monitorsUsers = new ArrayList<>();
-        monitoredByUsers = new ArrayList<>();
-
+        monitorsUsers = null;
+        monitoredByUsers = null;
+        walkingGroups = null;
     }
 
     public User (String id, String name, String email) {
@@ -86,7 +87,21 @@ public class User {
         this.email = email;
     }
 
+    public void setMonitorsUsers(List<User> monitorsUsers) {
+        this.monitorsUsers = monitorsUsers;
+    }
 
+    public void setMonitoredByUsers(List<User> monitoredByUsers) {
+        this.monitoredByUsers = monitoredByUsers;
+    }
+
+    public void setAllUsers(List<User> allUsers) {
+        this.allUsers = allUsers;
+    }
+
+    public void setWalkingGroups(List<Group> walkingGroups) {
+        this.walkingGroups = walkingGroups;
+    }
 
     public static String getToken() throws Exception{
         return token;
