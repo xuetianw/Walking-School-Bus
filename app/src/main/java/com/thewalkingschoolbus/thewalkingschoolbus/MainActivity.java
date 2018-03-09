@@ -10,6 +10,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
+import com.thewalkingschoolbus.thewalkingschoolbus.Api_Binding.GetUserAsyncTask;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+
+import static com.thewalkingschoolbus.thewalkingschoolbus.Api_Binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
+
+
 /**
  * MainActivity
  * Description here.
@@ -97,16 +104,40 @@ public class MainActivity extends AppCompatActivity {
                 loginName = nameET.getText().toString();
                 registerEmail = emailET.getText().toString();
                 loginPassword = passwordET.getText().toString();
+
                 if(loginName.isEmpty() || registerEmail.isEmpty()|| loginPassword.isEmpty()){
                     Toast.makeText(getApplicationContext(),FIELD_NOT_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
-                } else {
+                }
+
+                User user = new User();
+                user.setEmail(registerEmail);
+
+                new GetUserAsyncTask(LOGIN_REQUEST, user,null, null, new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(String result) {
+                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+                        if(result.equals("SUCCESSFUL")){
+
+                            //Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
+                            //startActivity(intent);
+                        }
+                    }
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }).execute();
+
+
+                /*else {
                     if (ifLoginNameAndPasswordCorrect(registerEmail, loginName, loginPassword)){
                         Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
                         startActivity(intent);
                         storeUserInfoToSharePreferences();
                     }
                 }
+                */
             }
         });
     }
