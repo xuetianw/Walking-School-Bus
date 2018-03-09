@@ -2,6 +2,7 @@ package com.thewalkingschoolbus.thewalkingschoolbus.API_Binding;
 
 import android.util.Log;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
 import com.google.gson.Gson;
@@ -30,6 +31,11 @@ public class ServerManager {
     private String LIST_USER = "/users";
     private String GET_USER = "/users/";
     private String USER_MONITORING_LIST = "/monitorsUsers";
+    private String CREATE_MONITORING_LIST = "/users/%s/monitorsUsers";
+    private String DELETE_MONITORING = "/users/%s/monitorsUsers/%s";
+    private String LIST_GROUPS = "/groups";
+
+
 
     private String SUCCESS = "SUCCESSFUL";
     private String UNSUCCESSFUL = "UNSUCCESSFUL";
@@ -203,24 +209,27 @@ public class ServerManager {
         return SUCCESS;
     }
 
-    public String listGroups(User user){
+    public String listGroups(Group group)throws Exception{
+        String url = BASE_URL+LIST_GROUPS;
+        HttpsURLConnection connection = httpRequest(url,GET);
 
         return null;
     }
 
-    public String createGroup(User user){
+    public String createGroup(Group group){
+
         return null;
     }
 
-    public String getOneGroup(User user){
+    public String getOneGroup(Group group)throws Exception{
         return null;
     }
 
-    public String updateExistingGroup(User user){
+    public String updateExistingGroup(Group group)throws Exception{
         return null;
     }
 
-    public String deleteGroup(User user){
+    public String deleteGroup(Group group)throws Exception{
         return null;
     }
 

@@ -5,6 +5,6 @@ package com.thewalkingschoolbus.thewalkingschoolbus.Interface;
  */
 
 public interface OnTaskComplete {
-    public void onSuccess(String result);
+    public void onSuccess(Object result);
     public void onFailure(Exception e);
 }
