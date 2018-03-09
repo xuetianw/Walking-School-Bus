@@ -49,7 +49,7 @@ public class ServerManager {
     }
 
     private void authorizationWithOutBody(HttpsURLConnection connection) throws Exception{
-        connection.setRequestProperty("Bearer <token>", User.getToken());
+        connection.setRequestProperty("Authorization", User.getToken());
         PrintStream printStream = new PrintStream(connection.getOutputStream());
         printStream.close();
     }
@@ -86,7 +86,7 @@ public class ServerManager {
         }
     }
 
-    private void saveJsonArrays(JSONArray responseJson,User user)throws Exception{
+    private void saveJsonArrays(JSONArray responseJson,User user,int flag)throws Exception{
         for (int i = 0; i < responseJson.length();i++){
             JSONObject tmpJsonObject = responseJson.getJSONObject(i);
             User tmpUser = new User();
@@ -94,8 +94,11 @@ public class ServerManager {
             tmpUser.setName(tmpJsonObject.getString("name"));
             tmpUser.setId(tmpJsonObject.getString("email"));
             saveJsonArraysWithIds(tmpJsonObject,tmpUser);
-            user.appendMonitoringUser(i, tmpUser);
-
+            if(flag == 0) {
+                user.appendMonitoringUser(i, tmpUser);
+            }else if(flag == 1){
+                user.appendAllUsers(i,tmpUser);
+            }
         }
     }
 
@@ -119,7 +122,7 @@ public class ServerManager {
         String token = connection.getResponseMessage();
         Log.i(TAG, "token: "+responseCode );
 
-        User.setToken(token);
+        User.setToken("Bearer "+token);
         return SUCCESS;
     }
 
@@ -150,7 +153,7 @@ public class ServerManager {
 
     }
 
-    public String getUsers()throws Exception {
+    public String getUsers(User user)throws Exception {
         String url = BASE_URL+LIST_USER;
         HttpsURLConnection connection = httpRequest(url,GET);
         authorizationWithOutBody(connection);
@@ -160,8 +163,10 @@ public class ServerManager {
             return UNSUCCESSFUL;
         }
 
-
-
+        StringBuffer response = readJsonIntoString(connection);
+        JSONArray responseJson = new JSONArray(response.toString());
+        int flag = 1;
+        saveJsonArrays(responseJson,user,flag);
         return SUCCESS;
     }
 
@@ -195,15 +200,15 @@ public class ServerManager {
 
         StringBuffer response = readJsonIntoString(connection);
         JSONArray responseJson = new JSONArray(response.toString());
-        saveJsonArrays(responseJson,user);
+        saveJsonArrays(responseJson,user,0);
 
         return SUCCESS;
     }
 
-    public String CreateMonitoring(User mainUser, User interactUser) throws Exception {
+    public String createMonitoring(User mainUser, User interactUser) throws Exception {
         String url = BASE_URL+GET_USER+mainUser.getId()+USER_MONITORING_LIST;
         HttpsURLConnection connection = httpRequest(url,POST);
-        connection.setRequestProperty("Bearer <token>", User.getToken());
+        connection.setRequestProperty("Authorization", User.getToken());
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id",interactUser.getId());
@@ -218,7 +223,7 @@ public class ServerManager {
         }
         StringBuffer response = readJsonIntoString(connection);
         JSONArray responseJson = new JSONArray(response.toString());
-        saveJsonArrays(responseJson,mainUser);
+        saveJsonArrays(responseJson,mainUser,0);
         return SUCCESS;
     }
 

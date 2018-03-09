@@ -15,16 +15,18 @@ public class User {
     private String name;
     private String email;
 
-    private List<User> monitoringUser;
-    private List<User> monitoringByUser;
-    // private list<Group> Group = new ArrayList<>();
+    private List<User> monitorsUsers;
+    private List<User> monitoredByUsers;
+    private List<User> allUsers;
+    //private list<Group> Group = new ArrayList<>();
 
     public User(){
         id = null;
         name = null;
         email = null;
-        monitoringUser = new ArrayList<>();
-        monitoringByUser = new ArrayList<>();
+        monitorsUsers = new ArrayList<>();
+        monitoredByUsers = new ArrayList<>();
+
     }
 
     public User (String id, String name, String email) {
@@ -47,24 +49,27 @@ public class User {
     }
 
     public List<User> getMonitoringUser(){
-        return monitoringUser;
-    }
-
-    public void appendMonitoringUser(User user){
-        monitoringUser.add(user);
+        return monitorsUsers;
     }
 
     public List<User> getMonitoringByUser(){
-        return monitoringByUser;
+        return monitoredByUsers;
+    }
+
+    public List<User> getAllUsers(){
+        return allUsers;
     }
 
     public void appendMonitoringByUser(int position,User user){
-        monitoringByUser.add(position,user);
+        monitoredByUsers.add(position,user);
     }
 
     public void appendMonitoringUser(int position,User user){
-        monitoringUser.add(position,user);
+        monitorsUsers.add(position,user);
+    }
 
+    public void appendAllUsers(int position,User user){
+        allUsers.add(position,user);
     }
 
     public void setId(String id) {
@@ -87,7 +92,7 @@ public class User {
         return token;
     }
 
-    public static void setToken(String tokenRecived) {
-        token = tokenRecived;
+    public static void setToken(String tokenReceive) {
+        token = tokenReceive;
     }
 }
