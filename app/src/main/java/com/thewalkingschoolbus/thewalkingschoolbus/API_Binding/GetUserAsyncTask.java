@@ -21,7 +21,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, String>{
 
     public GetUserAsyncTask(functionType functionType, User userA, User userB,String password,OnTaskComplete listener){
         functionChoice = functionType;
-        mlistener= listener;
+        mlistener = listener;
         mainUser = userA;
         interactUser = userB;
         passwordEntered = password;
