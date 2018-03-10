@@ -26,18 +26,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDnmdR0qzl77jyb1T1Fg5FTk26v_W0Gk6E" />
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key"/>
 
-        <activity android:name=".MainActivity">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name="com.thewalkingschoolbus.thewalkingschoolbus.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MonitoringActivity" />
-        <activity android:name="com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity"></activity>
+        <activity android:name="com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity">
+
+        </activity>
         <activity
             android:name="com.thewalkingschoolbus.thewalkingschoolbus.MainMenuActivity"
             android:theme="@style/AppTheme.NoActionBar">
