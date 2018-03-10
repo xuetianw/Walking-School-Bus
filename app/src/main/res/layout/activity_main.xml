@@ -24,35 +24,20 @@
             android:id="@+id/registerid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/passwordid"
-            android:layout_marginStart="11dp"
-            android:layout_marginTop="70dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/loginid"
+            android:layout_marginEnd="55dp"
+            android:layout_marginTop="71dp"
             android:text="register"
             tools:layout_editor_absoluteX="209dp"
             tools:layout_editor_absoluteY="401dp" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignBaseline="@+id/nameid"
-            android:layout_alignBottom="@+id/nameid"
-            android:layout_alignParentStart="true"
-            android:text="name"
-            android:textSize="18dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView"
-            android:layout_marginTop="22dp"
+            android:layout_alignParentTop="true"
             android:text="email"
             android:textSize="18dp" />
 
@@ -62,27 +47,16 @@
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/emailid"
-            android:layout_marginTop="26dp"
+            android:layout_marginTop="28dp"
             android:text="password"
             android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/nameid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="32dp"
-            android:ems="10"
-            android:hint="Name"
-            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/emailid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/nameid"
-            android:layout_alignTop="@+id/textView2"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
             android:ems="10"
             android:hint="email"
             android:inputType="textPersonName" />
@@ -101,10 +75,9 @@
             android:id="@+id/loginid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/registerid"
-            android:layout_alignBottom="@+id/registerid"
-            android:layout_alignEnd="@+id/passwordid"
-            android:layout_marginEnd="54dp"
+            android:layout_alignStart="@+id/registerid"
+            android:layout_below="@+id/passwordid"
+            android:layout_marginTop="76dp"
             android:text="Log in" />
 
     </RelativeLayout>
