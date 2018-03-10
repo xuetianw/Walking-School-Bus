@@ -15,12 +15,13 @@ public class User {
     private String name;
     private String email;
 
-    private List<User> monitorsUsers;
     private List<User> monitoredByUsers;
-    private List<User> allUsers;
-    private List<Group> walkingGroups;
-    private List<Group> allGroups;
+    private List<User> monitorsUsers;
 
+    private List<Group> memberOfGroups;
+    private List<Group> leadsGroups;
+
+    private String href;
 
     public User(){
         id = null;
@@ -28,7 +29,7 @@ public class User {
         email = null;
         monitorsUsers = null;
         monitoredByUsers = null;
-        walkingGroups = null;
+        memberOfGroups = null;
     }
 
     public User (String id, String name, String email) {
@@ -42,6 +43,7 @@ public class User {
     public String getId() {
         return id;
     }
+
     public String getName() {
         return name;
     }
@@ -50,28 +52,16 @@ public class User {
         return email;
     }
 
-    public List<User> getMonitoringUser(){
+    public List<User> getMonitorsUsers() {
         return monitorsUsers;
     }
 
-    public List<User> getMonitoringByUser(){
+    public List<User> getMonitoredByUsers() {
         return monitoredByUsers;
     }
 
-    public List<User> getAllUsers(){
-        return allUsers;
-    }
-
-    public void appendMonitoringByUser(int position,User user){
-        monitoredByUsers.add(position,user);
-    }
-
-    public void appendMonitoringUser(int position,User user){
-        monitorsUsers.add(position,user);
-    }
-
-    public void appendAllUsers(int position,User user){
-        allUsers.add(position,user);
+    public List<Group> getMemberOfGroups() {
+        return memberOfGroups;
     }
 
     public void setId(String id) {
@@ -92,16 +82,16 @@ public class User {
         this.monitorsUsers = monitorsUsers;
     }
 
-    public void setMonitoredByUsers(List<User> monitoredByUsers) {
-        this.monitoredByUsers = monitoredByUsers;
+    public void setMemberOfGroups(List<Group> memberOfGroups) {
+        this.memberOfGroups = memberOfGroups;
     }
 
-    public void setAllUsers(List<User> allUsers) {
-        this.allUsers = allUsers;
+    public List<Group> getLeadsGroups() {
+        return leadsGroups;
     }
 
-    public void setWalkingGroups(List<Group> walkingGroups) {
-        this.walkingGroups = walkingGroups;
+    public void setLeadsGroups(List<Group> leadsGroups) {
+        this.leadsGroups = leadsGroups;
     }
 
     public static String getToken() throws Exception{
