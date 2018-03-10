@@ -37,8 +37,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".MonitoringActivity" />
-        <activity android:name=".MapsActivity">
-
+        <activity android:name="com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity"></activity>
+        <activity
+            android:name="com.thewalkingschoolbus.thewalkingschoolbus.MainMenuActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name="com.thewalkingschoolbus.thewalkingschoolbus.AddMonitoringActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
