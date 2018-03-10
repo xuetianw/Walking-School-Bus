@@ -1,8 +1,10 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -16,8 +18,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.model.User;
 
 import java.util.ArrayList;
@@ -132,9 +134,12 @@ public class MainMenuActivity extends AppCompatActivity
                     .commit();
             toolbar.setTitle("Group");
         } else if (id == R.id.nav_fragment_map) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, new MapFragment())
-                    .commit();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, new MapFragment());
+            fragmentTransaction.commit();
+//            fragmentManager.beginTransaction()
+//                    .replace(R.id.content_frame, new MapFragment())
+//                    .commit();
             toolbar.setTitle("Map");
         } else if (id == R.id.nav_fragment_monitoring) {
             fragmentManager.beginTransaction()
