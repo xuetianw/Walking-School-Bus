@@ -13,6 +13,9 @@ public class MonitoredByFragment extends android.app.Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (container != null) {
+            container.removeAllViews();
+        }
         View view = inflater.inflate(R.layout.fragment_monitored_by, container, false);
         return view;
     }
