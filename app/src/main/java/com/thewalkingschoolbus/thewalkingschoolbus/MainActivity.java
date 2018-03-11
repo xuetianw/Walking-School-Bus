@@ -113,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
                         if(result != null){
                             Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
-                            //Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
-                            //startActivity(intent);
+                            Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
+                            startActivity(intent);
                         }
                     }
                     @Override
