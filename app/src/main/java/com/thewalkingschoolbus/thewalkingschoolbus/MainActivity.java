@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 new GetUserAsyncTask(LOGIN_REQUEST, user,null, null,loginPassword, new OnTaskComplete() {
                     @Override
                     public void onSuccess(Object result) {
-                        if(result != null){
+                        if(result == null){
                             Toast.makeText(getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
                         }
