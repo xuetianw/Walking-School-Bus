@@ -13,18 +13,18 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
     private functionType functionChoice;
 
     private Object returnObject;
-    private User mainUser;
-    private User interactUser;
+    private User mParentUser;
+    private User mChildUser;
     private String passwordEntered;
     private Exception mException;
     private Group mGroup;
 
-    public GetUserAsyncTask(functionType functionType, User userA, User userB, Group group, String password, OnTaskComplete listener){
+    public GetUserAsyncTask(functionType functionType, User parentUser, User childUser, Group group, String password, OnTaskComplete listener){
         functionChoice = functionType;
         mlistener = listener;
         mGroup = group;
-        mainUser = userA;
-        interactUser = userB;
+        mParentUser = parentUser;
+        mChildUser = childUser;
         passwordEntered = password;
     }
 
@@ -33,31 +33,40 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
             ServerManager server = new ServerManager();
             switch (functionChoice) {
                 case LOGIN_REQUEST:
-                    returnObject = server.loginRequest(mainUser,passwordEntered);
+                    returnObject = server.loginRequest(mParentUser,passwordEntered);
                     break;
                 case CREATE_USER:
-                    returnObject = server.createUser(mainUser,passwordEntered);
+                    returnObject = server.createUser(mParentUser,passwordEntered);
                     break;
                 case LIST_USERS:
-                    returnObject = server.listUsers(mainUser);
+                    returnObject = server.listUsers();
                     break;
-                case GET_SINGLE_USER:
-                    returnObject = server.getSingleUser(mainUser);
+                case GET_USER_BY_ID:
+                    returnObject = server.getUserById(mParentUser);
+                    break;
+                case GET_USER_BY_EMAIL:
+                    returnObject = server.getUserByEmail(mParentUser);
                     break;
                 case USR_MONITORING_LIST:
-                    returnObject = server.userMonitoringList(mainUser);
+                    returnObject = server.userMonitoringList(mParentUser);
+                    break;
+                case USER_MONITORING_BY_LIST:
+                    returnObject = server.userMonitoringByList(mParentUser);
                     break;
                 case CREATE_MONITORING:
-                    returnObject = server.createMonitoring(mainUser,interactUser);
+                    returnObject = server.createMonitoring(mParentUser, mChildUser);
                     break;
                 case DELETE_MONITORING:
-                    returnObject = server.deleteMonitoring(mainUser,interactUser);
+                    returnObject = server.deleteMonitoring(mParentUser, mChildUser);
                     break;
                 case LIST_GROUPS:
                     returnObject = server.listGroups();
                     break;
                 case CREATE_GROUP:
                     returnObject = server.createGroup(mGroup);
+                    break;
+                case CREATE_GROUP_WITH_DETAIL:
+                    returnObject = server.createGroupWithDetail(mGroup);
                     break;
                 case GET_ONE_GROUP:
                     returnObject = server.getOneGroup(mGroup);
@@ -67,15 +76,26 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
                     break;
                 case DELETE_GROUP:
                     returnObject = server.deleteGroup(mGroup);
+                    break;
+                case GET_MEMBERS_OF_GROUP:
+                    returnObject = server.getMembersOfGroup(mGroup);
+                    break;
+                case ADD_MEMBER_TO_GROUP:
+                    returnObject = server.addMemberToGroup(mParentUser,mGroup);
+                    break;
+                case REMOVE_MEMBER_OF_GROUP:
+                    returnObject = server.removeMemberOfGroup(mParentUser,mGroup);
+                    break;
                 default:
-                    returnObject = "Function Not Found";
+                    returnObject = null;
+                    break;
             }
             return returnObject;
 
         } catch (Exception e) {
             mException = e;
         }
-        return "Function Not Found";
+        return null;
     }
 
 
@@ -92,10 +112,11 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
         }
     }
     public enum functionType {
-        LOGIN_REQUEST, CREATE_USER, LIST_USERS, GET_SINGLE_USER,
-        USR_MONITORING_LIST, CREATE_MONITORING, DELETE_MONITORING,
-        LIST_GROUPS,CREATE_GROUP,GET_ONE_GROUP,UPDATE_EXISTING_GROUP,
-        DELETE_GROUP
+        LOGIN_REQUEST, CREATE_USER, LIST_USERS, GET_USER_BY_ID,GET_USER_BY_EMAIL,
+        USR_MONITORING_LIST,USER_MONITORING_BY_LIST, CREATE_MONITORING, DELETE_MONITORING,
+        LIST_GROUPS,CREATE_GROUP,CREATE_GROUP_WITH_DETAIL,
+        GET_ONE_GROUP,UPDATE_EXISTING_GROUP,DELETE_GROUP,
+        GET_MEMBERS_OF_GROUP,ADD_MEMBER_TO_GROUP,REMOVE_MEMBER_OF_GROUP
     }
 
 }

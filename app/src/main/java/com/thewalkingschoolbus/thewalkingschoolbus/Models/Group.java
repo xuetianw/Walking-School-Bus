@@ -8,20 +8,36 @@ import java.util.List;
  */
 
 public class Group {
+
+
+    private String id;
+
     private String groupDescription;
+
+    private double[] routeLatArray;
+    private double[] routeLngArray;
+
     private User leader;
     private List<User> memberUsers;
-    private float[] routeLatArray;
-    private float[] routeLngArray;
+
     private String href;
 
     public Group(){
+        id = null;
         groupDescription = null;
         leader=null;
         memberUsers = new ArrayList<>();
-        routeLatArray = new float[3];
-        routeLngArray = new float[3];
+        routeLatArray = new double[3];
+        routeLngArray = new double[3];
         href = null;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getGroupDescription() {
@@ -30,6 +46,22 @@ public class Group {
 
     public void setGroupDescription(String groupDescription) {
         this.groupDescription = groupDescription;
+    }
+
+    public double[] getRouteLatArray() {
+        return routeLatArray;
+    }
+
+    public void setRouteLatArray(double[] routeLatArray) {
+        this.routeLatArray = routeLatArray;
+    }
+
+    public double[] getRouteLngArray() {
+        return routeLngArray;
+    }
+
+    public void setRouteLngArray(double[] routeLngArray) {
+        this.routeLngArray = routeLngArray;
     }
 
     public User getLeader() {
@@ -46,22 +78,6 @@ public class Group {
 
     public void setMemberUsers(List<User> memberUsers) {
         this.memberUsers = memberUsers;
-    }
-
-    public float[] getRouteLatArray() {
-        return routeLatArray;
-    }
-
-    public void setRouteLatArray(float[] routeLatArray) {
-        this.routeLatArray = routeLatArray;
-    }
-
-    public float[] getRouteLngArray() {
-        return routeLngArray;
-    }
-
-    public void setRouteLngArray(float[] routeLngArray) {
-        this.routeLngArray = routeLngArray;
     }
 
     public String getHref() {
