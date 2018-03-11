@@ -1,7 +1,12 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -9,13 +14,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,7 +34,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -38,6 +42,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.EnterGroupNameDialogFragment;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinder;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinderListener;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.Route;
@@ -66,10 +71,10 @@ public class MapFragment extends android.support.v4.app.Fragment {
 
     private GoogleMap mMap;
     private Boolean mLocationPermissionGranted = false;
+    private Boolean mValidRouteEstablished = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private View view;
 
-    private Button btnFindPath;
     private EditText etOrigin;
     private EditText etDestination;
     private List<Marker> originMarkers = new ArrayList<>();
@@ -90,11 +95,18 @@ public class MapFragment extends android.support.v4.app.Fragment {
         }
         etOrigin = (EditText) view.findViewById(R.id.etOrigin);
         etDestination = (EditText) view.findViewById(R.id.etDestination);
-        btnFindPath = (Button) view.findViewById(R.id.btnFindPath);
+        Button btnFindPath = (Button) view.findViewById(R.id.btnFindPath);
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendRequest();
+            }
+        });
+        Button btnCreateGroup = (Button) view.findViewById(R.id.btnCreateGroup);
+        btnCreateGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayCreateGroupDialog();
             }
         });
 
@@ -164,9 +176,6 @@ public class MapFragment extends android.support.v4.app.Fragment {
     private void initMap() {
         Log.d(TAG, "initMap: initializing map");
 
-//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.map);
-
         SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager()
                 .findFragmentById(R.id.map);
 
@@ -176,6 +185,7 @@ public class MapFragment extends android.support.v4.app.Fragment {
                 Log.d(TAG, "onMapReady: map is ready");
 
                 mMap = googleMap;
+                mMap.setPadding(0, 600, 0, 0); // Boundaries for google map buttons
                 if (mLocationPermissionGranted) {
                     getDeviceLocation();
                     if (ActivityCompat.checkSelfPermission(getActivity(),
@@ -207,12 +217,16 @@ public class MapFragment extends android.support.v4.app.Fragment {
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
-                            Location currentLocation = (Location) task.getResult();
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+                            Location currentLocation = (Location) task.getResult(); // TODO: BUG: Occasionally, even though task.isSuccessful, current location will return null and crash app.
+                            if (currentLocation == null) {
+                                Toast.makeText(getActivity(), "Cannot find current location. (error code 1)", Toast.LENGTH_SHORT).show();
+                            } else {
+                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+                            }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
-                            // Toast.makeText(this, "Cannot find current location.", Toast.LENGTH_LONG).show(); //TODO: FIX THIS DAMNIT
+                            Toast.makeText(getActivity(), "Cannot find current location. (error code 2)", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -243,8 +257,7 @@ public class MapFragment extends android.support.v4.app.Fragment {
             new DirectionFinder(new DirectionFinderListener() {
                 @Override
                 public void onDirectionFinderStart() {
-                    progressDialog = ProgressDialog.show(getActivity(), "Please wait.",
-                            "Finding direction..!", true);
+                    displayProgressDialog();
 
                     if (originMarkers != null) {
                         for (Marker marker : originMarkers) {
@@ -267,6 +280,7 @@ public class MapFragment extends android.support.v4.app.Fragment {
 
                 @Override
                 public void onDirectionFinderSuccess(List<Route> routes) {
+                    mValidRouteEstablished = true;
                     progressDialog.dismiss();
                     polylinePaths = new ArrayList<>();
                     originMarkers = new ArrayList<>();
@@ -288,7 +302,7 @@ public class MapFragment extends android.support.v4.app.Fragment {
 
                         PolylineOptions polylineOptions = new PolylineOptions().
                                 geodesic(true).
-                                color(Color.BLUE).
+                                color(getResources().getColor(R.color.logoBlue)).
                                 width(10);
 
                         for (int i = 0; i < route.points.size(); i++)
@@ -302,5 +316,40 @@ public class MapFragment extends android.support.v4.app.Fragment {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+    private void displayProgressDialog() {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        progressDialog.setMessage("Finding direction...");
+//        progressDialog.setCancelable(false);
+//        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                progressDialog.dismiss();
+//            }
+//        });
+        progressDialog.show();
+
+//        progressDialog = ProgressDialog.show(getActivity(), "Please wait.",
+//                "Finding direction..!", true);
+    }
+
+    private void displayCreateGroupDialog() {
+        if (mValidRouteEstablished) {
+            // Create dialog which calls createGroup when user enters valid group name.
+            android.support.v4.app.FragmentManager manager = getFragmentManager();
+            EnterGroupNameDialogFragment dialog = new EnterGroupNameDialogFragment();
+            dialog.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+            dialog.show(manager, "MessageDialog");
+        } else {
+            Toast.makeText(getActivity(), "Please enter valid path.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static void createGroup(Context context) {
+
+        // Add to group list using NAME, ORIGIN, DESTINATION
+        // Transition to group window
     }
 }
