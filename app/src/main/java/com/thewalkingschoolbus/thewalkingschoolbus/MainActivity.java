@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String REGISTER_SUCCESSFULLY_MESSAGE = "register succesfully";
     public static final String ACCOUNT_DOES_NOT_EXIST_MESSAGE = "that account does not exist";
     public static final String PASSWORD_AND_NAME_NOT_CORRECT_MESSAGE = "password and name both are not correct";
-    public static final String PASSWORD_NOT_CORRECT_MESSAGE = "password is not correct";
-    public static final String LOGIN_NAME_NOT_CORRECT_MESSAGE = "login name is not correct";
+    public static final String REGISTER_FAIL_MESSAGE = "register failed";
+    public static final String LOGIN_FAIL_MESSAGE = "login failed";
     public static final String SUCCESSFUL_LOGIN_MESSAGE = "login successfully";
     EditText emailET;
     EditText passwordET;
@@ -111,6 +111,10 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Object result) {
                         if(result != null){
+                            Toast.makeText(getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                        else {
                             Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
                             Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
