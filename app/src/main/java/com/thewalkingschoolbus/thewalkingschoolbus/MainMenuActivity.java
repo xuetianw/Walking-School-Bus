@@ -20,7 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.model.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,16 +170,16 @@ public class MainMenuActivity extends AppCompatActivity
     public static List<User> monitoredByUsers;
     private void setupTest() {
         registeredUsers = new ArrayList<>();
-        registeredUsers.add(new User(0, "John", "john@email.com"));
-        registeredUsers.add(new User(1, "Jane", "jane@email.com"));
+        registeredUsers.add(new User("0", "John", "john@email.com"));
+        registeredUsers.add(new User("1", "Jane", "jane@email.com"));
 
         monitoringUsers = new ArrayList<>();
-        monitoringUsers.add(new User(2, "Josh", "josh@email.com"));
-        monitoringUsers.add(new User(3, "Fred", "fred@email.com"));
+        monitoringUsers.add(new User("2", "Josh", "josh@email.com"));
+        monitoringUsers.add(new User("3", "Fred", "fred@email.com"));
 
         monitoredByUsers = new ArrayList<>();
-        monitoredByUsers.add(new User(4, "Jacky", "jacky@email.com"));
-        monitoredByUsers.add(new User(5, "Benny", "benny@email.com"));
+        monitoredByUsers.add(new User("4", "Jacky", "jacky@email.com"));
+        monitoredByUsers.add(new User("5", "Benny", "benny@email.com"));
     }
     // TEST
 }
