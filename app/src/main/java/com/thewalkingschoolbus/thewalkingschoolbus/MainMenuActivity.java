@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.model.User;
 
 import java.util.ArrayList;
@@ -168,6 +169,7 @@ public class MainMenuActivity extends AppCompatActivity
     public static List<User> registeredUsers;
     public static List<User> monitoringUsers;
     public static List<User> monitoredByUsers;
+    public static List<Group> existingGroups;
     private void setupTest() {
         registeredUsers = new ArrayList<>();
         registeredUsers.add(new User(0, "John", "john@email.com"));
@@ -180,6 +182,25 @@ public class MainMenuActivity extends AppCompatActivity
         monitoredByUsers = new ArrayList<>();
         monitoredByUsers.add(new User(4, "Jacky", "jacky@email.com"));
         monitoredByUsers.add(new User(5, "Benny", "benny@email.com"));
+
+        existingGroups = new ArrayList<>();
+        Group group1 = new Group();
+        group1.setId("SFU to JOYCE STATION");
+        group1.setRouteLatArray(new double[]{49.2781,49.2384,0});
+        group1.setRouteLngArray(new double[]{-122.9199,-123.0318,0});
+
+        Group group2 = new Group();
+        group2.setId("UBC to GASTON PARK");
+        group2.setRouteLatArray(new double[]{49.2606,49.2359,0});
+        group2.setRouteLngArray(new double[]{-123.2459,-123.0309,0});
+
+        Group group3 = new Group();
+        group3.setId("JOYCE STATION to CENTRAL PARK");
+        group3.setRouteLatArray(new double[]{49.2384,49.2276,0});
+        group3.setRouteLngArray(new double[]{-123.0318,-123.0179,0});
+
+        existingGroups.add(group1);
+        existingGroups.add(group2);
+        existingGroups.add(group3);
     }
-    // TEST
 }

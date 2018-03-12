@@ -43,6 +43,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.EnterGroupNameDialogFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinder;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinderListener;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.Route;
@@ -352,4 +353,22 @@ public class MapFragment extends android.support.v4.app.Fragment {
         // Add to group list using NAME, ORIGIN, DESTINATION
         // Transition to group window
     }
+
+    private static final Double DEFAULT_SEARCH_RADIUS = 0.005;
+
+    private List<Group> searchNearbyGroups() {
+        // Get list of groups from database
+        List<Group> groupList = MainMenuActivity.existingGroups;
+
+
+
+        for (Group group : MainMenuActivity.existingGroups) {
+
+        }
+
+
+        return new ArrayList<>();
+    }
+
+
 }
