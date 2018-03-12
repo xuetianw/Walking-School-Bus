@@ -121,7 +121,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         etOrigin = (AutoCompleteTextView) view.findViewById(R.id.etOrigin);
         etDestination = (AutoCompleteTextView) view.findViewById(R.id.etDestination);
 
-        init();
+
 
         Button btnFindPath = (Button) view.findViewById(R.id.btnFindPath);
         btnFindPath.setOnClickListener(new View.OnClickListener() {
@@ -145,12 +145,14 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         Log.d(TAG, "initializing");
 
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(getActivity())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
+        if (mGoogleApiClient != null){
+            mGoogleApiClient = new GoogleApiClient
+                    .Builder(getActivity())
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .enableAutoManage(getActivity(), this)
+                    .build();
+        }
 
         mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(getActivity(), mGoogleApiClient,
                 LAT_LNG_BOUNDS, null);
@@ -317,6 +319,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
                 mMap = googleMap;
                 mMap.setPadding(0, 600, 0, 0); // Boundaries for google map buttons
                 if (mLocationPermissionGranted) {
+                    init();
                     getDeviceLocation();
                     if (ActivityCompat.checkSelfPermission(getActivity(),
                             android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
