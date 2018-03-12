@@ -81,7 +81,27 @@ import java.util.List;
 * map_modules from source code by "Hiep Mai Thanh"
 *   https://github.com/hiepxuan2008/GoogleMapDirectionSimple
 */
-public class MapFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback,
+        GoogleApiClient.OnConnectionFailedListener {
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Toast.makeText(getActivity(), "Map is Ready", Toast.LENGTH_SHORT).show();
+        mMap = googleMap;
+        mMap.setPadding(0, 600, 0, 0); // Boundaries for google map buttons
+        if (mLocationPermissionGranted) {
+            init();
+            getDeviceLocation();
+            if (ActivityCompat.checkSelfPermission(getActivity(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getActivity(),
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        }
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+    }
 
     private static final String TAG = "MapFragment";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234;
@@ -315,27 +335,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager()
                 .findFragmentById(R.id.map);
 
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                Log.d(TAG, "onMapReady: map is ready");
-
-                mMap = googleMap;
-                mMap.setPadding(0, 600, 0, 0); // Boundaries for google map buttons
-                if (mLocationPermissionGranted) {
-                    init();
-                    getDeviceLocation();
-                    if (ActivityCompat.checkSelfPermission(getActivity(),
-                            android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(getActivity(),
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
-                }
-                mMap.setMyLocationEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            }
-        });
+        mapFragment.getMapAsync(this);
     }
 
     private void getDeviceLocation() {
@@ -600,4 +600,6 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
             places.release();
         }
     };
+
+
 }
