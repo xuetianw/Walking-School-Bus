@@ -105,6 +105,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
             new LatLng(-40, -168), new LatLng(71, 136));
     private PlaceInfo mPlace;
+    private Marker mMarker;
 
     @Nullable
     @Override
@@ -120,7 +121,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         etOrigin = (AutoCompleteTextView) view.findViewById(R.id.etOrigin);
         etDestination = (AutoCompleteTextView) view.findViewById(R.id.etDestination);
 
-        init();
+
 
         Button btnFindPath = (Button) view.findViewById(R.id.btnFindPath);
         btnFindPath.setOnClickListener(new View.OnClickListener() {
@@ -144,12 +145,14 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         Log.d(TAG, "initializing");
 
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(getActivity())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
+        if (mGoogleApiClient != null){
+            mGoogleApiClient = new GoogleApiClient
+                    .Builder(getActivity())
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .enableAutoManage(getActivity(), this)
+                    .build();
+        }
 
         mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(getActivity(), mGoogleApiClient,
                 LAT_LNG_BOUNDS, null);
@@ -316,6 +319,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
                 mMap = googleMap;
                 mMap.setPadding(0, 600, 0, 0); // Boundaries for google map buttons
                 if (mLocationPermissionGranted) {
+                    init();
                     getDeviceLocation();
                     if (ActivityCompat.checkSelfPermission(getActivity(),
                             android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -371,12 +375,44 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
+        mMap.clear();
+
         if(!title .equals("My Location")){
             MarkerOptions options = new MarkerOptions()
                     .position(latLng)
                     .title(title);
             mMap.addMarker(options);
         }
+        hideSoftKeyboard();
+
+    }
+    private void moveCamera(LatLng latLng, float zoom, PlaceInfo placeInfo) {
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
+        mMap.clear();
+
+        if(placeInfo != null){
+            try {
+                String snippet = "Address: " + placeInfo.getAddress() + "\n" +
+                        "Phone Number: " + placeInfo.getPhoneNumber() + "\n" +
+                        "Website: " + placeInfo.getWebsiteUri() + "\n" +
+                        "Price Rating: " + placeInfo.getRating() + "\n";
+
+                MarkerOptions options = new MarkerOptions()
+                        .position(latLng)
+                        .title(placeInfo.getName())
+                        .snippet(snippet);
+                mMarker = mMap.addMarker(options);
+
+
+            }catch (NullPointerException e) {
+                Log.e(TAG, "moveCamera: NullPointerException " + e.getMessage() );
+            }
+        }else {
+            mMap.addMarker(new MarkerOptions().position(latLng));
+        }
+
         hideSoftKeyboard();
 
     }
@@ -555,7 +591,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
             }
 
             moveCamera(new LatLng(place.getViewport().getCenter().latitude,
-                    place.getViewport().getCenter().longitude), DEFAULT_ZOOM, mPlace.getName());
+                    place.getViewport().getCenter().longitude), DEFAULT_ZOOM, mPlace);
 
             places.release();
         }
