@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -27,6 +28,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,13 +36,16 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -69,7 +74,7 @@ import java.util.List;
 * map_modules from source code by "Hiep Mai Thanh"
 *   https://github.com/hiepxuan2008/GoogleMapDirectionSimple
 */
-public class MapFragment extends android.support.v4.app.Fragment {
+public class MapFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "MapFragment";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234;
@@ -82,12 +87,16 @@ public class MapFragment extends android.support.v4.app.Fragment {
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private View view;
 
-    private EditText etOrigin;
-    private EditText etDestination;
+    private AutoCompleteTextView etOrigin;
+    private AutoCompleteTextView etDestination;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
+    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
+    private GoogleApiClient mGoogleApiClient;
+    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
+            new LatLng(-40, -168), new LatLng(71, 136));
 
     @Nullable
     @Override
@@ -100,8 +109,8 @@ public class MapFragment extends android.support.v4.app.Fragment {
         if (isServicesOK()) {
             getLocationPermission();
         }
-        etOrigin = (EditText) view.findViewById(R.id.etOrigin);
-        etDestination = (EditText) view.findViewById(R.id.etDestination);
+        etOrigin = (AutoCompleteTextView) view.findViewById(R.id.etOrigin);
+        etDestination = (AutoCompleteTextView) view.findViewById(R.id.etDestination);
 
         init();
 
@@ -125,6 +134,22 @@ public class MapFragment extends android.support.v4.app.Fragment {
 
     private void init(){
         Log.d(TAG, "initializing");
+
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(getActivity())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(getActivity(), this)
+                .build();
+
+        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(getActivity(), mGoogleApiClient,
+                LAT_LNG_BOUNDS, null);
+
+
+        etOrigin.setAdapter(mPlaceAutocompleteAdapter);
+        etDestination.setAdapter(mPlaceAutocompleteAdapter);
+
         etOrigin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -463,5 +488,10 @@ public class MapFragment extends android.support.v4.app.Fragment {
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
