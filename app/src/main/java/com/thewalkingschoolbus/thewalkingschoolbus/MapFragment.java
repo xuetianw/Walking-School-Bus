@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,10 +19,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -47,6 +53,7 @@ import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinder;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinderListener;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.Route;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +102,9 @@ public class MapFragment extends android.support.v4.app.Fragment {
         }
         etOrigin = (EditText) view.findViewById(R.id.etOrigin);
         etDestination = (EditText) view.findViewById(R.id.etDestination);
+
+        init();
+
         Button btnFindPath = (Button) view.findViewById(R.id.btnFindPath);
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +121,50 @@ public class MapFragment extends android.support.v4.app.Fragment {
         });
 
         return view;
+    }
+
+    private void init(){
+        Log.d(TAG, "initializing");
+        etOrigin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_DONE
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || keyEvent.getAction() == keyEvent.ACTION_DOWN
+                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
+
+                    // execute our method for searching
+                    geoLocate();
+                }
+
+                return false;
+            }
+        });
+
+        hideSoftKeyboard();
+    }
+
+    private void geoLocate() {
+        Log.d(TAG, "geoLocate: geolocating");
+
+        String searchString = etOrigin.getText().toString();
+        Geocoder geocoder = new Geocoder(getActivity());
+        List<Address> list = new ArrayList<>();
+        try {
+            list = geocoder.getFromLocationName(searchString, 1);
+        }catch (IOException e){
+            Log.e(TAG, "geoLocate: IOException;" + e.getMessage());
+        }
+
+        if(list.size() >0 ){
+            Address address = list.get(0);
+
+            Log.d(TAG, "geoLocate found a location " + address.toString());
+
+            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM,
+                    address.getAddressLine(0));
+
+        }
     }
 
     public boolean isServicesOK(){
@@ -221,7 +275,9 @@ public class MapFragment extends android.support.v4.app.Fragment {
                             if (currentLocation == null) {
                                 Toast.makeText(getActivity(), "Cannot find current location. (error code 1)", Toast.LENGTH_SHORT).show();
                             } else {
-                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                        DEFAULT_ZOOM,
+                                        "My Location");
                             }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
@@ -236,9 +292,18 @@ public class MapFragment extends android.support.v4.app.Fragment {
         }
     }
 
-    private void moveCamera(LatLng latLng, float zoom) {
+    private void moveCamera(LatLng latLng, float zoom, String title) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
+        if(!title .equals("My Location")){
+            MarkerOptions options = new MarkerOptions()
+                    .position(latLng)
+                    .title(title);
+            mMap.addMarker(options);
+        }
+        hideSoftKeyboard();
+
     }
 
     private void sendRequest() {
@@ -351,5 +416,13 @@ public class MapFragment extends android.support.v4.app.Fragment {
 
         // Add to group list using NAME, ORIGIN, DESTINATION
         // Transition to group window
+    }
+
+    private void hideSoftKeyboard(){
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }
