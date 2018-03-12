@@ -59,6 +59,15 @@
                     android:layout_weight="1"
                     android:backgroundTint="@color/common_google_signin_btn_text_dark_disabled"
                     android:text="NEW GROUP" />
+
+                <Button
+                    android:id="@+id/btnViewGroup"
+                    style="@android:style/Widget.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/common_google_signin_btn_text_dark_disabled"
+                    android:text="VIEW GROUP" />
             </LinearLayout>
 
             <ImageView

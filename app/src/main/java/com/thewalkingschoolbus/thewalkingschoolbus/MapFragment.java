@@ -1,21 +1,18 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +45,7 @@ import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinder;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinderListener;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.Route;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +106,13 @@ public class MapFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
                 displayCreateGroupDialog();
+            }
+        });
+        Button btnViewGroup = (Button) view.findViewById(R.id.btnViewGroup);
+        btnViewGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayNearbyGroups();
             }
         });
 
@@ -255,6 +260,7 @@ public class MapFragment extends android.support.v4.app.Fragment {
         }
 
         try {
+            // Draw route
             new DirectionFinder(new DirectionFinderListener() {
                 @Override
                 public void onDirectionFinderStart() {
@@ -314,6 +320,9 @@ public class MapFragment extends android.support.v4.app.Fragment {
                 }
             }, origin, destination).execute();
 
+            // Save origin and destination coordinates
+            geoLocate();
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -354,21 +363,122 @@ public class MapFragment extends android.support.v4.app.Fragment {
         // Transition to group window
     }
 
-    private static final Double DEFAULT_SEARCH_RADIUS = 0.005;
 
-    private List<Group> searchNearbyGroups() {
-        // Get list of groups from database
-        List<Group> groupList = MainMenuActivity.existingGroups;
+    private double[] currentRouteLatArray;
+    private double[] currentRouteLngArray;
 
+    private void geoLocate() {
+        Log.d(TAG, "geoLocate: geolocating current route's origin and destination coordinates.");
 
+        currentRouteLatArray = new double[2];
+        currentRouteLngArray = new double[2];
 
-        for (Group group : MainMenuActivity.existingGroups) {
+        String origin = etOrigin.getText().toString();
+        String destination = etDestination.getText().toString();
 
+        Geocoder geocoder = new Geocoder(getActivity());
+        List<Address> originList = new ArrayList<>();
+        List<Address> destinationList = new ArrayList<>();
+        try {
+            originList = geocoder.getFromLocationName(origin, 1);
+            destinationList = geocoder.getFromLocationName(destination, 1);
+        } catch (IOException e) {
+            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
         }
-
-
-        return new ArrayList<>();
+        // Save origin coordinates
+        if (originList.size() > 0) {
+            Address originAddress = originList.get(0);
+            currentRouteLatArray[0] = originAddress.getLatitude();
+            currentRouteLngArray[0] = originAddress.getLongitude();
+        }
+        // Save destination coordinates
+        if (destinationList.size() > 0) {
+            Address destinationAddress = destinationList.get(0);
+            currentRouteLngArray[1] = destinationAddress.getLatitude();
+            currentRouteLatArray[1] = destinationAddress.getLongitude();
+        }
     }
 
+    private static final int DEFAULT_SEARCH_RADIUS_METERS = 1000;
 
+    private void displayNearbyGroups() {
+        if (mValidRouteEstablished) {
+            // Get list of groups from database // TODO: implement real group list from server
+            List<Group> groupList = MainMenuActivity.existingGroups;
+
+            Log.d(TAG, "displayNearbyGroups: current destination Lat, Lng: " + currentRouteLatArray[1] + ", " + currentRouteLngArray[1]);
+            for (Group group : groupList) {
+                // Compare destination difference of current route input and current group being examined. Returns distance in meters in results.
+                float[] results = new float[1];
+                Location.distanceBetween(currentRouteLatArray[1], currentRouteLngArray[1],
+                        group.getRouteLatArray()[1], group.getRouteLngArray()[1],
+                        results);
+                Log.d(TAG, "displayNearbyGroups: distance between destinations in meters(?): " + results[0]);
+                //if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
+                if (true) {
+                    // Display this result on map.
+                    displayGroup(group);
+                }
+            }
+        } else {
+            Toast.makeText(getActivity(), "Please enter valid path.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void displayGroup(Group group) {
+        // Display this group on the map
+        // Display clickable markers
+        // On marker click, display route // TODO: make markers clickable, on click, call joinGroup
+
+        // Draw route
+        try {
+            new DirectionFinder(new DirectionFinderListener() {
+                @Override
+                public void onDirectionFinderStart() {
+
+                }
+
+                @Override
+                public void onDirectionFinderSuccess(List<Route> routes) {
+                    polylinePaths = new ArrayList<>();
+                    originMarkers = new ArrayList<>();
+                    destinationMarkers = new ArrayList<>();
+
+                    for (Route route : routes) {
+                        ((TextView) view.findViewById(R.id.tvDuration)).setText(route.duration.text);
+                        ((TextView) view.findViewById(R.id.tvDistance)).setText(route.distance.text);
+
+                        originMarkers.add(mMap.addMarker(new MarkerOptions()
+                                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue)) // TODO: SET CUSTOM MARKER
+                                .title(route.startAddress)
+                                .position(route.startLocation)));
+                        destinationMarkers.add(mMap.addMarker(new MarkerOptions()
+                                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
+                                .title(route.endAddress)
+                                .position(route.endLocation)));
+
+                        PolylineOptions polylineOptions = new PolylineOptions().
+                                geodesic(true).
+                                color(getResources().getColor(R.color.logoBlue)).
+                                width(10);
+
+                        for (int i = 0; i < route.points.size(); i++)
+                            polylineOptions.add(route.points.get(i));
+
+                        polylinePaths.add(mMap.addPolyline(polylineOptions));
+                    }
+                }
+            },
+                    group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0],
+                    group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1])
+                    .execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void joinGroup(Group group) {
+        // Add group to user's group list
+        // Transition to group window
+    }
 }
