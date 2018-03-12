@@ -141,6 +141,22 @@ public class MapFragment extends android.support.v4.app.Fragment {
             }
         });
 
+        etDestination.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_DONE
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || keyEvent.getAction() == keyEvent.ACTION_DOWN
+                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
+
+                    // execute our method for searching
+                    geoLocate2();
+                }
+
+                return false;
+            }
+        });
+
         hideSoftKeyboard();
     }
 
@@ -148,6 +164,29 @@ public class MapFragment extends android.support.v4.app.Fragment {
         Log.d(TAG, "geoLocate: geolocating");
 
         String searchString = etOrigin.getText().toString();
+        Geocoder geocoder = new Geocoder(getActivity());
+        List<Address> list = new ArrayList<>();
+        try {
+            list = geocoder.getFromLocationName(searchString, 1);
+        }catch (IOException e){
+            Log.e(TAG, "geoLocate: IOException;" + e.getMessage());
+        }
+
+        if(list.size() >0 ){
+            Address address = list.get(0);
+
+            Log.d(TAG, "geoLocate found a location " + address.toString());
+
+            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM,
+                    address.getAddressLine(0));
+
+        }
+    }
+
+    private void geoLocate2() {
+        Log.d(TAG, "geoLocate: geolocating");
+
+        String searchString = etDestination.getText().toString();
         Geocoder geocoder = new Geocoder(getActivity());
         List<Address> list = new ArrayList<>();
         try {
