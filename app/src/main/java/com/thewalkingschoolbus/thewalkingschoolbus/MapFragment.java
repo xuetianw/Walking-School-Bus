@@ -135,9 +135,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
         view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        if (isServicesOK()) {
-            getLocationPermission();
-        }
+        getLocationPermission();
+
         etOrigin = (AutoCompleteTextView) view.findViewById(R.id.etOrigin);
         etDestination = (AutoCompleteTextView) view.findViewById(R.id.etDestination);
 
@@ -269,26 +268,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    public boolean isServicesOK(){
-        Log.d(TAG, "isServicesOK: checking google services version");
-
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
-
-        if(available == ConnectionResult.SUCCESS){
-            //everything is fine and the user can make map requests
-            Log.d(TAG, "isServicesOK: Google Play Services is working");
-            return true;
-        }
-        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-            //an error occurred but we can resolve it
-            Log.d(TAG, "isServicesOK: an error occurred but we can fix it");
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), available, ERROR_DIALOG_REQUEST);
-            dialog.show();
-        }else{
-            Toast.makeText(getActivity(), "You can't make map requests", Toast.LENGTH_SHORT).show();
-        }
-        return false;
-    }
 
     private void getLocationPermission() {
     /*
