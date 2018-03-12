@@ -14,7 +14,7 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 
 /**
@@ -31,13 +31,11 @@ public class MainActivity extends AppCompatActivity {
     public static final String REGISTER_SUCCESSFULLY_MESSAGE = "register succesfully";
     public static final String ACCOUNT_DOES_NOT_EXIST_MESSAGE = "that account does not exist";
     public static final String PASSWORD_AND_NAME_NOT_CORRECT_MESSAGE = "password and name both are not correct";
-    public static final String PASSWORD_NOT_CORRECT_MESSAGE = "password is not correct";
-    public static final String LOGIN_NAME_NOT_CORRECT_MESSAGE = "login name is not correct";
+    public static final String REGISTER_FAIL_MESSAGE = "register failed";
+    public static final String LOGIN_FAIL_MESSAGE = "login failed";
     public static final String SUCCESSFUL_LOGIN_MESSAGE = "login successfully";
-    EditText nameET;
     EditText emailET;
     EditText passwordET;
-    String loginName;
     String loginPassword;
     String registerEmail;
     public static final String AppStates = "UUERLOGIN";
@@ -58,9 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private void getUserLastState(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(AppStates, MODE_PRIVATE);
         registerEmail = preferences.getString(MainActivity.REGISTER_EMAIL, null);
-        loginName = preferences.getString(MainActivity.LOGIN_NAME, null);
         loginPassword = preferences.getString(MainActivity.LOGIN_PASSWORD, null);
-        if(registerEmail != null && loginName != null) {
+        if(registerEmail != null ) {
             Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
             startActivity(intent);
         }
@@ -68,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setupTextviews() {
-        nameET = (EditText)findViewById(R.id.nameid);
         emailET = (EditText)findViewById(R.id.emailid);
         passwordET = (EditText) findViewById(R.id.passwordid);
     }
@@ -81,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loginName = nameET.getText().toString();
                 registerEmail = emailET.getText().toString();
                 loginPassword = passwordET.getText().toString();
                 Intent intent = RegisterActivity.makeIntent(MainActivity.this);
@@ -101,11 +96,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                loginName = nameET.getText().toString();
                 registerEmail = emailET.getText().toString();
                 loginPassword = passwordET.getText().toString();
 
-                if(loginName.isEmpty() || registerEmail.isEmpty()|| loginPassword.isEmpty()){
+                if(registerEmail.isEmpty()|| loginPassword.isEmpty()){
                     Toast.makeText(getApplicationContext(),FIELD_NOT_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
                 }
@@ -113,13 +107,18 @@ public class MainActivity extends AppCompatActivity {
                 User user = new User();
                 user.setEmail(registerEmail);
 
-                new GetUserAsyncTask(LOGIN_REQUEST, user,null, null,"", new OnTaskComplete() {
+                new GetUserAsyncTask(LOGIN_REQUEST, user,null, null,loginPassword, new OnTaskComplete() {
                     @Override
                     public void onSuccess(Object result) {
-                        Toast.makeText(getApplicationContext(), (String)result, Toast.LENGTH_LONG).show();
-                        if(result != null){
-                            //Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
-                            //startActivity(intent);
+                        if(result == null){
+                            Toast.makeText(getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                                    .show();
+                            Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
+                            startActivity(intent);
                         }
                     }
                     @Override
@@ -150,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
 
         editor.putString(REGISTER_EMAIL, registerEmail );
-        editor.putString(LOGIN_NAME, loginName );
         editor.putString(LOGIN_PASSWORD, loginPassword );
         editor.commit();
 
