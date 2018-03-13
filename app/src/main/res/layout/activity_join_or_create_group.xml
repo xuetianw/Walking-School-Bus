@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.thewalkingschoolbus.thewalkingschoolbus.JoinOrCreateGroupActivity">
+
+    <Button
+        android:id="@+id/joinNearbyGroupBut"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="@string/join_nearby_group"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:theme="@style/mButton"
+        app:layout_constraintBottom_toTopOf="@+id/createGroupBut"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.518"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/joinGroupBut"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/join_group"
+        android:theme="@style/mButton"
+        app:layout_constraintEnd_toEndOf="@+id/errorMessage"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/errorMessage" />
+
+    <Button
+        android:id="@+id/createGroupBut"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:text="@string/create_group"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:theme="@style/mButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/joinNearbyGroupBut"
+        app:layout_constraintStart_toStartOf="@+id/joinNearbyGroupBut" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/errorMessage"
+        android:layout_width="0dp"
+        android:layout_height="63dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/groupIdField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:ems="10"
+            android:hint="Enter Group ID To Join Group"
+            android:inputType="number"
+            android:theme="@style/mEditText"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Or"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintBottom_toTopOf="@+id/joinNearbyGroupBut"
+        app:layout_constraintEnd_toEndOf="@+id/joinNearbyGroupBut"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@+id/joinNearbyGroupBut"
+        app:layout_constraintTop_toBottomOf="@+id/joinGroupBut"
+        app:layout_constraintVertical_bias="0.709" />
+
+</android.support.constraint.ConstraintLayout>

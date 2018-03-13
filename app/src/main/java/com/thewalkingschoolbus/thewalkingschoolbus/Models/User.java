@@ -7,9 +7,12 @@ import java.util.List;
  * Created by Jackyx on 2018-03-04.
  */
 
+
 public class User {
 
     private static String token = null;
+
+    private static User loginUser;
 
     private String id;
     private String name;
@@ -39,6 +42,14 @@ public class User {
     }
 
 
+
+    public static User getLoginUser() {
+        return loginUser;
+    }
+
+    public static void setLoginUser(User loginUser) {
+        User.loginUser = loginUser;
+    }
 
     public String getId() {
         return id;
