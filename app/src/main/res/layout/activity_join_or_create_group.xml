@@ -26,8 +26,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:background="@color/common_google_signin_btn_text_light_disabled"
-        android:backgroundTint="@color/logoBlue"
         android:text="@string/join_group"
         android:theme="@style/mButton"
         app:layout_constraintEnd_toEndOf="@+id/errorMessage"

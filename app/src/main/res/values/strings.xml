@@ -9,6 +9,7 @@
     <string name="logout">Logout</string>
     <string name="join_group">JOIN GROUP</string>
     <string name="group_id">GROUP ID:</string>
+    <string name="group_description">GROUP DESCRIPTION:</string>
     <string name="join_nearby_group">JOIN NEARBY GROUP</string>
     <string name="create_group">CREATE GROUP</string>
 </resources>

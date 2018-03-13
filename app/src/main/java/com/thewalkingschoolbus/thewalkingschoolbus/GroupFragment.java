@@ -1,26 +1,32 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.R;
+import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
+
+import java.util.List;
+
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 
 public class GroupFragment extends android.app.Fragment {
 
     private static final String TAG = "GroupFragment";
     private View view;
+    private Group[] mGroup;
 
     @Nullable
     @Override
@@ -29,7 +35,8 @@ public class GroupFragment extends android.app.Fragment {
             container.removeAllViews();
         }
         view = inflater.inflate(R.layout.fragment_group, container, false);
-        populateListView();
+        setUpRefresh();
+        getGroupListAndPopulateList();
         setUpAddButton();
         return view;
 
@@ -50,9 +57,45 @@ public class GroupFragment extends android.app.Fragment {
         * If this is unclear, look at example code in MonitoringFragment.
         */
     }
-    private void populateListView(){
+    private void getGroupListAndPopulateList(){
+        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                User returnUser = (User) result;
+                List<Group> mGroupList = returnUser.getMemberOfGroups();
+                mGroup = new Group[mGroupList.size()];
+                mGroupList.toArray(mGroup);
+                stringsPrep();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+            }
+        }).execute();
+    }
+
+    private void stringsPrep(){
+        String[] mGroupDisplay;
+        int length;
+        if(mGroup == null){
+            mGroupDisplay = new String[0];
+            length = 0;
+        }
+            mGroupDisplay = new String[mGroup.length];
+            length = mGroup.length;
+
+
+        for(int i = 0; i < length;i++){
+            String str = "id: "+mGroup[i].getId() +" "+"Group Name:"+mGroup[i].getGroupDescription();
+            mGroupDisplay[i]=str;
+        }
+
+        populateListView(mGroupDisplay);
+    }
+
+    private void populateListView(String[] mGroupDisplay){
         // create list of item
-        String[] myItems = {"lol 1","lol 2"};
+        String[] myItems = mGroupDisplay;
         // Build adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.group_entry,myItems);
         // configure the list view
@@ -69,7 +112,9 @@ public class GroupFragment extends android.app.Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 TextView textView = (TextView) viewClicked;
-                String message = "You clicked #" + position +"string is " +textView.getText().toString();
+                Group selectedGroup = mGroup[position];
+                Intent intent =  GroupDetailActivity.makeIntent(getActivity(),selectedGroup,User.getLoginUser());
+                startActivity(intent);
             }
         });
     }
@@ -83,5 +128,21 @@ public class GroupFragment extends android.app.Fragment {
                 startActivity(intent);
             }
         });
+    }
+
+    private void setUpRefresh(){
+        final SwipeRefreshLayout mySwipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        getGroupListAndPopulateList();
+                        // This method performs the actual data-refresh operation.
+                        // The method calls setRefreshing(false) when it's finished.
+                        mySwipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
+
     }
 }

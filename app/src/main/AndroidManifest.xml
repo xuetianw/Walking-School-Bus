@@ -41,14 +41,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity" />
         <activity
             android:name=".MainMenuActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddMonitoringActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".JoinOrCreateGroupActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".JoinOrCreateGroupActivity" />
+        <activity android:name=".GroupDetailActivity"></activity>
     </application>
 
 </manifest>
