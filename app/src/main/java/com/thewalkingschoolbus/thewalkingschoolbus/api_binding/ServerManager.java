@@ -155,7 +155,7 @@ public class ServerManager {
             return null;
         }
         // save token
-        String token = connection.getResponseMessage();
+        String token = connection.getHeaderField("authorization");
         Log.i(TAG, "token: "+responseCode );
 
         User.setToken("Bearer "+token);
