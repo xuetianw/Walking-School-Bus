@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +29,9 @@ public class MonitoredbyDetailActivity extends AppCompatActivity {
 
         deleteUser.setEmail(userEmail);
         updateUI();
+        setupStopBeingMonitoredBtn();
     }
+
 
     public static Intent makeIntent(Context context) {
         return new Intent(context, MonitoredbyDetailActivity.class);
@@ -61,5 +65,17 @@ public class MonitoredbyDetailActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }).execute();
+    }
+
+    private void setupStopBeingMonitoredBtn() {
+        Button btn = (Button) findViewById(R.id.steopBeingMoniID);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+        });
     }
 }

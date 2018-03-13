@@ -53,7 +53,7 @@
             android:textSize="24sp" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/steopBeingMoniID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/textView13"

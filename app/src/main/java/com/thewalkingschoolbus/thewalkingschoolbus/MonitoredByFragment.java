@@ -1,5 +1,6 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.LOGIN_FAIL_MESSAGE;
 import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.SUCCESSFUL_LOGIN_MESSAGE;
+import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.loginUser;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class MonitoredByFragment extends android.app.Fragment {
@@ -28,7 +30,7 @@ public class MonitoredByFragment extends android.app.Fragment {
     private View view;
     List<String> monitoredList;
     User []users;
-    public static int DELETE_BEING_MONITORED_REQUEST_CODE = 99;
+    final public static int DELETE_BEING_MONITORED_REQUEST_CODE = 99;
 
     @Nullable
     @Override
@@ -107,5 +109,32 @@ public class MonitoredByFragment extends android.app.Fragment {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case DELETE_BEING_MONITORED_REQUEST_CODE:
+                if(resultCode == Activity.RESULT_OK){
+                    new GetUserAsyncTask(DELETE_MONITORING, MonitoredbyDetailActivity.deleteUser, loginUser, null, null, new OnTaskComplete() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            if(result == null){
+                                Toast.makeText(getActivity().getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                        .show();
+                            } else {
+                                Toast.makeText(getActivity().getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                                        .show();
+
+                            }
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            Toast.makeText(getActivity().getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }).execute();
+                }
+                break;
+        }
     }
 }
