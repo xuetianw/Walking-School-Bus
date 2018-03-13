@@ -42,17 +42,26 @@
             </intent-filter>
 
         </activity>
-        <activity android:name="com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity">
 
+        <activity android:name="com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity">
         </activity>
+
         <activity
             android:name="com.thewalkingschoolbus.thewalkingschoolbus.MainMenuActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
+
         <activity
             android:name="com.thewalkingschoolbus.thewalkingschoolbus.AddMonitoringActivity"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name="com.thewalkingschoolbus.thewalkingschoolbus.JoinOrCreateGroupActivity">
+        </activity>
+
+        <activity
+            android:name="com.thewalkingschoolbus.thewalkingschoolbus.GroupDetailActivity">
         </activity>
     </application>
 
