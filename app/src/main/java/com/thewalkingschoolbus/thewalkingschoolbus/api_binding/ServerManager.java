@@ -1,5 +1,7 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.api_binding;
 
+import android.util.Log;
+
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
@@ -20,8 +22,8 @@ public class ServerManager {
 
     private String API_KEY = "BB390E20-F40E-40D1-BE2D-2F99AAF8E449"; //api key for flame group
     // Debug: Proxy server for plaintext debugging purpose
-    //private String BASE_URL = "http://walkgroup.api.tabjy.com/https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
-    private String BASE_URL="https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
+    private String BASE_URL = "http://walkgroup.api.tabjy.com/https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
+    //private String BASE_URL="https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
     private String LOGIN = "/login";
     private String CREATE_USER = "/users/signup";
     private String LIST_USERS = "/users";
@@ -95,7 +97,7 @@ public class ServerManager {
     private HttpURLConnection httpRequestDelete(String url)throws Exception{
         URL obj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-        connection.setDoOutput(true);
+        //connection.setDoOutput(true);
         connection.setRequestMethod(DELETE);
         connection.setRequestProperty("Content-Type","application/json");
         connection.setRequestProperty("apiKey",API_KEY);
@@ -363,13 +365,15 @@ public class ServerManager {
     // return group object if group is found
     public Group getOneGroup(Group group)throws Exception{
         String url = BASE_URL+String.format(GET_ONE_GROUP,group.getId());
-        HttpURLConnection connection = httpRequestPost(url,null);
+        HttpURLConnection connection = httpRequestGet(url,null);
+
         if(connection.getResponseCode() >= 400) {
             return null;
         }
+
         StringBuffer response = readJsonIntoString(connection);
-        group = new Gson().fromJson(response.toString(),Group.class);
-        return group;
+        Group mGroup = new Gson().fromJson(response.toString(),Group.class);
+        return mGroup;
     }
 
     // take mGroup as parameter to be used as updated group info
@@ -410,7 +414,7 @@ public class ServerManager {
     public User[] getMembersOfGroup (Group group) throws Exception{
         String url = BASE_URL+ String.format(GET_MEMBERS_OF_GROUP,group.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
-
+        Log.i("TAG","responseCode is:"+connection.getResponseCode());
         if(connection.getResponseCode() >= 400) {
             return null;
         }
@@ -447,7 +451,7 @@ public class ServerManager {
         HttpURLConnection connection = httpRequestDelete(url);
 
         if(connection.getResponseCode() >= 400){
-            return UNSUCCESSFUL;
+            return null;
         }
 
         return SUCCESSFUL;

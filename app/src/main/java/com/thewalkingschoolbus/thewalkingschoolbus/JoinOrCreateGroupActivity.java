@@ -70,7 +70,7 @@ public class JoinOrCreateGroupActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Exception e) {
-
+                    Toast.makeText(JoinOrCreateGroupActivity.this, "unable to join group", Toast.LENGTH_LONG).show();
                 }
             }).execute();
         }

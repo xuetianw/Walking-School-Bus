@@ -80,10 +80,10 @@ public class GroupFragment extends android.app.Fragment {
         if(mGroup == null){
             mGroupDisplay = new String[0];
             length = 0;
-        }
+        }else {
             mGroupDisplay = new String[mGroup.length];
             length = mGroup.length;
-
+        }
 
         for(int i = 0; i < length;i++){
             String str = "id: "+mGroup[i].getId() +" "+"Group Name:"+mGroup[i].getGroupDescription();
