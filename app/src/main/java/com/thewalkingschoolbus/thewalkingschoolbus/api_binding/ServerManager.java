@@ -240,17 +240,18 @@ public class ServerManager {
     //      id not found+ more
     // return a array of User if need can be convert to list
     public User[] userMonitoringList(User user) throws Exception {
-        String url = BASE_URL+String.format(USER_MONITORING_LIST,user.getId());
+        String url = BASE_URL+String.format(USER_MONITORING_LIST, getUserByEmail(user).getId());
         HttpURLConnection connection = httpRequestGet(url,null);
 
-        if (connection.getResponseCode() >= 400) {
+        int responseCode = connection.getResponseCode();
+        if ( responseCode >= 400) {
             // failed
             return null;
+        } else {
+            StringBuffer response = readJsonIntoString(connection);
+            User[] listMonitoring = new Gson().fromJson(response.toString(), User[].class);
+            return listMonitoring;
         }
-
-        StringBuffer response = readJsonIntoString(connection);
-        User[] listMonitoring = new Gson().fromJson(response.toString(), User[].class);
-        return listMonitoring;
     }
 
     // take parentUser as parameter
