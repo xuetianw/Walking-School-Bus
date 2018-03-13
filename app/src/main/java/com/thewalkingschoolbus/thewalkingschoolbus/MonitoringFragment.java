@@ -15,17 +15,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class MonitoringFragment extends android.app.Fragment {
 
     private static final String TAG = "MonitoringFragment";
     private static final int REQUEST_CODE_GET_EMAIL = 42;
     private View view;
+    List<String> monitoringList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -38,7 +45,6 @@ public class MonitoringFragment extends android.app.Fragment {
 
         updateListView();
         setupAddMonitoring();
-
         return view;
     }
 
@@ -50,21 +56,41 @@ public class MonitoringFragment extends android.app.Fragment {
     }
 
     private void updateListView() {
-        // create list of items
-        List<String> monitoringList = new ArrayList<>();
-        for (User user:MainMenuActivity.monitoringUsers) {
-            monitoringList.add(user.getName() + " (" + user.getEmail() + ")");
-        }
 
-        // build adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.monitoring_entry, monitoringList);
 
-        // configure the list view
-        ListView list = view.findViewById(R.id.listViewMonitoring);
-        list.setAdapter(adapter);
+        new GetUserAsyncTask(USR_MONITORING_LIST, MainActivity.loginUser,null, null, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                if(result == null){
+                    Toast.makeText(getActivity().getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                            .show();
+                    User []users = (User[]) result;
+                    for(User user: users){
+                        monitoringList.add(user.getName());
+                        System.out.println(user.getEmail());
+                    }
+                    // build adapter
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.monitoring_entry, monitoringList);
 
-        // update clicks
-        registerClickCallback();
+                    // configure the list view
+                    ListView list = view.findViewById(R.id.listViewMonitoring);
+                    list.setAdapter(adapter);
+
+                    // update clicks
+                    registerClickCallback();
+                }
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getActivity().getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }).execute();
+
+
+
     }
 
     private void registerClickCallback() {
