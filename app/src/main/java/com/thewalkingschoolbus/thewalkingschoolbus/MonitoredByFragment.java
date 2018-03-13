@@ -89,7 +89,7 @@ public class MonitoredByFragment extends android.app.Fragment {
     }
 
     private void registerClickCallback() {
-        ListView list = view.findViewById(R.id.listViewMonitoring);
+        ListView list = view.findViewById(R.id.listViewMonitored);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
