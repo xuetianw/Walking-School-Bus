@@ -32,7 +32,7 @@ public class MonitoringFragment extends android.app.Fragment {
     private static final String TAG = "MonitoringFragment";
     private static final int REQUEST_CODE_GET_EMAIL = 42;
     private View view;
-    List<String> monitoringList = new ArrayList<>();
+    List<String> monitoringList;
 
     @Nullable
     @Override
@@ -65,12 +65,13 @@ public class MonitoringFragment extends android.app.Fragment {
                     Toast.makeText(getActivity().getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
                 } else {
+                    monitoringList = new ArrayList<>();
                     Toast.makeText(getActivity().getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
                     User []users = (User[]) result;
                     for(User user: users){
+                        System.out.println(user);
                         monitoringList.add(user.getName());
-                        System.out.println(user.getEmail());
                     }
                     // build adapter
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.monitoring_entry, monitoringList);
