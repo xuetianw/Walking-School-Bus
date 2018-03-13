@@ -363,12 +363,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
 
 
         // Add to group list using NAME, ORIGIN, DESTINATION
-        Group group = new Group();
-        group.setGroupDescription(null);
-//        double[] lat;
-//        double[] lng;
-//               group.setRouteLatArray(lat);
-//               group.setRouteLngArray(lng);
+        Group group = new Group(); // tODO: initialize group to add properly
 
         new GetUserAsyncTask(CREATE_GROUP, null, null, group, null, new OnTaskComplete() {
             @Override
