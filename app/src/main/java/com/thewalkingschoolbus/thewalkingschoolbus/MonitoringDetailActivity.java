@@ -1,5 +1,6 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -18,18 +19,18 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 
 public class MonitoringDetailActivity extends AppCompatActivity {
     public static String userEmail;
-    User deleteUser = new User();
+    static User deleteUser = new User();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monitoring_detail);
 
         deleteUser.setEmail(userEmail);
-        setupTextViews();
+        updateUI();
         setupStopMonitoringBtn();
     }
 
-    private void setupTextViews() {
+    private void updateUI() {
         new GetUserAsyncTask(GET_USER_BY_EMAIL, deleteUser,null, null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
@@ -66,6 +67,8 @@ public class MonitoringDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
+                setResult(Activity.RESULT_OK, intent);
+                finish();
             }
         });
     }

@@ -295,7 +295,7 @@ public class ServerManager {
     //      parent not found, child not found, child not in the list
     // return SUCCESSFUL if deleted
     public String deleteMonitoring (User parentUser, User childUser)throws Exception{
-        String url = BASE_URL+ String.format(DELETE_MONITORING,parentUser.getId(),childUser.getId());
+        String url = BASE_URL+ String.format(DELETE_MONITORING, getUserByEmail(parentUser).getId(), getUserByEmail(childUser).getId());
         HttpURLConnection connection = httpRequestDelete(url);
 
         if (connection.getResponseCode() >= 400) {

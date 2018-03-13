@@ -149,6 +149,28 @@ public class MonitoringFragment extends android.app.Fragment {
                 else {
                     Toast.makeText(getActivity(), "Canceled.", Toast.LENGTH_LONG).show();
                 }
+                break;
+            case DELETE_REQUEST_CODE:
+                if(resultCode == Activity.RESULT_OK){
+                    new GetUserAsyncTask(DELETE_MONITORING, loginUser, MonitoringDetailActivity.deleteUser, null, null, new OnTaskComplete() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            if(result == null){
+                                Toast.makeText(getActivity().getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                        .show();
+                            } else {
+                                Toast.makeText(getActivity().getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                                        .show();
+
+                            }
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            Toast.makeText(getActivity().getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }).execute();
+                }
+                break;
         }
     }
 }
