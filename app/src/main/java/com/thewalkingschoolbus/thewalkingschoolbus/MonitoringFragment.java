@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
@@ -24,15 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
-import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class MonitoringFragment extends android.app.Fragment {
-
+    public static final int DELETE_REQUEST_CODE = 100;
     private static final String TAG = "MonitoringFragment";
     private static final int REQUEST_CODE_GET_EMAIL = 42;
     private View view;
     List<String> monitoringList;
+    User []users;
 
     @Nullable
     @Override
@@ -68,10 +67,10 @@ public class MonitoringFragment extends android.app.Fragment {
                     monitoringList = new ArrayList<>();
                     Toast.makeText(getActivity().getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
-                    User []users = (User[]) result;
+                    users = (User[]) result;
                     for(User user: users){
                         System.out.println(user);
-                        monitoringList.add(user.getName());
+                        monitoringList.add(user.getName() + "    "+ user.getEmail() );
                     }
                     // build adapter
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.monitoring_entry, monitoringList);
@@ -107,8 +106,11 @@ public class MonitoringFragment extends android.app.Fragment {
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View viewClicked, int position, long id) {
-                MainMenuActivity.monitoringUsers.remove(position);
-                updateListView();
+                //MainMenuActivity.monitoringUsers.remove(position);
+                //updateListView();
+                MonitoringDetailActivity.userEmail = users[position].getEmail();
+                Intent intent = MonitoringDetailActivity.makeIntent(getActivity());
+                startActivityForResult(intent, DELETE_REQUEST_CODE);
                 return true;
             }
         });
