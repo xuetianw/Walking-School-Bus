@@ -3,6 +3,8 @@ package com.thewalkingschoolbus.thewalkingschoolbus;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,8 +22,10 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.CREATE_MONITORING;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_MEMBERS_OF_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_ONE_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
@@ -32,6 +36,7 @@ public class GroupDetailActivity extends AppCompatActivity {
     private boolean asyncTaskReadyFlag = false;
     private Group mSelectedGroup;
     private User[] mMembers;
+    private User[] inviteMember;
     private int lengthOfMemberList;
     private int positionOfUser;
 
@@ -42,6 +47,8 @@ public class GroupDetailActivity extends AppCompatActivity {
         updateLoginUser();
         extractDataAndShowDetail();
         setUpLeaveGroupBut();
+        setUpInviteToGroupBut();
+        setUpRefresh();
     }
 
     public static Intent makeIntent(Context context, Group mGroup, User user) {
@@ -69,7 +76,6 @@ public class GroupDetailActivity extends AppCompatActivity {
     private void extractDataAndShowDetail(){
         Intent intent = getIntent();
         String groupId = intent.getStringExtra(GROUP_ID);
-        Log.i("TAG","mSelectedGroup ID:"+groupId);
         mSelectedGroup = new Group();
         mSelectedGroup.setId(groupId);
         new GetUserAsyncTask(GET_ONE_GROUP, null, null, mSelectedGroup, null, new OnTaskComplete() {
@@ -140,6 +146,9 @@ public class GroupDetailActivity extends AppCompatActivity {
                     str = "Name: "+mMembers[i].getName() +" "+"Email: "+mMembers[i].getEmail();
                 }
             }
+            if(listMonitoring.size() == 0){
+                str = "Name: "+mMembers[i].getName() +" "+"Email: "+mMembers[i].getEmail();
+            }
             mMemberDisplay[i]=str;
         }
 
@@ -176,6 +185,10 @@ public class GroupDetailActivity extends AppCompatActivity {
                                 "user you are not monitoring from group",Toast.LENGTH_LONG).show();
                     }
                 }
+                if(listMonitoring.size() == 0){
+                    Toast.makeText(GroupDetailActivity.this, "you can not remove " +
+                            "user you are not monitoring from group",Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -206,7 +219,7 @@ public class GroupDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(GroupDetailActivity.this, "unsuccessfully removed",Toast.LENGTH_LONG).show();
+                Toast.makeText(GroupDetailActivity.this, "Exception",Toast.LENGTH_LONG).show();
             }
         }).execute();
     }
@@ -216,7 +229,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         but.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(User.getLoginUser().getId().equals(mSelectedGroup.getId())){
+                if(User.getLoginUser().getId().equals(mSelectedGroup.getLeader().getId())){
                     Toast.makeText(GroupDetailActivity.this, "cant leave group as leader",Toast.LENGTH_LONG).show();
                 }else{
                     leaveGroup();
@@ -237,10 +250,93 @@ public class GroupDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(GroupDetailActivity.this, "Execption",Toast.LENGTH_LONG).show();
+                Toast.makeText(GroupDetailActivity.this, "Exception",Toast.LENGTH_LONG).show();
 
             }
         }).execute();
+    }
+    private void setUpInviteToGroupBut(){
+        Button but = findViewById(R.id.addMemberBut);
+        but.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(User.getLoginUser().getMonitorsUsers().size() == 0 || mMembers.length == 0){
+                    Toast.makeText(GroupDetailActivity.this, "you are not monitoring anyone",Toast.LENGTH_LONG).show();
+                }else {
+                    String[] inviteMemberList = inviteMemberList();
+                    //alertDialogForInvite(inviteMemberList);
+                }
+            }
+        });
+    }
+
+    private String [] inviteMemberList(){
+
+        List<String> inviteMembersList = new ArrayList<>();
+        List<User> usersInCommon =new ArrayList<>();
+        List<User> listMonitoring = User.getLoginUser().getMonitorsUsers();
+        String str = "";
+        int i,j;
+        for(i = 0; i < listMonitoring.size() ;i++) {
+            for (j = 0; j < lengthOfMemberList; j++) {
+                if (mMembers[i].getId().equals(listMonitoring.get(j).getId())) {
+                    usersInCommon.add(mMembers[i]);
+                }
+            }
+        }
+
+        String [] inviteMembersStr = inviteMembersList.toArray(new String[listMonitoring.size()]);
+        return inviteMembersStr;
+    }
+
+    private void alertDialogForInvite(String [] inviteMemberList){
+        AlertDialog alertDialog = new AlertDialog.Builder(GroupDetailActivity.this).create();
+        alertDialog.setTitle("Warning");
+        alertDialog.setMessage("Do u want to remove this user from the group");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeUserFromGroup();
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
+
+
+
+    private void setUpRefresh(){
+        final SwipeRefreshLayout mySwipeRefreshLayout = findViewById(R.id.swiperefreshGroupDetail);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        updateLoginUser();
+                        extractDataAndShowDetail();
+                        // This method performs the actual data-refresh operation.
+                        // The method calls setRefreshing(false) when it's finished.
+                        mySwipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
+
+        new GetUserAsyncTask(CREATE_MONITORING, parentUser, childUser, null, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                if(result != null){
+                    // success
+                }else{
+                    // failed
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // failed
+            }
+        }).execute();
+
     }
 }
 

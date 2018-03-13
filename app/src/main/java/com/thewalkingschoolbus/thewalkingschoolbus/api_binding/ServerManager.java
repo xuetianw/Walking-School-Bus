@@ -22,8 +22,8 @@ public class ServerManager {
 
     private String API_KEY = "BB390E20-F40E-40D1-BE2D-2F99AAF8E449"; //api key for flame group
     // Debug: Proxy server for plaintext debugging purpose
-    private String BASE_URL = "http://walkgroup.api.tabjy.com/https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
-    //private String BASE_URL="https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
+    // private String BASE_URL = "http://walkgroup.api.tabjy.com/https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
+    private String BASE_URL="https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
     private String LOGIN = "/login";
     private String CREATE_USER = "/users/signup";
     private String LIST_USERS = "/users";
@@ -449,7 +449,7 @@ public class ServerManager {
     public String removeMemberOfGroup(User user, Group group)throws Exception{
         String url = BASE_URL+ String.format(REMOVE_MEMBER_OF_GROUP,group.getId(),user.getId());
         HttpURLConnection connection = httpRequestDelete(url);
-
+        Log.i("TAG",url);
         if(connection.getResponseCode() >= 400){
             return null;
         }
