@@ -38,7 +38,6 @@ public class MonitoringFragment extends android.app.Fragment {
 
         updateListView();
         setupAddMonitoring();
-
         return view;
     }
 

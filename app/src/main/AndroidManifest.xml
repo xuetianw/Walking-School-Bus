@@ -34,7 +34,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.thewalkingschoolbus.thewalkingschoolbus.MainMenuActivity"
+            android:name="com.thewalkingschoolbus.thewalkingschoolbus.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,7 +47,7 @@
         </activity>
 
         <activity
-            android:name="com.thewalkingschoolbus.thewalkingschoolbus.MainActivity"
+            android:name="com.thewalkingschoolbus.thewalkingschoolbus.MainMenuActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
