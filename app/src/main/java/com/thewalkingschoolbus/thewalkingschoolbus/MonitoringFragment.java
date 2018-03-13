@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
-import com.thewalkingschoolbus.thewalkingschoolbus.model.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
 import java.util.ArrayList;
 import java.util.List;

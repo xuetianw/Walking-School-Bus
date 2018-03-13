@@ -1,40 +1,27 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.api_binding;
 
-import android.util.Log;
-
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
-import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
-
-import static android.content.ContentValues.TAG;
-
 
 public class ServerManager {
-
-    public static final int RESPONCE_CODE_OK = 200;
-    public static final int RESPONCE_CODE_FILE_NOT_FOUND = 404;
-    public static final int RESPONCE_CODE_CREATED = 201;
-    public static final int RESPONCE_CODE_UNAUTHORIZED = 401;
-    public static final int RESPONCE_CODE_FORBIDDEN = 403;
-    public static final int RESPONCE_CODE_INTERNAL_SERVER_ERROR = 500;
-    public static final int RESPONCE_CODE_NO_CONTENT = 204;
-
 
     private String GET = "GET";
     private String POST = "POST";
     private String DELETE = "DELETE";
 
     private String API_KEY = "BB390E20-F40E-40D1-BE2D-2F99AAF8E449"; //api key for flame group
-    private String BASE_URL = "https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
+    // Debug: Proxy server for plaintext debugging purpose
+    //private String BASE_URL = "http://walkgroup.api.tabjy.com/https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
+    private String BASE_URL="https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
     private String LOGIN = "/login";
     private String CREATE_USER = "/users/signup";
     private String LIST_USERS = "/users";
@@ -48,10 +35,10 @@ public class ServerManager {
     private String CREATE_GROUP = "/groups";
     private String GET_ONE_GROUP = "/groups/%s";
     private String UPDATE_EXISTING_GROUP = "/groups/%s";
-    private String DELETE_GROUP = "groups/%s";
-    private String GET_MEMBERS_OF_GROUP = "groups/%s/memberUsers";
-    private String ADD_MEMBERS_TO_GROUP = "groups/%s/memberUsers";
-    private String REMOVE_MEMBER_OF_GROUP = "groups/%s/memberUsers/%s";
+    private String DELETE_GROUP = "/groups/%s";
+    private String GET_MEMBERS_OF_GROUP = "/groups/%s/memberUsers";
+    private String ADD_MEMBERS_TO_GROUP = "/groups/%s/memberUsers";
+    private String REMOVE_MEMBER_OF_GROUP = "/groups/%s/memberUsers/%s";
 
     private String SUCCESSFUL = "SUCCESSFUL";
     private String UNSUCCESSFUL = "UNSUCCESSFUL";
@@ -59,9 +46,9 @@ public class ServerManager {
     // for any type of post request, this does the initial connection and sending json file
     // Such as: create User, create Group, create monitoring
     // return httpURLconnection which is used to getResponseCode from server side
-    private HttpsURLConnection httpRequestPost(String url,JSONObject jsonObject)throws Exception{
+    private HttpURLConnection httpRequestPost(String url, JSONObject jsonObject)throws Exception{
         URL obj = new URL(url);
-        HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
         connection.setRequestMethod(POST);
         connection.setRequestProperty("Content-Type","application/json");
         connection.setRequestProperty("apiKey",API_KEY);
@@ -82,9 +69,9 @@ public class ServerManager {
     // for any type of Get request, this does the initial connection and sending json file(for login)
     // Such as: login User, list Group, list monitoring
     // return httpURLconnection which is used to getResponseCode from server side
-    private HttpsURLConnection httpRequestGet(String url,JSONObject jsonObject)throws Exception{
+    private HttpURLConnection httpRequestGet(String url,JSONObject jsonObject)throws Exception{
         URL obj = new URL(url);
-        HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
         connection.setRequestMethod(GET);
         connection.setRequestProperty("Content-Type","application/json");
         connection.setRequestProperty("apiKey",API_KEY);
@@ -105,9 +92,9 @@ public class ServerManager {
     // for any type of Delete request, this does the initial connection
     // Such as: login User, list Group, list monitoring
     // return httpURLconnection which is used to getResponseCode from server side
-    private HttpsURLConnection httpRequestDelete(String url)throws Exception{
+    private HttpURLConnection httpRequestDelete(String url)throws Exception{
         URL obj = new URL(url);
-        HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
         connection.setDoOutput(true);
         connection.setRequestMethod(DELETE);
         connection.setRequestProperty("Content-Type","application/json");
@@ -122,7 +109,7 @@ public class ServerManager {
 
     // turns json file in to string.. as name suggest return a StringBuffer well organize
     // preparation to map Json file into each object
-    private StringBuffer readJsonIntoString (HttpsURLConnection connection) throws Exception{
+    private StringBuffer readJsonIntoString (HttpURLConnection connection) throws Exception{
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(connection.getInputStream()));
         StringBuffer response = new StringBuffer();
@@ -146,17 +133,15 @@ public class ServerManager {
         jsonObject.put("email",user.getEmail());
         jsonObject.put("password",enteredPassword);
 
-        HttpsURLConnection connection = httpRequestGet(url,jsonObject);
+        HttpURLConnection connection = httpRequestGet(url,jsonObject);
 
         int responseCode = connection.getResponseCode();
-        Log.i(TAG, "loginRequest: "+responseCode );
 
-        if(responseCode != RESPONCE_CODE_OK) {
+        if(responseCode >= 400) {
             return null;
         }
         // save token
         String token = connection.getHeaderField("authorization");
-        Log.i(TAG, "token: "+responseCode );
 
         User.setToken("Bearer "+token);
         return SUCCESSFUL;
@@ -175,10 +160,10 @@ public class ServerManager {
         jsonObject.put("email",user.getEmail());
         jsonObject.put("password",enteredPassword);
 
-        HttpsURLConnection connection = httpRequestPost(url,jsonObject);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject);
         // send json file
 
-        if (connection.getResponseCode() != RESPONCE_CODE_CREATED) {
+        if (connection.getResponseCode() >= 400) {
             // failed
             return null;
         }
@@ -198,9 +183,9 @@ public class ServerManager {
     //      in every user's list of monitoring and monitoring by only conntain user ID
     public User[] listUsers()throws Exception {
         String url = BASE_URL+LIST_USERS;
-        HttpsURLConnection connection = httpRequestGet(url,null);
+        HttpURLConnection connection = httpRequestGet(url,null);
 
-        if (connection.getResponseCode() != RESPONCE_CODE_OK) {
+        if (connection.getResponseCode() >= 400) {
             return null;
         }
 
@@ -218,9 +203,9 @@ public class ServerManager {
     public User getUserById(User user) throws Exception {
 
         String url = BASE_URL+String.format(GET_USER_BY_ID,user.getId());
-        HttpsURLConnection connection = httpRequestGet(url,null);
+        HttpURLConnection connection = httpRequestGet(url,null);
 
-        if (connection.getResponseCode() != RESPONCE_CODE_OK) {
+        if (connection.getResponseCode() >= 400) {
             // failed
             return null;
         }
@@ -238,9 +223,9 @@ public class ServerManager {
     //      in the list of monitoring user only contain IDs
     public User getUserByEmail(User user) throws Exception{
         String url = BASE_URL + String.format(GET_USER_BY_EMAIL,user.getEmail());
-        HttpsURLConnection connection = httpRequestGet(url,null);
+        HttpURLConnection connection = httpRequestGet(url,null);
 
-        if (connection.getResponseCode() != RESPONCE_CODE_OK) {
+        if (connection.getResponseCode() >= 400) {
             // failed
             return null;
         }
@@ -256,9 +241,9 @@ public class ServerManager {
     // return a array of User if need can be convert to list
     public User[] userMonitoringList(User user) throws Exception {
         String url = BASE_URL+String.format(USER_MONITORING_LIST,user.getId());
-        HttpsURLConnection connection = httpRequestGet(url,null);
+        HttpURLConnection connection = httpRequestGet(url,null);
 
-        if (connection.getResponseCode() != RESPONCE_CODE_OK) {
+        if (connection.getResponseCode() >= 400) {
             // failed
             return null;
         }
@@ -274,9 +259,9 @@ public class ServerManager {
     // return a array of User if need can be convert to list
     public User[] userMonitoringByList(User user) throws Exception {
         String url = BASE_URL+String.format(USER_MONITORING_BY_LIST,user.getId());
-        HttpsURLConnection connection = httpRequestGet(url,null);
+        HttpURLConnection connection = httpRequestGet(url,null);
 
-        if (connection.getResponseCode() != RESPONCE_CODE_OK) {
+        if (connection.getResponseCode() >= 400) {
             // failed
             return null;
         }
@@ -294,9 +279,9 @@ public class ServerManager {
         String url = BASE_URL+String.format(CREATE_MONITORING,parentUser.getId());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id",childUser.getId());
-        HttpsURLConnection connection = httpRequestPost(url,jsonObject);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject);
 
-        if (connection.getResponseCode() != RESPONCE_CODE_CREATED) {
+        if (connection.getResponseCode() >= 400) {
             return null;
         }
 
@@ -310,9 +295,9 @@ public class ServerManager {
     // return SUCCESSFUL if deleted
     public String deleteMonitoring (User parentUser, User childUser)throws Exception{
         String url = BASE_URL+ String.format(DELETE_MONITORING,parentUser.getId(),childUser.getId());
-        HttpsURLConnection connection = httpRequestDelete(url);
+        HttpURLConnection connection = httpRequestDelete(url);
 
-        if (connection.getResponseCode() != RESPONCE_CODE_NO_CONTENT) {
+        if (connection.getResponseCode() >= 400) {
             // failed
             return null;
         }
@@ -325,9 +310,9 @@ public class ServerManager {
     // return Array of group object
     public Group[] listGroups()throws Exception{
         String url = BASE_URL+LIST_GROUPS;
-        HttpsURLConnection connection = httpRequestGet(url,null);
+        HttpURLConnection connection = httpRequestGet(url,null);
 
-        if(connection.getResponseCode() != RESPONCE_CODE_OK){
+        if(connection.getResponseCode() >= 400){
             return null;
         }
         StringBuffer response = readJsonIntoString(connection);
@@ -343,9 +328,9 @@ public class ServerManager {
         String url = BASE_URL+CREATE_GROUP;
         String string = new Gson().toJson(group);
         JSONObject jsonObject = new JSONObject(string);
-        HttpsURLConnection connection = httpRequestPost(url,jsonObject);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject);
 
-        if(connection.getResponseCode() != RESPONCE_CODE_OK) {
+        if(connection.getResponseCode() >= 400) {
             return null;
         }
 
@@ -362,9 +347,9 @@ public class ServerManager {
         String url = BASE_URL+CREATE_GROUP;
         String string = new Gson().toJson(group);
         JSONObject jsonObject = new JSONObject(string);
-        HttpsURLConnection connection = httpRequestPost(url,jsonObject);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject);
 
-        if(connection.getResponseCode() != RESPONCE_CODE_OK) {
+        if(connection.getResponseCode() >= 400) {
             return null;
         }
         StringBuffer response = readJsonIntoString(connection);
@@ -378,8 +363,8 @@ public class ServerManager {
     // return group object if group is found
     public Group getOneGroup(Group group)throws Exception{
         String url = BASE_URL+String.format(GET_ONE_GROUP,group.getId());
-        HttpsURLConnection connection = httpRequestPost(url,null);
-        if(connection.getResponseCode() != RESPONCE_CODE_OK) {
+        HttpURLConnection connection = httpRequestPost(url,null);
+        if(connection.getResponseCode() >= 400) {
             return null;
         }
         StringBuffer response = readJsonIntoString(connection);
@@ -395,9 +380,9 @@ public class ServerManager {
         String url = BASE_URL+String.format(UPDATE_EXISTING_GROUP,group.getId());
         String string = new Gson().toJson(group);
         JSONObject jsonObject = new JSONObject(string);
-        HttpsURLConnection connection = httpRequestPost(url, jsonObject);
+        HttpURLConnection connection = httpRequestPost(url, jsonObject);
 
-        if(connection.getResponseCode() != RESPONCE_CODE_OK) {
+        if(connection.getResponseCode() >= 400) {
             return null;
         }
 
@@ -411,8 +396,8 @@ public class ServerManager {
     // return SUCCESSFUL
     public String deleteGroup(Group group)throws Exception{
         String url = BASE_URL + String.format(DELETE_GROUP,group.getId());
-        HttpsURLConnection connection = httpRequestDelete(url);
-        if(connection.getResponseCode() != RESPONCE_CODE_NO_CONTENT) {
+        HttpURLConnection connection = httpRequestDelete(url);
+        if(connection.getResponseCode() >= 400) {
             return null;
         }
         return SUCCESSFUL;
@@ -424,9 +409,9 @@ public class ServerManager {
     // return array of User object for all the member in the group
     public User[] getMembersOfGroup (Group group) throws Exception{
         String url = BASE_URL+ String.format(GET_MEMBERS_OF_GROUP,group.getId());
-        HttpsURLConnection connection = httpRequestGet(url,null);
+        HttpURLConnection connection = httpRequestGet(url,null);
 
-        if(connection.getResponseCode() != RESPONCE_CODE_OK) {
+        if(connection.getResponseCode() >= 400) {
             return null;
         }
 
@@ -443,9 +428,9 @@ public class ServerManager {
         String url = BASE_URL+ String.format(ADD_MEMBERS_TO_GROUP,group.getId());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id",user.getId());
-        HttpsURLConnection connection = httpRequestPost(url,jsonObject);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject);
 
-        if(connection.getResponseCode() != RESPONCE_CODE_OK) {
+        if(connection.getResponseCode() >= 400) {
             return null;
         }
 
@@ -459,9 +444,9 @@ public class ServerManager {
     // return SUCCESSFUL if successfully removed
     public String removeMemberOfGroup(User user, Group group)throws Exception{
         String url = BASE_URL+ String.format(REMOVE_MEMBER_OF_GROUP,group.getId(),user.getId());
-        HttpsURLConnection connection = httpRequestDelete(url);
+        HttpURLConnection connection = httpRequestDelete(url);
 
-        if(connection.getResponseCode() != RESPONCE_CODE_NO_CONTENT){
+        if(connection.getResponseCode() >= 400){
             return UNSUCCESSFUL;
         }
 
@@ -475,9 +460,9 @@ public class ServerManager {
 /*
     garbage for now... i do hope this stay as garbage...
     /*
-    private HttpsURLConnection httpRequest(String url,String requestMethod) throws Exception{
+    private HttpURLConnection httpRequest(String url,String requestMethod) throws Exception{
         URL obj = new URL(url);
-        HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
         connection.setDoOutput(true);
         connection.setRequestMethod(requestMethod);
         connection.setRequestProperty("Content-Type","application/json");
@@ -485,13 +470,13 @@ public class ServerManager {
         return connection;
     }
 
-    private void sendJson(HttpsURLConnection connection,JSONObject jsonObject)throws Exception{
+    private void sendJson(HttpURLConnection connection,JSONObject jsonObject)throws Exception{
         PrintStream printStream = new PrintStream(connection.getOutputStream());
         printStream.println(jsonObject.toString());
         printStream.close();
     }
 
-    private void authorizationWithOutBody(HttpsURLConnection connection) throws Exception{
+    private void authorizationWithOutBody(HttpURLConnection connection) throws Exception{
         connection.setRequestProperty("Authorization", User.getToken());
         PrintStream printStream = new PrintStream(connection.getOutputStream());
         printStream.close();
