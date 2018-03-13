@@ -37,19 +37,21 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity" />
         <activity
             android:name=".MainMenuActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddMonitoringActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".JoinOrCreateGroupActivity"></activity>
-        <activity android:name=".GroupDetailActivity"></activity>
-        <activity android:name=".MonitoringDetailActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".JoinOrCreateGroupActivity" />
+        <activity android:name=".GroupDetailActivity" />
+        <activity android:name=".MonitoringDetailActivity" />
+        <activity android:name=".MonitoredbyDetailActivity"></activity>
     </application>
 
 </manifest>

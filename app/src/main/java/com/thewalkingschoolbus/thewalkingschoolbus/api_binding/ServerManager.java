@@ -259,10 +259,13 @@ public class ServerManager {
     //      id not found+ more
     // return a array of User if need can be convert to list
     public User[] userMonitoringByList(User user) throws Exception {
+        if(user.getId() == null) {
+            user = getUserByEmail(user);
+        }
         String url = BASE_URL+String.format(USER_MONITORING_BY_LIST,user.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
-
-        if (connection.getResponseCode() >= 400) {
+        int responseCode = connection.getResponseCode();
+        if (responseCode >= 400) {
             // failed
             return null;
         }

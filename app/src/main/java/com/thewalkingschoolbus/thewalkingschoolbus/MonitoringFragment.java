@@ -26,7 +26,7 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class MonitoringFragment extends android.app.Fragment {
-    public static final int DELETE_REQUEST_CODE = 100;
+    public static final int DELETE_MORNITORING_REQUEST_CODE = 100;
     private static final String TAG = "MonitoringFragment";
     private static final int REQUEST_CODE_GET_EMAIL = 42;
     private View view;
@@ -43,7 +43,7 @@ public class MonitoringFragment extends android.app.Fragment {
         Log.d(TAG, "Starting.");
 
         updateListView();
-        setupAddMonitoring();
+        setupAddMonitoringBtn();
         return view;
     }
 
@@ -110,13 +110,13 @@ public class MonitoringFragment extends android.app.Fragment {
                 //updateListView();
                 MonitoringDetailActivity.userEmail = users[position].getEmail();
                 Intent intent = MonitoringDetailActivity.makeIntent(getActivity());
-                startActivityForResult(intent, DELETE_REQUEST_CODE);
+                startActivityForResult(intent, DELETE_MORNITORING_REQUEST_CODE);
                 return true;
             }
         });
     }
 
-    private void setupAddMonitoring() {
+    private void setupAddMonitoringBtn() {
         FloatingActionButton btn = view.findViewById(R.id.btnAddMonitoring);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,7 +150,7 @@ public class MonitoringFragment extends android.app.Fragment {
                     Toast.makeText(getActivity(), "Canceled.", Toast.LENGTH_LONG).show();
                 }
                 break;
-            case DELETE_REQUEST_CODE:
+            case DELETE_MORNITORING_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
                     new GetUserAsyncTask(DELETE_MONITORING, loginUser, MonitoringDetailActivity.deleteUser, null, null, new OnTaskComplete() {
                         @Override
