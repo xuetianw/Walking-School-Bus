@@ -31,6 +31,9 @@ public class Group {
         routeLngArray = new double[3];
         href = null;
     }
+//    public Group(String name, double[] lat,double[] lng){
+//
+//    }
 
     public String getId() {
         return id;

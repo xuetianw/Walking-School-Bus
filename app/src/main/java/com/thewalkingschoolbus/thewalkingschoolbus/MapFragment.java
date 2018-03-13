@@ -39,8 +39,11 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.EnterGroupNameDialogFragment;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinder;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinderListener;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.Route;
@@ -49,6 +52,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.ADD_MEMBER_TO_GROUP;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.CREATE_GROUP;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LIST_GROUPS;
 
 /*
 * SOURCES - Based on following tutorials:
@@ -359,7 +366,31 @@ public class MapFragment extends android.support.v4.app.Fragment {
 
     public static void createGroup(Context context) {
 
+
         // Add to group list using NAME, ORIGIN, DESTINATION
+        Group group = new Group();
+        group.setGroupDescription(null);
+//        double[] lat;
+//        double[] lng;
+//               group.setRouteLatArray(lat);
+//               group.setRouteLngArray(lng);
+
+        new GetUserAsyncTask(CREATE_GROUP, null, null, group, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                if(result == null){
+
+                }else {
+                    Group[] group = (Group[]) result;
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // leave empty
+            }
+        }).execute();
+
         // Transition to group window
     }
 
@@ -381,43 +412,70 @@ public class MapFragment extends android.support.v4.app.Fragment {
         List<Address> destinationList = new ArrayList<>();
         try {
             originList = geocoder.getFromLocationName(origin, 1);
+        } catch (IOException e) {
+            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
+        }
+        try {
             destinationList = geocoder.getFromLocationName(destination, 1);
         } catch (IOException e) {
             Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
         }
         // Save origin coordinates
         if (originList.size() > 0) {
+            Log.d(TAG, "geoLocate: if 1");
             Address originAddress = originList.get(0);
             currentRouteLatArray[0] = originAddress.getLatitude();
             currentRouteLngArray[0] = originAddress.getLongitude();
         }
         // Save destination coordinates
         if (destinationList.size() > 0) {
+            Log.d(TAG, "geoLocate: if 2");
             Address destinationAddress = destinationList.get(0);
-            currentRouteLngArray[1] = destinationAddress.getLatitude();
-            currentRouteLatArray[1] = destinationAddress.getLongitude();
+            currentRouteLatArray[1] = destinationAddress.getLatitude();
+            currentRouteLngArray[1] = destinationAddress.getLongitude();
         }
-    }
 
+        Log.d(TAG, "geoLocate: " + currentRouteLatArray[0] + ", " + currentRouteLngArray[0] + ", " + currentRouteLatArray[1] + ", " + currentRouteLngArray[1]);
+    }
+    
     private static final int DEFAULT_SEARCH_RADIUS_METERS = 1000;
 
     private void displayNearbyGroups() {
         if (mValidRouteEstablished) {
             // Get list of groups from database // TODO: implement real group list from server
+            new GetUserAsyncTask(LIST_GROUPS, null, null, null, null, new OnTaskComplete() {
+                @Override
+                public void onSuccess(Object result) {
+                    if (result == null) {
+                        // failed
+                    }else{
+                        Group[] groupList = (Group[]) result;
+                    }
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            }).execute();
+
             List<Group> groupList = MainMenuActivity.existingGroups;
 
             Log.d(TAG, "displayNearbyGroups: current destination Lat, Lng: " + currentRouteLatArray[1] + ", " + currentRouteLngArray[1]);
             for (Group group : groupList) {
                 // Compare destination difference of current route input and current group being examined. Returns distance in meters in results.
-                float[] results = new float[1];
+                float[] results = new float[3];
+                Log.d(TAG, "displayNearbyGroups: distance between destinations in meters(?): " + results[0] + ", " + results[1] + ", " + results[2]);
                 Location.distanceBetween(currentRouteLatArray[1], currentRouteLngArray[1],
                         group.getRouteLatArray()[1], group.getRouteLngArray()[1],
                         results);
-                Log.d(TAG, "displayNearbyGroups: distance between destinations in meters(?): " + results[0]);
-                //if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
-                if (true) {
+                Log.d(TAG, "displayNearbyGroups: distance between destinations in meters(?): " + results[0] + ", " + results[1] + ", " + results[2]);
+                if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
+                    Log.d(TAG, "displayNearbyGroups: INSIDE CIRCLE: " + results[0]);
                     // Display this result on map.
                     displayGroup(group);
+                } else {
+                    Log.d(TAG, "displayNearbyGroups: OUTSIDE CIRCLE: " + results[0]);
                 }
             }
         } else {
@@ -429,6 +487,21 @@ public class MapFragment extends android.support.v4.app.Fragment {
         // Display this group on the map
         // Display clickable markers
         // On marker click, display route // TODO: make markers clickable, on click, call joinGroup
+        // TODO: put this in the right place!!!
+        User user = new User();
+        new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, user, null, group, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                if (result ==null) {
+                    // FAILED
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        }).execute();
 
         // Draw route
         try {
