@@ -66,7 +66,7 @@ public class EnterGroupNameDialogFragment extends AppCompatDialogFragment {
                     } else {
                         Toast.makeText(getActivity(), "Group created!", Toast.LENGTH_SHORT).show();
                         alertDialog.dismiss();
-                        MapFragment.createGroup(getActivity());
+                        MapFragment.createGroup(getActivity(), etGroupName.getText().toString());
                     }
                 }
             });

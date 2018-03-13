@@ -31,9 +31,11 @@ public class Group {
         routeLngArray = new double[3];
         href = null;
     }
-//    public Group(String name, double[] lat,double[] lng){
-//
-//    }
+    public Group(String name, double[] routeLatArray,double[] routeLngArray){
+        groupDescription = name;
+        this.routeLatArray = routeLatArray;
+        this.routeLngArray = routeLngArray;
+    }
 
     public String getId() {
         return id;

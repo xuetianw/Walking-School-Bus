@@ -1,12 +1,13 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,12 +15,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -48,7 +54,6 @@ import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinder;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinderListener;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.Route;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,12 +73,12 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 * map_modules from source code by "Hiep Mai Thanh"
 *   https://github.com/hiepxuan2008/GoogleMapDirectionSimple
 */
-public class MapFragment extends android.support.v4.app.Fragment {
+public class MapFragment extends android.support.v4.app.Fragment implements GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = "MapFragment";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234;
     private static final int ERROR_DIALOG_REQUEST = 9001;
-    private static final float DEFAULT_ZOOM = 18;
+    private static final float DEFAULT_ZOOM = 15;
 
     private GoogleMap mMap;
     private Boolean mLocationPermissionGranted = false;
@@ -198,7 +203,8 @@ public class MapFragment extends android.support.v4.app.Fragment {
                 Log.d(TAG, "onMapReady: map is ready");
 
                 mMap = googleMap;
-                mMap.setPadding(0, 600, 0, 0); // Boundaries for google map buttons
+                relocateMyLocationButton();
+
                 if (mLocationPermissionGranted) {
                     getDeviceLocation();
                     if (ActivityCompat.checkSelfPermission(getActivity(),
@@ -301,18 +307,21 @@ public class MapFragment extends android.support.v4.app.Fragment {
                     destinationMarkers = new ArrayList<>();
 
                     for (Route route : routes) {
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
+                        moveCamera(route.originLocation, DEFAULT_ZOOM);
                         ((TextView) view.findViewById(R.id.tvDuration)).setText(route.duration.text);
                         ((TextView) view.findViewById(R.id.tvDistance)).setText(route.distance.text);
 
+                        Log.d(TAG, "onDirectionFinderSuccess: Current route: FROM: " + route.originAddress + ", TO: " + route.destinationAddress);
+                        currentRoute = route;
+
                         originMarkers.add(mMap.addMarker(new MarkerOptions()
-                                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue)) // TODO: SET CUSTOM MARKER
-                                .title(route.startAddress)
-                                .position(route.startLocation)));
+                                .icon(BitmapDescriptorFactory.defaultMarker(210))
+                                .title(route.originAddress)
+                                .position(route.originLocation)));
                         destinationMarkers.add(mMap.addMarker(new MarkerOptions()
-                                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
-                                .title(route.endAddress)
-                                .position(route.endLocation)));
+                                .icon(BitmapDescriptorFactory.defaultMarker(210))
+                                .title(route.destinationAddress)
+                                .position(route.destinationLocation)));
 
                         PolylineOptions polylineOptions = new PolylineOptions().
                                 geodesic(true).
@@ -326,10 +335,6 @@ public class MapFragment extends android.support.v4.app.Fragment {
                     }
                 }
             }, origin, destination).execute();
-
-            // Save origin and destination coordinates
-            geoLocate();
-
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -339,17 +344,7 @@ public class MapFragment extends android.support.v4.app.Fragment {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         progressDialog.setMessage("Finding direction...");
-//        progressDialog.setCancelable(false);
-//        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                progressDialog.dismiss();
-//            }
-//        });
         progressDialog.show();
-
-//        progressDialog = ProgressDialog.show(getActivity(), "Please wait.",
-//                "Finding direction..!", true);
     }
 
     private void displayCreateGroupDialog() {
@@ -364,7 +359,7 @@ public class MapFragment extends android.support.v4.app.Fragment {
         }
     }
 
-    public static void createGroup(Context context) {
+    public static void createGroup(Context context, String name) {
 
 
         // Add to group list using NAME, ORIGIN, DESTINATION
@@ -394,51 +389,8 @@ public class MapFragment extends android.support.v4.app.Fragment {
         // Transition to group window
     }
 
-
-    private double[] currentRouteLatArray;
-    private double[] currentRouteLngArray;
-
-    private void geoLocate() {
-        Log.d(TAG, "geoLocate: geolocating current route's origin and destination coordinates.");
-
-        currentRouteLatArray = new double[2];
-        currentRouteLngArray = new double[2];
-
-        String origin = etOrigin.getText().toString();
-        String destination = etDestination.getText().toString();
-
-        Geocoder geocoder = new Geocoder(getActivity());
-        List<Address> originList = new ArrayList<>();
-        List<Address> destinationList = new ArrayList<>();
-        try {
-            originList = geocoder.getFromLocationName(origin, 1);
-        } catch (IOException e) {
-            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
-        }
-        try {
-            destinationList = geocoder.getFromLocationName(destination, 1);
-        } catch (IOException e) {
-            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
-        }
-        // Save origin coordinates
-        if (originList.size() > 0) {
-            Log.d(TAG, "geoLocate: if 1");
-            Address originAddress = originList.get(0);
-            currentRouteLatArray[0] = originAddress.getLatitude();
-            currentRouteLngArray[0] = originAddress.getLongitude();
-        }
-        // Save destination coordinates
-        if (destinationList.size() > 0) {
-            Log.d(TAG, "geoLocate: if 2");
-            Address destinationAddress = destinationList.get(0);
-            currentRouteLatArray[1] = destinationAddress.getLatitude();
-            currentRouteLngArray[1] = destinationAddress.getLongitude();
-        }
-
-        Log.d(TAG, "geoLocate: " + currentRouteLatArray[0] + ", " + currentRouteLngArray[0] + ", " + currentRouteLatArray[1] + ", " + currentRouteLngArray[1]);
-    }
-    
-    private static final int DEFAULT_SEARCH_RADIUS_METERS = 1000;
+    private Route currentRoute;
+    private static final int DEFAULT_SEARCH_RADIUS_METERS = 500;
 
     private void displayNearbyGroups() {
         if (mValidRouteEstablished) {
@@ -458,18 +410,23 @@ public class MapFragment extends android.support.v4.app.Fragment {
 
                 }
             }).execute();
-
+            // delete after proper group established
             List<Group> groupList = MainMenuActivity.existingGroups;
 
-            Log.d(TAG, "displayNearbyGroups: current destination Lat, Lng: " + currentRouteLatArray[1] + ", " + currentRouteLngArray[1]);
+
+            // Draw visual circle for search radius
+            drawSearchRadius(currentRoute.destinationLocation, DEFAULT_SEARCH_RADIUS_METERS);
+            moveCamera(currentRoute.destinationLocation, DEFAULT_ZOOM);
+
+            // Display groups within search radius
             for (Group group : groupList) {
                 // Compare destination difference of current route input and current group being examined. Returns distance in meters in results.
-                float[] results = new float[3];
-                Log.d(TAG, "displayNearbyGroups: distance between destinations in meters(?): " + results[0] + ", " + results[1] + ", " + results[2]);
-                Location.distanceBetween(currentRouteLatArray[1], currentRouteLngArray[1],
+                float[] results = new float[1];
+                Log.d(TAG, "displayNearbyGroups: distance between destinations in meters: " + results[0]);
+                Location.distanceBetween(currentRoute.destinationLocation.latitude, currentRoute.destinationLocation.longitude,
                         group.getRouteLatArray()[1], group.getRouteLngArray()[1],
                         results);
-                Log.d(TAG, "displayNearbyGroups: distance between destinations in meters(?): " + results[0] + ", " + results[1] + ", " + results[2]);
+                Log.d(TAG, "displayNearbyGroups: distance between destinations in meters: " + results[0]);
                 if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
                     Log.d(TAG, "displayNearbyGroups: INSIDE CIRCLE: " + results[0]);
                     // Display this result on map.
@@ -483,7 +440,10 @@ public class MapFragment extends android.support.v4.app.Fragment {
         }
     }
 
-    private void displayGroup(Group group) {
+    private void displayGroup(final Group group) {
+
+        mMap.setOnInfoWindowClickListener(this); // toDO: right place?
+
         // Display this group on the map
         // Display clickable markers
         // On marker click, display route // TODO: make markers clickable, on click, call joinGroup
@@ -521,19 +481,26 @@ public class MapFragment extends android.support.v4.app.Fragment {
                         ((TextView) view.findViewById(R.id.tvDuration)).setText(route.duration.text);
                         ((TextView) view.findViewById(R.id.tvDistance)).setText(route.distance.text);
 
-                        originMarkers.add(mMap.addMarker(new MarkerOptions()
-                                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue)) // TODO: SET CUSTOM MARKER
-                                .title(route.startAddress)
-                                .position(route.startLocation)));
-                        destinationMarkers.add(mMap.addMarker(new MarkerOptions()
-                                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
-                                .title(route.endAddress)
-                                .position(route.endLocation)));
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
+                                        .title(group.getId())
+                                        .snippet("Click to join group!")
+                                        .position(route.originLocation));
+                        marker.setTag(group.getId());
+                        originMarkers.add(marker);
+
+                        marker = mMap.addMarker(new MarkerOptions()
+                                        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
+                                        .title(group.getId())
+                                        .snippet("Click to join group!")
+                                        .position(route.destinationLocation));
+                        marker.setTag(group.getId());
+                        destinationMarkers.add(marker);
 
                         PolylineOptions polylineOptions = new PolylineOptions().
                                 geodesic(true).
-                                color(getResources().getColor(R.color.logoBlue)).
-                                width(10);
+                                color(getResources().getColor(R.color.colorAccent)).
+                                width(8);
 
                         for (int i = 0; i < route.points.size(); i++)
                             polylineOptions.add(route.points.get(i));
@@ -553,5 +520,50 @@ public class MapFragment extends android.support.v4.app.Fragment {
     private void joinGroup(Group group) {
         // Add group to user's group list
         // Transition to group window
+    }
+
+    private Circle searchRadiusCircle;
+
+    private void drawSearchRadius(LatLng centerCoordinate, int radiusMeters) {
+        if (searchRadiusCircle != null)
+            searchRadiusCircle.remove();
+        CircleOptions circleOptions = new CircleOptions();
+        circleOptions.center(centerCoordinate);
+        circleOptions.radius(radiusMeters);
+        circleOptions.strokeColor(0xFFffc300);
+        circleOptions.fillColor(0x40f7f056);
+        circleOptions.strokeWidth(4);
+        searchRadiusCircle = mMap.addCircle(circleOptions);
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if (marker.getTag() == null) {
+            return;
+        }
+        displayConfirmJoinGroup((String) marker.getTag());
+    }
+
+    private void displayConfirmJoinGroup(final String groupName) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setMessage("Join \"" + groupName + "\" ?")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getActivity(), "Joined group: " + groupName, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null);
+        AlertDialog dialog = builder.create();
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.show();
+    }
+
+    private void relocateMyLocationButton() {
+        View locationBtn = view.findViewWithTag("GoogleMapMyLocationButton");
+        RelativeLayout.LayoutParams locationLayout = (RelativeLayout.LayoutParams) locationBtn.getLayoutParams(); //TODO: this code does not work.
+        locationLayout.addRule(RelativeLayout.ALIGN_BOTTOM);
+        locationLayout.addRule(RelativeLayout.ALIGN_LEFT);
+        locationBtn.setBottom(8);
     }
 }

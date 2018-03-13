@@ -10,10 +10,10 @@ import java.util.List;
 public class Route {
     public Distance distance;
     public Duration duration;
-    public String endAddress;
-    public LatLng endLocation;
-    public String startAddress;
-    public LatLng startLocation;
+    public String destinationAddress;
+    public LatLng destinationLocation;
+    public String originAddress;
+    public LatLng originLocation;
 
     public List<LatLng> points;
 }

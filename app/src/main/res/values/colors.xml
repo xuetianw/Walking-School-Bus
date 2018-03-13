@@ -6,6 +6,8 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00000000</color>
-    <color name="logoBlue">#25aae1</color>
-    <color name="logoYellow">#f7f056</color>
+    <color name="logoBlue">#FF25aae1</color>
+    <color name="logoYellow">#FFf7f056</color>
+    <color name="logoBlueTransparent">#8025aae1</color>
+    <color name="logoYellowTransparent">#80f7f056</color>
 </resources>

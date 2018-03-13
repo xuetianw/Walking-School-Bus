@@ -30,4 +30,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.android.support:design:26.1.0'
     compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
 }
