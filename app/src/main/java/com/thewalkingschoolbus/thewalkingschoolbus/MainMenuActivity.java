@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.MapFragmentState;
@@ -36,19 +38,6 @@ public class MainMenuActivity extends AppCompatActivity
     public static Intent makeIntent(Context context) {
         return new Intent(context, MainMenuActivity.class);
     }
-
-    // SINGLETON
-
-    private static MainMenuActivity instance;
-
-    public static MainMenuActivity getInstance() {
-        if (instance == null) {
-            instance = new MainMenuActivity();
-        }
-        return instance;
-    }
-
-    // SINGLETON
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +146,8 @@ public class MainMenuActivity extends AppCompatActivity
             openMapFragment(MapFragmentState.CREATE_GROUP);
         } else if (id == R.id.nav_fragment_map_join_group) {
             openMapFragment(MapFragmentState.JOIN_GROUP);
+        } else if (id == R.id.nav_lougout) {
+            logout();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
