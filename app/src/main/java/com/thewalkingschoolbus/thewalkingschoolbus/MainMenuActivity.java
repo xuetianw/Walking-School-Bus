@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
 
 public class MainMenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -147,7 +150,8 @@ public class MainMenuActivity extends AppCompatActivity
         } else if (id == R.id.nav_fragment_map_join_group) {
             openMapFragment(MapFragmentState.JOIN_GROUP);
         } else if (id == R.id.nav_lougout) {
-            logout();
+            storeLogoutInfoToSharePreferences();
+            finish();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -188,8 +192,13 @@ public class MainMenuActivity extends AppCompatActivity
         }
     }
 
-    private void logout() {
-        // TODO: USE THIS TO LOG OUT
+    private void storeLogoutInfoToSharePreferences() {
+        SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString(REGISTER_EMAIL, null);
+        editor.putString(LOGIN_PASSWORD, null );
+        editor.commit();
     }
 
 //

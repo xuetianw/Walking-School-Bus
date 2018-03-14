@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = context.getSharedPreferences(AppStates, MODE_PRIVATE);
         registerEmail = preferences.getString(MainActivity.REGISTER_EMAIL, null);
         loginPassword = preferences.getString(MainActivity.LOGIN_PASSWORD, null);
-        if(registerEmail != null ) {
-
+        if(registerEmail != null && loginPassword != null) {
+            login();
         }
     }
 
@@ -107,28 +107,33 @@ public class MainActivity extends AppCompatActivity {
                 loginUser = new User();
                 loginUser.setEmail(registerEmail);
 
-                new GetUserAsyncTask(LOGIN_REQUEST, loginUser,null, null, loginPassword, new OnTaskComplete() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        if(result == null){
-                            Toast.makeText(getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
-                                    .show();
-                        } else {
-                            Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
-                                    .show();
-                            setLoginUser(loginUser);
-                            Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
-                            startActivity(intent);
-                        }
-                    }
-                    @Override
-                    public void onFailure(Exception e) {
-                        Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }).execute();
+                login();
 
             }
         });
+    }
+
+    private void login() {
+        new GetUserAsyncTask(LOGIN_REQUEST, loginUser,null, null, loginPassword, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                if(result == null){
+                    Toast.makeText(getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                            .show();
+                    storeUserInfoToSharePreferences();
+                    setLoginUser(loginUser);
+                    Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
+                    startActivity(intent);
+                }
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }).execute();
     }
 
     private void setLoginUser(User user){
