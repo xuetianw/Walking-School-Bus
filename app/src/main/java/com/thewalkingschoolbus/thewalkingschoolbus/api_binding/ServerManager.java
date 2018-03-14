@@ -43,7 +43,6 @@ public class ServerManager {
     private String REMOVE_MEMBER_OF_GROUP = "/groups/%s/memberUsers/%s";
 
     private String SUCCESSFUL = "SUCCESSFUL";
-    private String UNSUCCESSFUL = "UNSUCCESSFUL";
 
     // for any type of post request, this does the initial connection and sending json file
     // Such as: create User, create Group, create monitoring

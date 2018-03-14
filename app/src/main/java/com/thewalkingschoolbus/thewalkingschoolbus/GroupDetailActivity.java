@@ -1,5 +1,7 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,18 +27,19 @@ import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.ADD_MEMBER_TO_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.CREATE_MONITORING;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_MEMBERS_OF_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_ONE_GROUP;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_EMAIL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.REMOVE_MEMBER_OF_GROUP;
 
 public class GroupDetailActivity extends AppCompatActivity {
     private static final String GROUP_ID ="GROUP_ID";
-    private boolean asyncTaskReadyFlag = false;
     private Group mSelectedGroup;
     private User[] mMembers;
-    private User[] inviteMember;
+    private List<User> inviteMember = new ArrayList<>();
     private int lengthOfMemberList;
     private int positionOfUser;
 
@@ -85,12 +88,12 @@ public class GroupDetailActivity extends AppCompatActivity {
                     mSelectedGroup = (Group) result;
                     showGroupDetail();
                 }else{
-                    //Toast.makeText(GroupDetailActivity.this, "fuck", Toast.LENGTH_LONG).show();
+                    Toast.makeText(GroupDetailActivity.this, "Unable to get Group data", Toast.LENGTH_LONG).show();
                 }
             }
             @Override
             public void onFailure(Exception e) {
-                //Toast.makeText(GroupDetailActivity.this, "fuck twice", Toast.LENGTH_LONG).show();
+                Toast.makeText(GroupDetailActivity.this, "Unable to get Group data", Toast.LENGTH_LONG).show();
             }
         }).execute();
     }
@@ -263,44 +266,87 @@ public class GroupDetailActivity extends AppCompatActivity {
                 if(User.getLoginUser().getMonitorsUsers().size() == 0 || mMembers.length == 0){
                     Toast.makeText(GroupDetailActivity.this, "you are not monitoring anyone",Toast.LENGTH_LONG).show();
                 }else {
-                    String[] inviteMemberList = inviteMemberList();
-                    //alertDialogForInvite(inviteMemberList);
+                    List<String> inviteMemberList = inviteMemberList();
+                    if(inviteMemberList.size()>0){
+                        alertDialogForInvite(inviteMemberList.toArray(new String[inviteMemberList.size()]));
+                    }else {
+                        Toast.makeText(GroupDetailActivity.this, "not one to add",Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
     }
 
-    private String [] inviteMemberList(){
+    private List<String> inviteMemberList(){
 
-        List<String> inviteMembersList = new ArrayList<>();
+        List<String> inviteMembersStrList = new ArrayList<>();
         List<User> usersInCommon =new ArrayList<>();
         List<User> listMonitoring = User.getLoginUser().getMonitorsUsers();
         String str = "";
         int i,j;
-        for(i = 0; i < listMonitoring.size() ;i++) {
-            for (j = 0; j < lengthOfMemberList; j++) {
+        for(i = 0; i < lengthOfMemberList ;i++) {
+            for (j = 0; j < listMonitoring.size(); j++) {
                 if (mMembers[i].getId().equals(listMonitoring.get(j).getId())) {
                     usersInCommon.add(mMembers[i]);
+
                 }
             }
         }
 
-        String [] inviteMembersStr = inviteMembersList.toArray(new String[listMonitoring.size()]);
-        return inviteMembersStr;
+        for(i = 0;i < listMonitoring.size();i++){
+            boolean aMember = false;
+            for (j = 0;j < usersInCommon.size();j++){
+                if (!usersInCommon.get(j).getId().equals(listMonitoring.get(i).getId())) {
+                    aMember = false;
+                }else{
+                    aMember = true;
+                    break;
+                }
+            }
+            if(aMember == false){
+                inviteMember.add(listMonitoring.get(i));
+                inviteMembersStrList.add("ID: "+listMonitoring.get(i).getId());
+            }
+        }
+
+        return inviteMembersStrList;
     }
 
     private void alertDialogForInvite(String [] inviteMemberList){
-        AlertDialog alertDialog = new AlertDialog.Builder(GroupDetailActivity.this).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage("Do u want to remove this user from the group");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        removeUserFromGroup();
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Make your selection");
+        builder.setItems(inviteMemberList, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+
+                addMemberToGroup(item);
+                updateLoginUser();
+                extractDataAndShowDetail();
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+    private void addMemberToGroup(int position){
+        new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, inviteMember.get(position), null, mSelectedGroup, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                if(result!=null){
+                    Toast.makeText(GroupDetailActivity.this, "added to group",Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(GroupDetailActivity.this, "unable to add to group",Toast.LENGTH_LONG).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(GroupDetailActivity.this, "unable to add to group",Toast.LENGTH_LONG).show();
+
+            }
+        }).execute();
     }
 
 
@@ -320,22 +366,6 @@ public class GroupDetailActivity extends AppCompatActivity {
                     }
                 }
         );
-
-        new GetUserAsyncTask(CREATE_MONITORING, parentUser, childUser, null, null, new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                if(result != null){
-                    // success
-                }else{
-                    // failed
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                // failed
-            }
-        }).execute();
 
     }
 }
