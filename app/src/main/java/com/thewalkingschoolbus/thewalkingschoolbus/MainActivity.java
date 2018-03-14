@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     String registerEmail;
     public static final String AppStates = "UUERLOGIN";
 
+    public static User loginUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +60,7 @@ public class MainActivity extends AppCompatActivity {
         registerEmail = preferences.getString(MainActivity.REGISTER_EMAIL, null);
         loginPassword = preferences.getString(MainActivity.LOGIN_PASSWORD, null);
         if(registerEmail != null ) {
-            Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
-            startActivity(intent);
+
         }
     }
 
@@ -77,8 +78,7 @@ public class MainActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //registerEmail = emailET.getText().toString();
-                //loginPassword = passwordET.getText().toString();
+
                 Intent intent = RegisterActivity.makeIntent(MainActivity.this);
                 startActivity(intent);
             }
@@ -104,22 +104,19 @@ public class MainActivity extends AppCompatActivity {
                             .show();
                 }
 
-                User user = new User();
-                user.setEmail(registerEmail);
+                loginUser = new User();
+                loginUser.setEmail(registerEmail);
 
-                new GetUserAsyncTask(LOGIN_REQUEST, user,null, null,loginPassword, new OnTaskComplete() {
+                new GetUserAsyncTask(LOGIN_REQUEST, loginUser,null, null, loginPassword, new OnTaskComplete() {
                     @Override
                     public void onSuccess(Object result) {
                         if(result == null){
                             Toast.makeText(getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
-                        }
-                        else {
+                        } else {
                             Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
-                            User user = new User();
-                            user.setEmail(registerEmail);
-                            setLoginUser(user);
+                            setLoginUser(loginUser);
                             Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
                             startActivity(intent);
                         }
@@ -130,15 +127,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).execute();
 
-
-                /*else {
-                    if (ifLoginNameAndPasswordCorrect(registerEmail, loginName, loginPassword)){
-                        Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
-                        startActivity(intent);
-                        storeUserInfoToSharePreferences();
-                    }
-                }
-                */
             }
         });
     }
@@ -159,9 +147,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private boolean ifLoginNameAndPasswordCorrect(String registerEmail, String loginName, String loginPassword) {
-        return true;
-    }
 
     private void storeUserInfoToSharePreferences() {
         SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);

@@ -27,42 +27,31 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
-
+            android:value="@string/google_maps_key" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.thewalkingschoolbus.thewalkingschoolbus.MainActivity"
+            android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
-        <activity android:name="com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity">
-        </activity>
-
+        <activity android:name=".RegisterActivity" />
         <activity
-            android:name="com.thewalkingschoolbus.thewalkingschoolbus.MainMenuActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
+            android:name=".MainMenuActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.thewalkingschoolbus.thewalkingschoolbus.AddMonitoringActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
-        <activity
-            android:name="com.thewalkingschoolbus.thewalkingschoolbus.JoinOrCreateGroupActivity">
-        </activity>
-
-        <activity
-            android:name="com.thewalkingschoolbus.thewalkingschoolbus.GroupDetailActivity">
-        </activity>
+            android:name=".AddMonitoringActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".JoinOrCreateGroupActivity" />
+        <activity android:name=".GroupDetailActivity" />
+        <activity android:name=".MonitoringDetailActivity" />
+        <activity android:name=".MonitoredbyDetailActivity"></activity>
     </application>
 
 </manifest>

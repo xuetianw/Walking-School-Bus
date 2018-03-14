@@ -241,17 +241,21 @@ public class ServerManager {
     //      id not found+ more
     // return a array of User if need can be convert to list
     public User[] userMonitoringList(User user) throws Exception {
-        String url = BASE_URL+String.format(USER_MONITORING_LIST,user.getId());
+        if(user.getId() == null) {
+            user = getUserByEmail(user);
+        }
+        String url = BASE_URL+String.format(USER_MONITORING_LIST, user.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
 
-        if (connection.getResponseCode() >= 400) {
+        int responseCode = connection.getResponseCode();
+        if ( responseCode >= 400) {
             // failed
             return null;
+        } else {
+            StringBuffer response = readJsonIntoString(connection);
+            User[] listMonitoring = new Gson().fromJson(response.toString(), User[].class);
+            return listMonitoring;
         }
-
-        StringBuffer response = readJsonIntoString(connection);
-        User[] listMonitoring = new Gson().fromJson(response.toString(), User[].class);
-        return listMonitoring;
     }
 
     // take parentUser as parameter
@@ -259,10 +263,13 @@ public class ServerManager {
     //      id not found+ more
     // return a array of User if need can be convert to list
     public User[] userMonitoringByList(User user) throws Exception {
+        if(user.getId() == null) {
+            user = getUserByEmail(user);
+        }
         String url = BASE_URL+String.format(USER_MONITORING_BY_LIST,user.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
-
-        if (connection.getResponseCode() >= 400) {
+        int responseCode = connection.getResponseCode();
+        if (responseCode >= 400) {
             // failed
             return null;
         }
@@ -295,7 +302,16 @@ public class ServerManager {
     //      parent not found, child not found, child not in the list
     // return SUCCESSFUL if deleted
     public String deleteMonitoring (User parentUser, User childUser)throws Exception{
-        String url = BASE_URL+ String.format(DELETE_MONITORING,parentUser.getId(),childUser.getId());
+
+        if(parentUser.getId() == null) {
+            parentUser = getUserByEmail(parentUser);
+        }
+
+        if(childUser.getId() == null) {
+            childUser = getUserByEmail(childUser);
+        }
+
+        String url = BASE_URL+ String.format(DELETE_MONITORING, parentUser.getId(), childUser.getId());
         HttpURLConnection connection = httpRequestDelete(url);
 
         if (connection.getResponseCode() >= 400) {

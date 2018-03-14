@@ -15,17 +15,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.R;
+import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MonitoringFragment extends android.app.Fragment {
+import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
+public class MonitoringFragment extends android.app.Fragment {
+    public static final int DELETE_MORNITORING_REQUEST_CODE = 100;
     private static final String TAG = "MonitoringFragment";
     private static final int REQUEST_CODE_GET_EMAIL = 42;
     private View view;
+    List<String> monitoringList;
+    User []users;
 
     @Nullable
     @Override
@@ -37,8 +43,7 @@ public class MonitoringFragment extends android.app.Fragment {
         Log.d(TAG, "Starting.");
 
         updateListView();
-        setupAddMonitoring();
-
+        setupAddMonitoringBtn();
         return view;
     }
 
@@ -50,21 +55,42 @@ public class MonitoringFragment extends android.app.Fragment {
     }
 
     private void updateListView() {
-        // create list of items
-        List<String> monitoringList = new ArrayList<>();
-        for (User user:MainMenuActivity.monitoringUsers) {
-            monitoringList.add(user.getName() + " (" + user.getEmail() + ")");
-        }
 
-        // build adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.monitoring_entry, monitoringList);
 
-        // configure the list view
-        ListView list = view.findViewById(R.id.listViewMonitoring);
-        list.setAdapter(adapter);
+        new GetUserAsyncTask(USR_MONITORING_LIST, MainActivity.loginUser,null, null, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                if(result == null){
+                    Toast.makeText(getActivity().getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    monitoringList = new ArrayList<>();
+                    Toast.makeText(getActivity().getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                            .show();
+                    users = (User[]) result;
+                    for(User user: users){
+                        System.out.println(user);
+                        monitoringList.add(user.getName() + "    "+ user.getEmail() );
+                    }
+                    // build adapter
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.monitoring_entry, monitoringList);
 
-        // update clicks
-        registerClickCallback();
+                    // configure the list view
+                    ListView list = view.findViewById(R.id.listViewMonitoring);
+                    list.setAdapter(adapter);
+
+                    // update clicks
+                    registerClickCallback();
+                }
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getActivity().getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }).execute();
+
+
+
     }
 
     private void registerClickCallback() {
@@ -80,14 +106,17 @@ public class MonitoringFragment extends android.app.Fragment {
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View viewClicked, int position, long id) {
-                MainMenuActivity.monitoringUsers.remove(position);
-                updateListView();
+                //MainMenuActivity.monitoringUsers.remove(position);
+                //updateListView();
+                MonitoringDetailActivity.userEmail = users[position].getEmail();
+                Intent intent = MonitoringDetailActivity.makeIntent(getActivity());
+                startActivityForResult(intent, DELETE_MORNITORING_REQUEST_CODE);
                 return true;
             }
         });
     }
 
-    private void setupAddMonitoring() {
+    private void setupAddMonitoringBtn() {
         FloatingActionButton btn = view.findViewById(R.id.btnAddMonitoring);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +149,28 @@ public class MonitoringFragment extends android.app.Fragment {
                 else {
                     Toast.makeText(getActivity(), "Canceled.", Toast.LENGTH_LONG).show();
                 }
+                break;
+            case DELETE_MORNITORING_REQUEST_CODE:
+                if(resultCode == Activity.RESULT_OK){
+                    new GetUserAsyncTask(DELETE_MONITORING, loginUser, MonitoringDetailActivity.deleteUser, null, null, new OnTaskComplete() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            if(result == null){
+                                Toast.makeText(getActivity().getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                        .show();
+                            } else {
+                                Toast.makeText(getActivity().getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                                        .show();
+
+                            }
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            Toast.makeText(getActivity().getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }).execute();
+                }
+                break;
         }
     }
 }
