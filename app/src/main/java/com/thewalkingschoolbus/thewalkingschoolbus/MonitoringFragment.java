@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,37 +41,30 @@ public class MonitoringFragment extends android.app.Fragment {
             container.removeAllViews();
         }
         view = inflater.inflate(R.layout.fragment_monitoring, container, false);
-        Log.d(TAG, "Starting.");
 
         updateListView();
         setupAddMonitoringBtn();
+        setUpRefresh();
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        updateListView();
-    }
-
     private void updateListView() {
-
-
-        new GetUserAsyncTask(USR_MONITORING_LIST, MainActivity.loginUser,null, null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(USR_MONITORING_LIST, User.getLoginUser(),null, null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if(result == null){
-                    Toast.makeText(getActivity().getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                    Toast.makeText(getActivity(),"unable to retrieve user monitoring list", Toast.LENGTH_SHORT)
                             .show();
                 } else {
                     monitoringList = new ArrayList<>();
-                    Toast.makeText(getActivity().getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                    Toast.makeText(getActivity(),"successfully retrieve user monitoring list", Toast.LENGTH_SHORT)
                             .show();
                     users = (User[]) result;
+                    if(users.length == 0){
+                        Toast.makeText(getActivity(),"not monitoring anyone", Toast.LENGTH_SHORT).show();
+                    }
                     for(User user: users){
-                        System.out.println(user);
-                        monitoringList.add(user.getName() + "    "+ user.getEmail() );
+                        monitoringList.add("Name: "+user.getName() + " "+"Email: "+ user.getEmail() );
                     }
                     // build adapter
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.monitoring_entry, monitoringList);
@@ -85,12 +79,9 @@ public class MonitoringFragment extends android.app.Fragment {
             }
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(getActivity().getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }).execute();
-
-
-
     }
 
     private void registerClickCallback() {
@@ -98,20 +89,9 @@ public class MonitoringFragment extends android.app.Fragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-                TextView textView = (TextView) viewClicked;
-                String message = "You clicked #" + (position + 1) + ", which is string: " + textView.getText().toString();
-                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-            }
-        });
-        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View viewClicked, int position, long id) {
-                //MainMenuActivity.monitoringUsers.remove(position);
-                //updateListView();
                 MonitoringDetailActivity.userEmail = users[position].getEmail();
                 Intent intent = MonitoringDetailActivity.makeIntent(getActivity());
                 startActivityForResult(intent, DELETE_MORNITORING_REQUEST_CODE);
-                return true;
             }
         });
     }
@@ -121,35 +101,32 @@ public class MonitoringFragment extends android.app.Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startAddMonitoringActivity();
+                Intent intent = AddMonitoringActivity.makeIntent(getActivity());
+                startActivity(intent);
             }
         });
     }
 
-    private void startAddMonitoringActivity() {
-        Intent intent = AddMonitoringActivity.makeIntent(getActivity());
-        startActivityForResult(intent, REQUEST_CODE_GET_EMAIL);
+    private void setUpRefresh(){
+        final SwipeRefreshLayout mySwipeRefreshLayout = view.findViewById(R.id.swiperefreshForMonitoring);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        updateListView();
+                        // This method performs the actual data-refresh operation.
+                        // The method calls setRefreshing(false) when it's finished.
+                        mySwipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
+
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CODE_GET_EMAIL:
-                if (resultCode == Activity.RESULT_OK) {
-                    // TODO: ADD EMAIL TO MONITORING LIST
-                    User newMonitoringUser = AddMonitoringActivity.getUserFromIntent(data);
-                    if (newMonitoringUser != null) {
-//                        MainMenuActivity.monitoringUsers.add(newMonitoringUser);
-//                        updateListView();
-//                        Toast.makeText(getActivity(), "Added!", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getActivity(), "Canceled.", Toast.LENGTH_LONG).show();
-                    }
-                }
-                else {
-                    Toast.makeText(getActivity(), "Canceled.", Toast.LENGTH_LONG).show();
-                }
-                break;
             case DELETE_MORNITORING_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
                     new GetUserAsyncTask(DELETE_MONITORING, loginUser, MonitoringDetailActivity.deleteUser, null, null, new OnTaskComplete() {

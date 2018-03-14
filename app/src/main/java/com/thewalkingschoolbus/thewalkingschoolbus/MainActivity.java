@@ -114,11 +114,10 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
                         } else {
+
                             Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
                             setLoginUser(loginUser);
-                            Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
-                            startActivity(intent);
                         }
                     }
                     @Override
@@ -137,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(Object result) {
                 if(result != null){
                     User.setLoginUser((User)result);
+                    Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
+                    startActivity(intent);
                 }
             }
             @Override

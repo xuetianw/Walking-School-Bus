@@ -58,16 +58,16 @@ public class MonitoredByFragment extends android.app.Fragment {
             @Override
             public void onSuccess(Object result) {
                 if(result == null){
-                    Toast.makeText(getActivity().getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                    Toast.makeText(getActivity(),"unable to update the list", Toast.LENGTH_SHORT)
                             .show();
                 } else {
                     monitoredList = new ArrayList<>();
-                    Toast.makeText(getActivity().getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                    Toast.makeText(getActivity(),"successfully update the list", Toast.LENGTH_SHORT)
                             .show();
                     users = (User[]) result;
                     for(User user: users){
                         System.out.println(user);
-                        monitoredList.add(user.getName() + "    "+ user.getEmail() );
+                        monitoredList.add(user.getName() + "  "+ user.getEmail() );
                     }
                     // build adapter
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.monitoring_entry, monitoredList);
@@ -120,10 +120,10 @@ public class MonitoredByFragment extends android.app.Fragment {
                         @Override
                         public void onSuccess(Object result) {
                             if(result == null){
-                                Toast.makeText(getActivity().getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                Toast.makeText(getActivity(),"delete Monitoring", Toast.LENGTH_SHORT)
                                         .show();
                             } else {
-                                Toast.makeText(getActivity().getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                                Toast.makeText(getActivity(),"unable to delete monitoring", Toast.LENGTH_SHORT)
                                         .show();
 
                             }
