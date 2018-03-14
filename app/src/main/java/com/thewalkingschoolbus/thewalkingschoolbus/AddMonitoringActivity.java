@@ -33,11 +33,11 @@ public class AddMonitoringActivity extends AppCompatActivity {
     public static User getUserFromIntent(Intent data) {
         // TODO: RETURN USER BASED ON CORRECT DATABASE
         String email = data.getStringExtra(RESULT_EMAIL).trim();
-        for (User user:MainMenuActivity.registeredUsers) {
-            if (user.getEmail().trim().equalsIgnoreCase(email)) {
-                return user;
-            }
-        }
+//        for (User user:MainMenuActivity.registeredUsers) {
+//            if (user.getEmail().trim().equalsIgnoreCase(email)) {
+//                return user;
+//            }
+//        }
         return null;
     }
 
@@ -64,11 +64,11 @@ public class AddMonitoringActivity extends AppCompatActivity {
             return false;
         }
         // TODO: CHECK IF EMAIL IS IN DATABASE, OR IF EMAIL IS ALREADY IN MONITORING LIST
-        for (User user:MainMenuActivity.registeredUsers) {
-            if (user.getEmail().trim().equalsIgnoreCase(field.getText().toString().trim())) {
-                return true;
-            }
-        }
+//        for (User user:MainMenuActivity.registeredUsers) {
+//            if (user.getEmail().trim().equalsIgnoreCase(field.getText().toString().trim())) {
+//                return true;
+//            }
+//        }
         toastErrorMessage("Email does not exist.");
         return false;
     }

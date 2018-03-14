@@ -139,9 +139,9 @@ public class MonitoringFragment extends android.app.Fragment {
                     // TODO: ADD EMAIL TO MONITORING LIST
                     User newMonitoringUser = AddMonitoringActivity.getUserFromIntent(data);
                     if (newMonitoringUser != null) {
-                        MainMenuActivity.monitoringUsers.add(newMonitoringUser);
-                        updateListView();
-                        Toast.makeText(getActivity(), "Added!", Toast.LENGTH_LONG).show();
+//                        MainMenuActivity.monitoringUsers.add(newMonitoringUser);
+//                        updateListView();
+//                        Toast.makeText(getActivity(), "Added!", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getActivity(), "Canceled.", Toast.LENGTH_LONG).show();
                     }

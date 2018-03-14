@@ -32,6 +32,7 @@ public class Group {
         href = null;
     }
     public Group(String name, double[] routeLatArray,double[] routeLngArray){
+        setLeader(User.getLoginUser());
         groupDescription = name;
         this.routeLatArray = routeLatArray;
         this.routeLngArray = routeLngArray;

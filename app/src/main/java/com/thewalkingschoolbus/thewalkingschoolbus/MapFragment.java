@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -16,7 +17,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
@@ -103,7 +103,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234;
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final float DEFAULT_ZOOM = 14;
-    private static int DEFAULT_SEARCH_RADIUS_METERS = 500;
+    private static int DEFAULT_SEARCH_RADIUS_METERS = 1000;//500;
 
     private GoogleMap mMap;
     private Boolean mLocationPermissionGranted = false;
@@ -123,7 +123,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
             new LatLng(-40, -168), new LatLng(71, 136));
     private PlaceInfo mPlace;
-    private Marker mMarker;
+    private List<Marker> mMarker;
 
     private Circle searchRadiusCircle;
     private Location currentLocation;
@@ -184,7 +184,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         return view;
     }
 
-    // TODO: necessary?
+    // TODO: this call may cause crash
     @Override
     public void onPause() {
         super.onPause();
@@ -220,7 +220,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
     private void init(){
         Log.d(TAG, "initializing");
 
-
+        // TODO: this line caused a crash!
         mGoogleApiClient = new GoogleApiClient
                 .Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)
@@ -293,7 +293,6 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
 
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM,
                     address.getAddressLine(0));
-
         }
     }
 
@@ -316,10 +315,8 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
 
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM,
                     address.getAddressLine(0));
-
         }
     }
-
 
     private void getLocationPermission() {
     /*
@@ -375,7 +372,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                 relocateMyLocationButton();
 
                 if (mLocationPermissionGranted) {
-                    init(); // For search auto complete
+                    init(); // TODO: review code for search auto complete
                     getDeviceLocation();
                     if (ActivityCompat.checkSelfPermission(getActivity(),
                             android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -440,10 +437,12 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             MarkerOptions options = new MarkerOptions()
                     .position(latLng)
                     .title(title);
-            mMap.addMarker(options);
+            mMarker.add(mMap.addMarker(options));
         }
         hideSoftKeyboard();
 
+        // Invalidate previously established route
+        mValidRouteEstablished = false;
     }
     private void moveCamera(LatLng latLng, float zoom, PlaceInfo placeInfo) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
@@ -453,27 +452,24 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
 
         if(placeInfo != null){
             try {
-                String snippet = "Address: " + placeInfo.getAddress() + "\n" +
-                        "Phone Number: " + placeInfo.getPhoneNumber() + "\n" +
-                        "Website: " + placeInfo.getWebsiteUri() + "\n" +
-                        "Price Rating: " + placeInfo.getRating() + "\n";
+                String snippet = placeInfo.getAddress();
 
                 MarkerOptions options = new MarkerOptions()
                         .position(latLng)
                         .title(placeInfo.getName())
                         .snippet(snippet);
-                mMarker = mMap.addMarker(options);
-
-
+                mMarker.add(mMap.addMarker(options));
             }catch (NullPointerException e) {
                 Log.e(TAG, "moveCamera: NullPointerException " + e.getMessage() );
             }
         }else {
-            mMap.addMarker(new MarkerOptions().position(latLng));
+            mMarker.add(mMap.addMarker(new MarkerOptions().position(latLng)));
         }
 
         hideSoftKeyboard();
 
+        // Invalidate previously established route
+        mValidRouteEstablished = false;
     }
 
     private void sendRequest() {
@@ -512,6 +508,14 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                             polyline.remove();
                         }
                     }
+
+                    // TODO: keep better track of markers and removing them
+                    if (mMarker != null) {
+                        for (Marker marker : mMarker) {
+                            marker.remove();
+                        }
+                    }
+                    mMap.clear();
                 }
 
                 @Override
@@ -523,7 +527,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                     destinationMarkers = new ArrayList<>();
 
                     for (Route route : routes) {
-                        moveCamera(route.originLocation, DEFAULT_ZOOM);
+                        moveCamera(route.destinationLocation, DEFAULT_ZOOM);
                         ((TextView) view.findViewById(R.id.tvDuration)).setText(route.duration.text);
                         ((TextView) view.findViewById(R.id.tvDistance)).setText(route.distance.text);
 
@@ -532,11 +536,13 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
 
                         originMarkers.add(mMap.addMarker(new MarkerOptions()
                                 .icon(BitmapDescriptorFactory.defaultMarker(210))
-                                .title(route.originAddress)
+                                .title("Origin")
+                                .snippet(route.originAddress)
                                 .position(route.originLocation)));
                         destinationMarkers.add(mMap.addMarker(new MarkerOptions()
                                 .icon(BitmapDescriptorFactory.defaultMarker(210))
-                                .title(route.destinationAddress)
+                                .title("Destination")
+                                .snippet(route.destinationAddress)
                                 .position(route.destinationLocation)));
 
                         PolylineOptions polylineOptions = new PolylineOptions().
@@ -580,7 +586,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         } else {
             // Build group to add
             double[] routeLatArray = {currentRoute.originLocation.latitude, currentRoute.destinationLocation.latitude, 0};
-            double[] routeLngArray = {currentRoute.originLocation.longitude, currentRoute.destinationLocation.latitude, 0};
+            double[] routeLngArray = {currentRoute.originLocation.longitude, currentRoute.destinationLocation.longitude, 0};
             Group group = new Group(name, routeLatArray, routeLngArray);
 
             new GetUserAsyncTask(CREATE_GROUP, null, null, group, null, new OnTaskComplete() {
@@ -654,62 +660,97 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
     }
 
     // Use this method to display all groups who's origin or destination is within search radius
+    // Update currentLocation first, retrieve group from server, then check groups against currentLocation
+    // TODO: simplify method
     private void displayGroupsNearbyCurrentPosition() {
-        new GetUserAsyncTask(LIST_GROUPS, null, null, null, null, new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                if (result == null) {
-                    Toast.makeText(getActivity(), "Failed to retrieve group data.", Toast.LENGTH_SHORT).show();
-                    return;
-                } else {
-                    Boolean groupNearBy = false;
-                    groupList = (Group[]) result;
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        try {
+            if (mLocationPermissionGranted) {
+                Task locationResult = mFusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if (task.isSuccessful()) {
+                            currentLocation = (Location) task.getResult();
+                            if (currentLocation == null) {
+                                Toast.makeText(getActivity(), "Cannot find current location. (error code 1)", Toast.LENGTH_SHORT).show();
+                                return;
+                            } else {
+                                // Retrieve group data, and compare group to currentLocation
+                                new GetUserAsyncTask(LIST_GROUPS, null, null, null, null, new OnTaskComplete() {
+                                    @Override
+                                    public void onSuccess(Object result) {
+                                        if (result == null) {
+                                            Toast.makeText(getActivity(), "Failed to retrieve group data.", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        } else {
+                                            Boolean groupNearBy = false;
+                                            groupList = (Group[]) result;
 
-                    // Display groups within search radius
-                    for (Group group : groupList) {
-                        // Compare distance between current location to current group's DESTINATION
-                        float[] results = new float[1];
-                        Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
-                                group.getRouteLatArray()[1], group.getRouteLngArray()[1],
-                                results);
-                        if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
-                            // Display this result on map.
-                            displayGroup(group);
-                            groupNearBy = true;
-                        }
-                        // Compare distance between current location to current group's ORIGIN
-                        results = new float[1];
-                        Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
-                                group.getRouteLatArray()[0], group.getRouteLngArray()[0],
-                                results);
-                        if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
-                            // Display this result on map.
-                            displayGroup(group);
-                            groupNearBy = true;
+                                            // Display groups within search radius
+                                            for (Group group : groupList) {
+                                                Log.d(TAG, "@@@@@@ ID: " + group.getId());
+                                                Log.d(TAG, "@@@@@@ DESCRIPTION: " + group.getGroupDescription());
+                                                Log.d(TAG, "@@@@@@ ORIGIN LATLNG: " + group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0]);
+                                                Log.d(TAG, "@@@@@@ DESTINATION LATLNG: " + group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1]);
+                                                // Compare distance between current location to current group's DESTINATION
+                                                float[] results = new float[1];
+                                                Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                                        group.getRouteLatArray()[1], group.getRouteLngArray()[1],
+                                                        results);
+                                                if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
+                                                    // Display this result on map.
+                                                    displayGroup(group);
+                                                    groupNearBy = true;
+                                                }
+                                                // Compare distance between current location to current group's ORIGIN
+                                                results = new float[1];
+                                                Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                                        group.getRouteLatArray()[0], group.getRouteLngArray()[0],
+                                                        results);
+                                                if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
+                                                    Log.d(TAG, "@@@@@: DISPLAY ROUTE");
+                                                    // Display this result on map.
+                                                    displayGroup(group);
+                                                    groupNearBy = true;
+                                                }
+                                            }
+                                            if (!groupNearBy) {
+                                                Toast.makeText(getActivity(), "No groups near you.", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                            // Draw visual circle for search radius
+                                            drawSearchRadius(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_SEARCH_RADIUS_METERS);
+                                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+
+                                    }
+                                }).execute();
+                            }
+                        } else {
+                            Log.d(TAG, "Current location is null. Using defaults.");
+                            Log.e(TAG, "Exception: %s", task.getException());
+                            Toast.makeText(getActivity(), "Cannot find current location. (error code 2)", Toast.LENGTH_LONG).show();
                         }
                     }
-                    if (!groupNearBy) {
-                        Toast.makeText(getActivity(), "No groups near you.", Toast.LENGTH_SHORT).show();
-                    }
-
-                    // Draw visual circle for search radius
-                    drawSearchRadius(currentRoute.destinationLocation, DEFAULT_SEARCH_RADIUS_METERS);
-                    moveCamera(currentRoute.destinationLocation, DEFAULT_ZOOM);
-                }
+                });
             }
-
-            @Override
-            public void onFailure(Exception e) {
-
-            }
-        }).execute();
+        } catch(SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage());
+        }
     }
 
     private void displayGroup(final Group group) {
         // Enable info window click
         mMap.setOnInfoWindowClickListener(this);
 
-        // Draw route
+        Log.d(TAG, "displayGroup ORIGIN ####: " + group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0]);
+        Log.d(TAG, "displayGroup DESTINATION ####: " + group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1]);
+
         try {
             new DirectionFinder(new DirectionFinderListener() {
                 @Override
@@ -719,7 +760,6 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
 
                 @Override
                 public void onDirectionFinderSuccess(List<Route> routes) {
-                    progressDialog.dismiss();
                     polylinePaths = new ArrayList<>();
                     originMarkers = new ArrayList<>();
                     destinationMarkers = new ArrayList<>();
@@ -730,7 +770,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
 
                         Marker marker = mMap.addMarker(new MarkerOptions()
                                         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
-                                        .title(group.getId())
+                                        .title(group.getGroupDescription())
                                         .snippet("Click to join group!")
                                         .position(route.originLocation));
                         marker.setTag(group.getId());
@@ -738,7 +778,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
 
                         marker = mMap.addMarker(new MarkerOptions()
                                         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
-                                        .title(group.getId())
+                                        .title(group.getGroupDescription())
                                         .snippet("Click to join group!")
                                         .position(route.destinationLocation));
                         marker.setTag(group.getId());
@@ -760,6 +800,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                     group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1])
                     .execute();
         } catch (UnsupportedEncodingException e) {
+            Log.d(TAG, "displayGroup: ####");
             e.printStackTrace();
         }
     }
@@ -788,7 +829,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         final Group finalJoinGroup = joinGroup;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                .setMessage("Join \"" + groupName + "\" ?")
+                .setMessage("Join \"" + joinGroup.getGroupDescription() + "\" ?")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -802,14 +843,14 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
     }
 
     private void joinGroup(final Group group) {
-        User user = new User(); //TODO: IMPORTANT: CHANGE THIS USER TO THE CURRENT LOGGED IN USER!!!
+        User user = User.getLoginUser();
         new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, user, null, group, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if(result == null) {
                     Toast.makeText(getActivity(), "Failed to join group.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getActivity(), "Joined \"" + group.getId() + "\" !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Joined \"" + group.getGroupDescription() + "\" !", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -844,7 +885,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         rlp.setMargins(0, 0, 30, 30);
     }
 
-    // TODO: autocomplete code below
+    // TODO: review autocomplete code below
     private void hideSoftKeyboard(){
         View view = getActivity().getCurrentFocus();
         if (view != null) {
@@ -912,6 +953,4 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             places.release();
         }
     };
-
-
 }
