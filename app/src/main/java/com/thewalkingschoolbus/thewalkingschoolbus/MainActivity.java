@@ -31,14 +31,16 @@ public class MainActivity extends AppCompatActivity {
     public static final String REGISTER_SUCCESSFULLY_MESSAGE = "register succesfully";
     public static final String ACCOUNT_DOES_NOT_EXIST_MESSAGE = "that account does not exist";
     public static final String PASSWORD_AND_NAME_NOT_CORRECT_MESSAGE = "password and name both are not correct";
-    public static final String PASSWORD_NOT_CORRECT_MESSAGE = "password is not correct";
-    public static final String LOGIN_NAME_NOT_CORRECT_MESSAGE = "login name is not correct";
+    public static final String REGISTER_FAIL_MESSAGE = "register failed";
+    public static final String LOGIN_FAIL_MESSAGE = "login failed";
     public static final String SUCCESSFUL_LOGIN_MESSAGE = "login successfully";
     EditText emailET;
     EditText passwordET;
     String loginPassword;
     String registerEmail;
     public static final String AppStates = "UUERLOGIN";
+
+    public static User loginUser;
 
 
     @Override
@@ -58,8 +60,7 @@ public class MainActivity extends AppCompatActivity {
         registerEmail = preferences.getString(MainActivity.REGISTER_EMAIL, null);
         loginPassword = preferences.getString(MainActivity.LOGIN_PASSWORD, null);
         if(registerEmail != null ) {
-            Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
-            startActivity(intent);
+
         }
     }
 
@@ -77,8 +78,7 @@ public class MainActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerEmail = emailET.getText().toString();
-                loginPassword = passwordET.getText().toString();
+
                 Intent intent = RegisterActivity.makeIntent(MainActivity.this);
                 startActivity(intent);
             }
@@ -104,17 +104,21 @@ public class MainActivity extends AppCompatActivity {
                             .show();
                 }
 
-                User user = new User();
-                user.setEmail(registerEmail);
+                loginUser = new User();
+                loginUser.setEmail(registerEmail);
 
-                new GetUserAsyncTask(LOGIN_REQUEST, user,null, null,loginPassword, new OnTaskComplete() {
+                new GetUserAsyncTask(LOGIN_REQUEST, loginUser,null, null, loginPassword, new OnTaskComplete() {
                     @Override
                     public void onSuccess(Object result) {
-                        if(result != null){
+                        if(result == null){
+                            Toast.makeText(getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                    .show();
+                        } else {
                             Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
-                            //Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
-                            //startActivity(intent);
+                            setLoginUser(loginUser);
+                            Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
+                            startActivity(intent);
                         }
                     }
                     @Override
@@ -123,22 +127,26 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).execute();
 
-
-                /*else {
-                    if (ifLoginNameAndPasswordCorrect(registerEmail, loginName, loginPassword)){
-                        Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
-                        startActivity(intent);
-                        storeUserInfoToSharePreferences();
-                    }
-                }
-                */
             }
         });
     }
 
-    private boolean ifLoginNameAndPasswordCorrect(String registerEmail, String loginName, String loginPassword) {
-        return true;
+    private void setLoginUser(User user){
+        new GetUserAsyncTask(GET_USER_BY_EMAIL, user, null, null, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                if(result != null){
+                    User.setLoginUser((User)result);
+                }
+            }
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        }).execute();
     }
+
+
 
     private void storeUserInfoToSharePreferences() {
         SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);

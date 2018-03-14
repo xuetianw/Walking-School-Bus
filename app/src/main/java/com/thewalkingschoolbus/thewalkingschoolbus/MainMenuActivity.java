@@ -201,16 +201,16 @@ public class MainMenuActivity extends AppCompatActivity
     public static List<Group> existingGroups;
     private void setupTest() {
         registeredUsers = new ArrayList<>();
-        registeredUsers.add(new User(0, "John", "john@email.com"));
-        registeredUsers.add(new User(1, "Jane", "jane@email.com"));
+        registeredUsers.add(new User("0", "John", "john@email.com"));
+        registeredUsers.add(new User("1", "Jane", "jane@email.com"));
 
         monitoringUsers = new ArrayList<>();
-        monitoringUsers.add(new User(2, "Josh", "josh@email.com"));
-        monitoringUsers.add(new User(3, "Fred", "fred@email.com"));
+        monitoringUsers.add(new User("2", "Josh", "josh@email.com"));
+        monitoringUsers.add(new User("3", "Fred", "fred@email.com"));
 
         monitoredByUsers = new ArrayList<>();
-        monitoredByUsers.add(new User(4, "Jacky", "jacky@email.com"));
-        monitoredByUsers.add(new User(5, "Benny", "benny@email.com"));
+        monitoredByUsers.add(new User("4", "Jacky", "jacky@email.com"));
+        monitoredByUsers.add(new User("5", "Benny", "benny@email.com"));
 
         existingGroups = new ArrayList<>();
         Group group1 = new Group();
@@ -231,5 +231,7 @@ public class MainMenuActivity extends AppCompatActivity
         existingGroups.add(group1);
         existingGroups.add(group2);
         existingGroups.add(group3);
+        monitoredByUsers.add(new User("4", "Jacky", "jacky@email.com"));
+        monitoredByUsers.add(new User("5", "Benny", "benny@email.com"));
     }
 }

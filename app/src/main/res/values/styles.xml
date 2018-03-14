@@ -22,5 +22,13 @@
         <item name="android:textColorPrimary">@color/black</item>
     </style>
     <!-- Parent theme sets colorControlNormal to textColorPrimary. -->
+    <style name="mEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/logoBlue</item>
+        <item name="colorControlActivated">@color/logoYellow</item>
+    </style>
+
+    <style name="mButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/logoBlue</item>
+    </style>
 
 </resources>

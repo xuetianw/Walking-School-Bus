@@ -17,21 +17,23 @@
         android:gravity="right"
         android:orientation="vertical">
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/etOrigin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
             android:backgroundTint="@color/common_google_signin_btn_text_dark_disabled"
-            android:hint="Enter origin address" />
+            android:hint="Enter origin address"
+            android:imeOptions="actionSearch"/>
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/etDestination"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
             android:backgroundTint="@color/common_google_signin_btn_text_dark_disabled"
-            android:hint="Enter destination address" />
+            android:hint="Enter destination address"
+            android:imeOptions="actionSearch"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
