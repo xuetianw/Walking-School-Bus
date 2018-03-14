@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.MapFragmentState;
 import com.thewalkingschoolbus.thewalkingschoolbus.model.User;
 
 import java.util.ArrayList;
@@ -135,13 +136,14 @@ public class MainMenuActivity extends AppCompatActivity
                     .commit();
             toolbar.setTitle("Group");
         } else if (id == R.id.nav_fragment_map) {
-            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, new MapFragment());
-            fragmentTransaction.commit();
-//            fragmentManager.beginTransaction()
-//                    .replace(R.id.content_frame, new MapFragment())
-//                    .commit();
-            toolbar.setTitle("Map");
+            openMapFragment(MapFragmentState.JOIN_GROUP);
+//            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.content_frame, new MapFragment());
+//            fragmentTransaction.commit();
+////            fragmentManager.beginTransaction()
+////                    .replace(R.id.content_frame, new MapFragment())
+////                    .commit();
+//            toolbar.setTitle("Map");
         } else if (id == R.id.nav_fragment_monitoring) {
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, new MonitoringFragment())
@@ -163,6 +165,33 @@ public class MainMenuActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void openMapFragment(MapFragmentState state) {
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+        Bundle args = new Bundle();
+        args.putInt("state", state.ordinal());
+        MapFragment mapFragment = new MapFragment();
+        mapFragment.setArguments(args);
+
+        //        MapFragmentState firstState = MapFragmentState.values()[0];
+        //        int sameState = firstState.ordinal();
+
+        fragmentTransaction.replace(R.id.content_frame, mapFragment);
+        fragmentTransaction.commit();
+
+        switch (state) {
+            case JOIN_GROUP:
+                toolbar.setTitle("Join Group");
+                break;
+            case CREATE_GROUP:
+                toolbar.setTitle("Create Group");
+                break;
+            default:
+                toolbar.setTitle("Map (Debug Mode)");
+                break;
+        }
     }
 
     // TEST - MOCK DATABASE - DELETE AFTER DATABASE MANAGER IS WRITTEN

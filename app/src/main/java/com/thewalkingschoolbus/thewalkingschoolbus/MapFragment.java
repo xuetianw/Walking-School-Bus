@@ -53,6 +53,7 @@ import com.google.android.gms.tasks.Task;
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.EnterGroupNameDialogFragment;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.MapFragmentState;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinder;
@@ -101,6 +102,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
     private ProgressDialog progressDialog;
 
     private Circle searchRadiusCircle;
+    private Location currentLocation;
     private static Route currentRoute;
     private static Group[] groupList;
 
@@ -115,6 +117,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         if (isServicesOK()) {
             getLocationPermission();
         }
+
         etOrigin = (EditText) view.findViewById(R.id.etOrigin);
         etDestination = (EditText) view.findViewById(R.id.etDestination);
         Button btnFindPath = (Button) view.findViewById(R.id.btnFindPath);
@@ -135,14 +138,34 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         btnViewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                displayNearbyGroups();
+                if (getMapFragmentState() == MapFragmentState.JOIN_GROUP) {
+                    displayGroupsNearbyCurrentPosition();
+                } else if (getMapFragmentState() == MapFragmentState.MAP) {
+                    displayNearbyGroups();
+                } else {
+                    Toast.makeText(getActivity(), "Unexpected error.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
+        // Disable unnecessary buttons according to Map State
+        if (getMapFragmentState() == MapFragmentState.CREATE_GROUP) {
+            btnViewGroup.setVisibility(View.GONE);
+        } else if (getMapFragmentState() == MapFragmentState.JOIN_GROUP) {
+            etOrigin.setVisibility(View.GONE);
+            etDestination.setVisibility(View.GONE);
+            btnFindPath.setVisibility(View.GONE);
+            btnCreateGroup.setVisibility(View.GONE);
+        }
 
         return view;
     }
 
-    public boolean isServicesOK(){
+    private MapFragmentState getMapFragmentState() {
+        return MapFragmentState.values()[getArguments().getInt("state")];
+    }
+
+    private boolean isServicesOK(){
         Log.d(TAG, "isServicesOK: checking google services version");
 
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
@@ -247,7 +270,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
-                            Location currentLocation = (Location) task.getResult(); // TODO: BUG: Occasionally, even though task.isSuccessful, current location will return null and crash app.
+                            currentLocation = (Location) task.getResult(); // TODO: BUG: Occasionally, even though task.isSuccessful, current location will return null and crash app.
                             if (currentLocation == null) {
                                 Toast.makeText(getActivity(), "Cannot find current location. (error code 1)", Toast.LENGTH_SHORT).show();
                             } else {
@@ -312,7 +335,6 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                 @Override
                 public void onDirectionFinderSuccess(List<Route> routes) {
                     mValidRouteEstablished = true;
-
                     progressDialog.dismiss();
                     polylinePaths = new ArrayList<>();
                     originMarkers = new ArrayList<>();
@@ -449,6 +471,58 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         }
     }
 
+    // Use this method to display all groups who's origin or destination is within search radius
+    private void displayGroupsNearbyCurrentPosition() {
+        new GetUserAsyncTask(LIST_GROUPS, null, null, null, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                if (result == null) {
+                    Toast.makeText(getActivity(), "Failed to retrieve group data.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    Boolean groupNearBy = false;
+                    groupList = (Group[]) result;
+
+                    // Display groups within search radius
+                    for (Group group : groupList) {
+                        // Compare distance between current location to current group's DESTINATION
+                        float[] results = new float[1];
+                        Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                group.getRouteLatArray()[1], group.getRouteLngArray()[1],
+                                results);
+                        if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
+                            // Display this result on map.
+                            displayGroup(group);
+                            groupNearBy = true;
+                        }
+                        // Compare distance between current location to current group's ORIGIN
+                        results = new float[1];
+                        Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                group.getRouteLatArray()[0], group.getRouteLngArray()[0],
+                                results);
+                        if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
+                            // Display this result on map.
+                            displayGroup(group);
+                            groupNearBy = true;
+                        }
+                    }
+                    if (!groupNearBy) {
+                        Toast.makeText(getActivity(), "No groups near you.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    // Draw visual circle for search radius
+                    drawSearchRadius(currentRoute.destinationLocation, DEFAULT_SEARCH_RADIUS_METERS);
+                    moveCamera(currentRoute.destinationLocation, DEFAULT_ZOOM);
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        }).execute();
+    }
+
     private void displayGroup(final Group group) {
         // Enable info window click
         mMap.setOnInfoWindowClickListener(this);
@@ -577,13 +651,14 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
     }
 
     private void relocateMyLocationButton() {
-//        View locationBtn = view.findViewWithTag("GoogleMapMyLocationButton");
-//        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) locationBtn.getLayoutParams();
-//        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
-//        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-//        layoutParams.setMargins(30, 30, 30, 30);
+        // Get the button view
+        View locationButton = ((View) view.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
 
-        // TODO: Above solution does not work, but this solution affects camera centering (ie. the camera will center too low)
-        mMap.setPadding(0,600,0,0);
+        // and next place it, for example, on bottom right (as Google Maps app)
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+        // position on right bottom
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+        rlp.setMargins(0, 0, 30, 30);
     }
 }
