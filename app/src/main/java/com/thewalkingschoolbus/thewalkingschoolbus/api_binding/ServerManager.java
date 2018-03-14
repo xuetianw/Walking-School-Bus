@@ -240,7 +240,10 @@ public class ServerManager {
     //      id not found+ more
     // return a array of User if need can be convert to list
     public User[] userMonitoringList(User user) throws Exception {
-        String url = BASE_URL+String.format(USER_MONITORING_LIST, getUserByEmail(user).getId());
+        if(user.getId() == null) {
+            user = getUserByEmail(user);
+        }
+        String url = BASE_URL+String.format(USER_MONITORING_LIST, user.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
 
         int responseCode = connection.getResponseCode();
@@ -298,7 +301,16 @@ public class ServerManager {
     //      parent not found, child not found, child not in the list
     // return SUCCESSFUL if deleted
     public String deleteMonitoring (User parentUser, User childUser)throws Exception{
-        String url = BASE_URL+ String.format(DELETE_MONITORING, getUserByEmail(parentUser).getId(), getUserByEmail(childUser).getId());
+
+        if(parentUser.getId() == null) {
+            parentUser = getUserByEmail(parentUser);
+        }
+
+        if(childUser.getId() == null) {
+            childUser = getUserByEmail(childUser);
+        }
+
+        String url = BASE_URL+ String.format(DELETE_MONITORING, parentUser.getId(), childUser.getId());
         HttpURLConnection connection = httpRequestDelete(url);
 
         if (connection.getResponseCode() >= 400) {

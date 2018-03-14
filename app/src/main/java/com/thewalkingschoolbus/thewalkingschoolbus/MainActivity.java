@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
+                            setLoginUser(loginUser);
                             Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
                             startActivity(intent);
                         }
@@ -128,6 +129,21 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setLoginUser(User user){
+        new GetUserAsyncTask(GET_USER_BY_EMAIL, user, null, null, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                if(result != null){
+                    User.setLoginUser((User)result);
+                }
+            }
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        }).execute();
     }
 
 
