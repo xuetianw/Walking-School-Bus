@@ -20,6 +20,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.MapFragmentState;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
 import java.util.ArrayList;
@@ -34,6 +36,19 @@ public class MainMenuActivity extends AppCompatActivity
     public static Intent makeIntent(Context context) {
         return new Intent(context, MainMenuActivity.class);
     }
+
+    // SINGLETON
+
+    private static MainMenuActivity instance;
+
+    public static MainMenuActivity getInstance() {
+        if (instance == null) {
+            instance = new MainMenuActivity();
+        }
+        return instance;
+    }
+
+    // SINGLETON
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,19 +80,19 @@ public class MainMenuActivity extends AppCompatActivity
         openDefaultFragment();
 
         // SET UP TEST //
-        setupTest();
+        //setupTest();
     }
 
     private void openDefaultFragment() {
-        navigationView.setCheckedItem(R.id.nav_fragment_profile);
+        navigationView.setCheckedItem(R.id.nav_fragment_monitoring);
         getFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, new ProfileFragment())
+                .replace(R.id.content_frame, new MonitoringFragment())
                 .commit();
         // Brief delay to prevent new title from being overwritten by default title.
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                toolbar.setTitle("Profile");
+                toolbar.setTitle("Monitoring");
             }
         }, 1);
     }
@@ -92,29 +107,29 @@ public class MainMenuActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.action_logout) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        } else if (id == R.id.action_logout) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -123,25 +138,7 @@ public class MainMenuActivity extends AppCompatActivity
         int id = item.getItemId();
         FragmentManager fragmentManager = getFragmentManager();
 
-        if (id == R.id.nav_fragment_profile) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, new ProfileFragment())
-                    .commit();
-            toolbar.setTitle("Profile");
-        } else if (id == R.id.nav_fragment_group) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, new GroupFragment())
-                    .commit();
-            toolbar.setTitle("Group");
-        } else if (id == R.id.nav_fragment_map) {
-            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, new MapFragment());
-            fragmentTransaction.commit();
-//            fragmentManager.beginTransaction()
-//                    .replace(R.id.content_frame, new MapFragment())
-//                    .commit();
-            toolbar.setTitle("Map");
-        } else if (id == R.id.nav_fragment_monitoring) {
+        if (id == R.id.nav_fragment_monitoring) {
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, new MonitoringFragment())
                     .commit();
@@ -151,6 +148,15 @@ public class MainMenuActivity extends AppCompatActivity
                     .replace(R.id.content_frame, new MonitoredByFragment())
                     .commit();
             toolbar.setTitle("Monitored By");
+        } else if (id == R.id.nav_fragment_group) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, new GroupFragment())
+                    .commit();
+            toolbar.setTitle("Groups");
+        } else if (id == R.id.nav_fragment_map_create_group) {
+            openMapFragment(MapFragmentState.CREATE_GROUP);
+        } else if (id == R.id.nav_fragment_map_join_group) {
+            openMapFragment(MapFragmentState.JOIN_GROUP);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -164,22 +170,74 @@ public class MainMenuActivity extends AppCompatActivity
         return true;
     }
 
-    // TEST - MOCK DATABASE - DELETE AFTER DATABASE MANAGER IS WRITTEN
-    public static List<User> registeredUsers;
-    public static List<User> monitoringUsers;
-    public static List<User> monitoredByUsers;
-    private void setupTest() {
-        registeredUsers = new ArrayList<>();
-        registeredUsers.add(new User("0", "John", "john@email.com"));
-        registeredUsers.add(new User("1", "Jane", "jane@email.com"));
+    public void openMapFragment(MapFragmentState state) {
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-        monitoringUsers = new ArrayList<>();
-        monitoringUsers.add(new User("2", "Josh", "josh@email.com"));
-        monitoringUsers.add(new User("3", "Fred", "fred@email.com"));
+        Bundle args = new Bundle();
+        args.putInt("state", state.ordinal());
+        MapFragment mapFragment = new MapFragment();
+        mapFragment.setArguments(args);
 
-        monitoredByUsers = new ArrayList<>();
-        monitoredByUsers.add(new User("4", "Jacky", "jacky@email.com"));
-        monitoredByUsers.add(new User("5", "Benny", "benny@email.com"));
+        //        MapFragmentState firstState = MapFragmentState.values()[0];
+        //        int sameState = firstState.ordinal();
+
+        fragmentTransaction.replace(R.id.content_frame, mapFragment);
+        fragmentTransaction.commit();
+
+        switch (state) {
+            case JOIN_GROUP:
+                toolbar.setTitle("Join Group");
+                break;
+            case CREATE_GROUP:
+                toolbar.setTitle("Create Group");
+                break;
+            default:
+                toolbar.setTitle("Map (Debug Mode)");
+                break;
+        }
     }
-    // TEST
+
+    private void logout() {
+        // TODO: USE THIS TO LOG OUT
+    }
+
+//
+//    // TEST - MOCK DATABASE - DELETE AFTER DATABASE MANAGER IS WRITTEN
+//    public static List<User> registeredUsers;
+//    public static List<User> monitoringUsers;
+//    public static List<User> monitoredByUsers;
+//    public static List<Group> existingGroups;
+//    private void setupTest() {
+//        registeredUsers = new ArrayList<>();
+//        registeredUsers.add(new User("0", "John", "john@email.com"));
+//        registeredUsers.add(new User("1", "Jane", "jane@email.com"));
+//
+//        monitoringUsers = new ArrayList<>();
+//        monitoringUsers.add(new User("2", "Josh", "josh@email.com"));
+//        monitoringUsers.add(new User("3", "Fred", "fred@email.com"));
+//
+//        monitoredByUsers = new ArrayList<>();
+//        monitoredByUsers.add(new User("4", "Jacky", "jacky@email.com"));
+//        monitoredByUsers.add(new User("5", "Benny", "benny@email.com"));
+//
+//        existingGroups = new ArrayList<>();
+//        Group group1 = new Group();
+//        group1.setId("SFU to JOYCE STATION");
+//        group1.setRouteLatArray(new double[]{49.2781,49.2384,0});
+//        group1.setRouteLngArray(new double[]{-122.9199,-123.0318,0});
+//
+//        Group group2 = new Group();
+//        group2.setId("UBC to GASTON PARK");
+//        group2.setRouteLatArray(new double[]{49.2606,49.2359,0});
+//        group2.setRouteLngArray(new double[]{-123.2459,-123.0309,0});
+//
+//        Group group3 = new Group();
+//        group3.setId("JOYCE STATION to CENTRAL PARK");
+//        group3.setRouteLatArray(new double[]{49.2384,49.2276,0});
+//        group3.setRouteLngArray(new double[]{-123.0318,-123.0179,0});
+//
+//        existingGroups.add(group1);
+//        existingGroups.add(group2);
+//        existingGroups.add(group3);
+//    }
 }

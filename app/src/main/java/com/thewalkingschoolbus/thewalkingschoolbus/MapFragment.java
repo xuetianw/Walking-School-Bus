@@ -1,8 +1,14 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -11,10 +17,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +31,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -38,8 +48,12 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -50,7 +64,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.common.api.ResultCallback;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.EnterGroupNameDialogFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.MapFragmentState;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinder;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinderListener;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.Route;
@@ -60,6 +79,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.ADD_MEMBER_TO_GROUP;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.CREATE_GROUP;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LIST_GROUPS;
 
 /*
 * SOURCES - Based on following tutorials:
@@ -72,32 +96,14 @@ import java.util.List;
 * map_modules from source code by "Hiep Mai Thanh"
 *   https://github.com/hiepxuan2008/GoogleMapDirectionSimple
 */
-public class MapFragment extends Fragment implements OnMapReadyCallback,
+public class MapFragment extends android.support.v4.app.Fragment implements GoogleMap.OnInfoWindowClickListener,
         GoogleApiClient.OnConnectionFailedListener {
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(getActivity(), "Map is Ready", Toast.LENGTH_SHORT).show();
-        mMap = googleMap;
-        mMap.setPadding(0, 600, 0, 0); // Boundaries for google map buttons
-        if (mLocationPermissionGranted) {
-            init();
-            getDeviceLocation();
-            if (ActivityCompat.checkSelfPermission(getActivity(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getActivity(),
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-        }
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-    }
 
     private static final String TAG = "MapFragment";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234;
     private static final int ERROR_DIALOG_REQUEST = 9001;
-    private static final float DEFAULT_ZOOM = 18;
+    private static final float DEFAULT_ZOOM = 14;
+    private static int DEFAULT_SEARCH_RADIUS_METERS = 1000;//500;
 
     private GoogleMap mMap;
     private Boolean mLocationPermissionGranted = false;
@@ -111,12 +117,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
+
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private GoogleApiClient mGoogleApiClient;
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
             new LatLng(-40, -168), new LatLng(71, 136));
     private PlaceInfo mPlace;
-    private Marker mMarker;
+    private List<Marker> mMarker;
+
+    private Circle searchRadiusCircle;
+    private Location currentLocation;
+    private static Route currentRoute;
+    private static Group[] groupList;
 
     @Nullable
     @Override
@@ -126,13 +138,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
         view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        getLocationPermission();
+        //if (isServicesOK()) // TODO: improve this
+            getLocationPermission();
 
         etOrigin = (AutoCompleteTextView) view.findViewById(R.id.etOrigin);
         etDestination = (AutoCompleteTextView) view.findViewById(R.id.etDestination);
-
-
-
         Button btnFindPath = (Button) view.findViewById(R.id.btnFindPath);
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,20 +157,70 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 displayCreateGroupDialog();
             }
         });
+        Button btnViewGroup = (Button) view.findViewById(R.id.btnViewGroup);
+        btnViewGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getMapFragmentState() == MapFragmentState.JOIN_GROUP) {
+                    displayGroupsNearbyCurrentPosition();
+                } else if (getMapFragmentState() == MapFragmentState.MAP) {
+                    displayNearbyGroups();
+                } else {
+                    Toast.makeText(getActivity(), "Unexpected error.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // Disable unnecessary buttons according to Map State
+        if (getMapFragmentState() == MapFragmentState.CREATE_GROUP) {
+            btnViewGroup.setVisibility(View.GONE);
+        } else if (getMapFragmentState() == MapFragmentState.JOIN_GROUP) {
+            etOrigin.setVisibility(View.GONE);
+            etDestination.setVisibility(View.GONE);
+            btnFindPath.setVisibility(View.GONE);
+            btnCreateGroup.setVisibility(View.GONE);
+        }
 
         return view;
     }
 
+    // TODO: this call may cause crash
     @Override
     public void onPause() {
         super.onPause();
         mGoogleApiClient.stopAutoManage(getActivity());
         mGoogleApiClient.disconnect();
     }
+
+    private MapFragmentState getMapFragmentState() {
+        return MapFragmentState.values()[getArguments().getInt("state")];
+    }
+
+    private boolean isServicesOK(){
+        Log.d(TAG, "isServicesOK: checking google services version");
+
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
+
+        if(available == ConnectionResult.SUCCESS){
+            //everything is fine and the user can make map requests
+            Log.d(TAG, "isServicesOK: Google Play Services is working");
+            return true;
+        }
+        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+            //an error occurred but we can resolve it
+            Log.d(TAG, "isServicesOK: an error occurred but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        }else{
+            Toast.makeText(getActivity(), "You can't make map requests", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
     private void init(){
         Log.d(TAG, "initializing");
 
-
+        // TODO: this line caused a crash!
         mGoogleApiClient = new GoogleApiClient
                 .Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)
@@ -213,6 +273,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         hideSoftKeyboard();
     }
 
+
     private void geoLocate() {
         Log.d(TAG, "geoLocate: geolocating");
 
@@ -232,7 +293,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM,
                     address.getAddressLine(0));
-
         }
     }
 
@@ -255,10 +315,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM,
                     address.getAddressLine(0));
-
         }
     }
-
 
     private void getLocationPermission() {
     /*
@@ -305,7 +363,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager()
                 .findFragmentById(R.id.map);
 
-        mapFragment.getMapAsync(this);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                Log.d(TAG, "onMapReady: map is ready");
+
+                mMap = googleMap;
+                relocateMyLocationButton();
+
+                if (mLocationPermissionGranted) {
+                    init(); // TODO: review code for search auto complete
+                    getDeviceLocation();
+                    if (ActivityCompat.checkSelfPermission(getActivity(),
+                            android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(getActivity(),
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                }
+                mMap.setMyLocationEnabled(true);
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            }
+        });
     }
 
     private void getDeviceLocation() {
@@ -324,13 +403,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
-                            Location currentLocation = (Location) task.getResult(); // TODO: BUG: Occasionally, even though task.isSuccessful, current location will return null and crash app.
+                            currentLocation = (Location) task.getResult(); // TODO: BUG: Occasionally, even though task.isSuccessful, current location will return null and crash app.
                             if (currentLocation == null) {
                                 Toast.makeText(getActivity(), "Cannot find current location. (error code 1)", Toast.LENGTH_SHORT).show();
                             } else {
-                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                        DEFAULT_ZOOM,
-                                        "My Location");
+                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
                             }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
@@ -345,6 +422,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
+    private void moveCamera(LatLng latLng, float zoom) {
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    }
+
     private void moveCamera(LatLng latLng, float zoom, String title) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
@@ -355,10 +437,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             MarkerOptions options = new MarkerOptions()
                     .position(latLng)
                     .title(title);
-            mMap.addMarker(options);
+            mMarker.add(mMap.addMarker(options));
         }
         hideSoftKeyboard();
 
+        // Invalidate previously established route
+        mValidRouteEstablished = false;
     }
     private void moveCamera(LatLng latLng, float zoom, PlaceInfo placeInfo) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
@@ -368,27 +452,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         if(placeInfo != null){
             try {
-                String snippet = "Address: " + placeInfo.getAddress() + "\n" +
-                        "Phone Number: " + placeInfo.getPhoneNumber() + "\n" +
-                        "Website: " + placeInfo.getWebsiteUri() + "\n" +
-                        "Price Rating: " + placeInfo.getRating() + "\n";
+                String snippet = placeInfo.getAddress();
 
                 MarkerOptions options = new MarkerOptions()
                         .position(latLng)
                         .title(placeInfo.getName())
                         .snippet(snippet);
-                mMarker = mMap.addMarker(options);
-
-
+                mMarker.add(mMap.addMarker(options));
             }catch (NullPointerException e) {
                 Log.e(TAG, "moveCamera: NullPointerException " + e.getMessage() );
             }
         }else {
-            mMap.addMarker(new MarkerOptions().position(latLng));
+            mMarker.add(mMap.addMarker(new MarkerOptions().position(latLng)));
         }
 
         hideSoftKeyboard();
 
+        // Invalidate previously established route
+        mValidRouteEstablished = false;
     }
 
     private void sendRequest() {
@@ -404,6 +485,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
 
         try {
+            // Draw route
             new DirectionFinder(new DirectionFinderListener() {
                 @Override
                 public void onDirectionFinderStart() {
@@ -426,6 +508,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                             polyline.remove();
                         }
                     }
+
+                    // TODO: keep better track of markers and removing them
+                    if (mMarker != null) {
+                        for (Marker marker : mMarker) {
+                            marker.remove();
+                        }
+                    }
+                    mMap.clear();
                 }
 
                 @Override
@@ -437,18 +527,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     destinationMarkers = new ArrayList<>();
 
                     for (Route route : routes) {
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
+                        moveCamera(route.destinationLocation, DEFAULT_ZOOM);
                         ((TextView) view.findViewById(R.id.tvDuration)).setText(route.duration.text);
                         ((TextView) view.findViewById(R.id.tvDistance)).setText(route.distance.text);
 
+                        Log.d(TAG, "onDirectionFinderSuccess: Current route: FROM: " + route.originAddress + ", TO: " + route.destinationAddress);
+                        currentRoute = route;
+
                         originMarkers.add(mMap.addMarker(new MarkerOptions()
-                                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue)) // TODO: SET CUSTOM MARKER
-                                .title(route.startAddress)
-                                .position(route.startLocation)));
+                                .icon(BitmapDescriptorFactory.defaultMarker(210))
+                                .title("Origin")
+                                .snippet(route.originAddress)
+                                .position(route.originLocation)));
                         destinationMarkers.add(mMap.addMarker(new MarkerOptions()
-                                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
-                                .title(route.endAddress)
-                                .position(route.endLocation)));
+                                .icon(BitmapDescriptorFactory.defaultMarker(210))
+                                .title("Destination")
+                                .snippet(route.destinationAddress)
+                                .position(route.destinationLocation)));
 
                         PolylineOptions polylineOptions = new PolylineOptions().
                                 geodesic(true).
@@ -462,7 +557,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     }
                 }
             }, origin, destination).execute();
-
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -471,38 +565,327 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private void displayProgressDialog() {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        progressDialog.setMessage("Finding direction...");
-//        progressDialog.setCancelable(false);
-//        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                progressDialog.dismiss();
-//            }
-//        });
+        progressDialog.setMessage("Please wait...");
         progressDialog.show();
-
-//        progressDialog = ProgressDialog.show(getActivity(), "Please wait.",
-//                "Finding direction..!", true);
     }
 
     private void displayCreateGroupDialog() {
         if (mValidRouteEstablished) {
-            // Create dialog which calls createGroup when user enters valid group name.
-            android.support.v4.app.FragmentManager manager = getFragmentManager();
+            // Create dialog which calls createGroupDialogPositiveOnClick on OK.
             EnterGroupNameDialogFragment dialog = new EnterGroupNameDialogFragment();
             dialog.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-            dialog.show(manager, "MessageDialog");
+            dialog.show(getFragmentManager(), "MessageDialog");
         } else {
-            Toast.makeText(getActivity(), "Please enter valid path.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please enter valid path first.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static void createGroup(Context context) {
+    public static void createGroupDialogPositiveOnClick(final Context context, final AlertDialog alertDialog, String name) {
+        if (Objects.equals(name, "")) {
+            Toast.makeText(context, "Group name cannot be empty.", Toast.LENGTH_SHORT).show();
+        } else {
+            // Build group to add
+            double[] routeLatArray = {currentRoute.originLocation.latitude, currentRoute.destinationLocation.latitude, 0};
+            double[] routeLngArray = {currentRoute.originLocation.longitude, currentRoute.destinationLocation.longitude, 0};
+            Group group = new Group(name, routeLatArray, routeLngArray);
 
-        // Add to group list using NAME, ORIGIN, DESTINATION
-        // Transition to group window
+            new GetUserAsyncTask(CREATE_GROUP, null, null, group, null, new OnTaskComplete() {
+                @Override
+                public void onSuccess(Object result) {
+                    if(result == null) {
+                        Toast.makeText(context, "Name already exists.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        //Group[] group = (Group[]) result;
+                        Toast.makeText(context, "Group created!", Toast.LENGTH_SHORT).show();
+                        alertDialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    Toast.makeText(context, "Unexpected error.", Toast.LENGTH_SHORT).show();
+                }
+            }).execute();
+        }
     }
 
+    private void displayNearbyGroups() {
+        if (mValidRouteEstablished) {
+            new GetUserAsyncTask(LIST_GROUPS, null, null, null, null, new OnTaskComplete() {
+                @Override
+                public void onSuccess(Object result) {
+                    if (result == null) {
+                        Toast.makeText(getActivity(), "Failed to retrieve group data.", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else {
+                        Boolean groupNearBy = false;
+                        groupList = (Group[]) result;
+
+                        // Display groups within search radius
+                        for (Group group : groupList) {
+                            // Compare destination difference of current route input and current group being examined. Returns distance in meters in results.
+                            float[] results = new float[1];
+                            Log.d(TAG, "displayNearbyGroups: distance between destinations in meters: " + results[0]);
+                            Location.distanceBetween(currentRoute.destinationLocation.latitude, currentRoute.destinationLocation.longitude,
+                                    group.getRouteLatArray()[1], group.getRouteLngArray()[1],
+                                    results);
+                            Log.d(TAG, "displayNearbyGroups: distance between destinations in meters: " + results[0]);
+                            if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
+                                Log.d(TAG, "displayNearbyGroups: INSIDE CIRCLE: " + results[0]);
+                                // Display this result on map.
+                                displayGroup(group);
+                                groupNearBy = true;
+                            } else {
+                                Log.d(TAG, "displayNearbyGroups: OUTSIDE CIRCLE: " + results[0]);
+                            }
+                        }
+                        if (!groupNearBy) {
+                            Toast.makeText(getActivity(), "No groups near destination.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        // Draw visual circle for search radius
+                        drawSearchRadius(currentRoute.destinationLocation, DEFAULT_SEARCH_RADIUS_METERS);
+                        moveCamera(currentRoute.destinationLocation, DEFAULT_ZOOM);
+                    }
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            }).execute();
+        } else {
+            Toast.makeText(getActivity(), "Please enter valid path first.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Use this method to display all groups who's origin or destination is within search radius
+    // Update currentLocation first, retrieve group from server, then check groups against currentLocation
+    // TODO: simplify method
+    private void displayGroupsNearbyCurrentPosition() {
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        try {
+            if (mLocationPermissionGranted) {
+                Task locationResult = mFusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if (task.isSuccessful()) {
+                            currentLocation = (Location) task.getResult();
+                            if (currentLocation == null) {
+                                Toast.makeText(getActivity(), "Cannot find current location. (error code 1)", Toast.LENGTH_SHORT).show();
+                                return;
+                            } else {
+                                // Retrieve group data, and compare group to currentLocation
+                                new GetUserAsyncTask(LIST_GROUPS, null, null, null, null, new OnTaskComplete() {
+                                    @Override
+                                    public void onSuccess(Object result) {
+                                        if (result == null) {
+                                            Toast.makeText(getActivity(), "Failed to retrieve group data.", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        } else {
+                                            Boolean groupNearBy = false;
+                                            groupList = (Group[]) result;
+
+                                            // Display groups within search radius
+                                            for (Group group : groupList) {
+                                                Log.d(TAG, "@@@@@@ ID: " + group.getId());
+                                                Log.d(TAG, "@@@@@@ DESCRIPTION: " + group.getGroupDescription());
+                                                Log.d(TAG, "@@@@@@ ORIGIN LATLNG: " + group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0]);
+                                                Log.d(TAG, "@@@@@@ DESTINATION LATLNG: " + group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1]);
+                                                // Compare distance between current location to current group's DESTINATION
+                                                float[] results = new float[1];
+                                                Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                                        group.getRouteLatArray()[1], group.getRouteLngArray()[1],
+                                                        results);
+                                                if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
+                                                    // Display this result on map.
+                                                    displayGroup(group);
+                                                    groupNearBy = true;
+                                                }
+                                                // Compare distance between current location to current group's ORIGIN
+                                                results = new float[1];
+                                                Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                                                        group.getRouteLatArray()[0], group.getRouteLngArray()[0],
+                                                        results);
+                                                if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
+                                                    Log.d(TAG, "@@@@@: DISPLAY ROUTE");
+                                                    // Display this result on map.
+                                                    displayGroup(group);
+                                                    groupNearBy = true;
+                                                }
+                                            }
+                                            if (!groupNearBy) {
+                                                Toast.makeText(getActivity(), "No groups near you.", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                            // Draw visual circle for search radius
+                                            drawSearchRadius(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_SEARCH_RADIUS_METERS);
+                                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Exception e) {
+
+                                    }
+                                }).execute();
+                            }
+                        } else {
+                            Log.d(TAG, "Current location is null. Using defaults.");
+                            Log.e(TAG, "Exception: %s", task.getException());
+                            Toast.makeText(getActivity(), "Cannot find current location. (error code 2)", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        } catch(SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
+    private void displayGroup(final Group group) {
+        // Enable info window click
+        mMap.setOnInfoWindowClickListener(this);
+
+        Log.d(TAG, "displayGroup ORIGIN ####: " + group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0]);
+        Log.d(TAG, "displayGroup DESTINATION ####: " + group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1]);
+
+        try {
+            new DirectionFinder(new DirectionFinderListener() {
+                @Override
+                public void onDirectionFinderStart() {
+
+                }
+
+                @Override
+                public void onDirectionFinderSuccess(List<Route> routes) {
+                    polylinePaths = new ArrayList<>();
+                    originMarkers = new ArrayList<>();
+                    destinationMarkers = new ArrayList<>();
+
+                    for (Route route : routes) {
+                        ((TextView) view.findViewById(R.id.tvDuration)).setText(route.duration.text);
+                        ((TextView) view.findViewById(R.id.tvDistance)).setText(route.distance.text);
+
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
+                                        .title(group.getGroupDescription())
+                                        .snippet("Click to join group!")
+                                        .position(route.originLocation));
+                        marker.setTag(group.getId());
+                        originMarkers.add(marker);
+
+                        marker = mMap.addMarker(new MarkerOptions()
+                                        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
+                                        .title(group.getGroupDescription())
+                                        .snippet("Click to join group!")
+                                        .position(route.destinationLocation));
+                        marker.setTag(group.getId());
+                        destinationMarkers.add(marker);
+
+                        PolylineOptions polylineOptions = new PolylineOptions().
+                                geodesic(true).
+                                color(getResources().getColor(R.color.colorAccent)).
+                                width(8);
+
+                        for (int i = 0; i < route.points.size(); i++)
+                            polylineOptions.add(route.points.get(i));
+
+                        polylinePaths.add(mMap.addPolyline(polylineOptions));
+                    }
+                }
+            },
+                    group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0],
+                    group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1])
+                    .execute();
+        } catch (UnsupportedEncodingException e) {
+            Log.d(TAG, "displayGroup: ####");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if (marker.getTag() == null) {
+            return;
+        }
+        displayConfirmJoinGroup((String) marker.getTag());
+    }
+
+    private void displayConfirmJoinGroup(final String groupName) {
+
+        // Group to join by name
+        Group joinGroup = new Group();
+        for (Group group : groupList) {
+            if (Objects.equals(group.getId(), groupName)) {
+                joinGroup = group;
+            }
+        }
+        if (joinGroup.getId() == null) {
+            Toast.makeText(getActivity(), "Unexpected error.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final Group finalJoinGroup = joinGroup;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setMessage("Join \"" + joinGroup.getGroupDescription() + "\" ?")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        joinGroup(finalJoinGroup);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null);
+        AlertDialog dialog = builder.create();
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.show();
+    }
+
+    private void joinGroup(final Group group) {
+        User user = User.getLoginUser();
+        new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, user, null, group, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                if(result == null) {
+                    Toast.makeText(getActivity(), "Failed to join group.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Joined \"" + group.getGroupDescription() + "\" !", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getActivity(), "Unexpected error.", Toast.LENGTH_SHORT).show();
+            }
+        }).execute();
+    }
+
+    private void drawSearchRadius(LatLng centerCoordinate, int radiusMeters) {
+        if (searchRadiusCircle != null)
+            searchRadiusCircle.remove();
+        CircleOptions circleOptions = new CircleOptions();
+        circleOptions.center(centerCoordinate);
+        circleOptions.radius(radiusMeters);
+        circleOptions.strokeColor(0xFFffc300);
+        circleOptions.fillColor(0x40f7f056);
+        circleOptions.strokeWidth(4);
+        searchRadiusCircle = mMap.addCircle(circleOptions);
+    }
+
+    private void relocateMyLocationButton() {
+        // Get the button view
+        View locationButton = ((View) view.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+
+        // and next place it, for example, on bottom right (as Google Maps app)
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+        // position on right bottom
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+        rlp.setMargins(0, 0, 30, 30);
+    }
+
+    // TODO: review autocomplete code below
     private void hideSoftKeyboard(){
         View view = getActivity().getCurrentFocus();
         if (view != null) {
@@ -570,6 +953,4 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             places.release();
         }
     };
-
-
 }

@@ -4,11 +4,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.constraint.solver.widgets.WidgetContainer;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -58,16 +56,7 @@ public class EnterGroupNameDialogFragment extends AppCompatDialogFragment {
                 @Override
                 public void onClick(View v)
                 {
-                    if (Objects.equals(etGroupName.getText().toString(), "")) {
-                        Toast.makeText(getActivity(), "Group name cannot be empty.", Toast.LENGTH_SHORT).show();
-                    } else if (false) {
-                        // TODO: ERROR CHECK FOR DUPLICATE GROUP NAME
-                        Toast.makeText(getActivity(), "Group name already exists.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getActivity(), "Group created!", Toast.LENGTH_SHORT).show();
-                        alertDialog.dismiss();
-                        MapFragment.createGroup(getActivity());
-                    }
+                    MapFragment.createGroupDialogPositiveOnClick(getActivity(), alertDialog, etGroupName.getText().toString());
                 }
             });
         }
