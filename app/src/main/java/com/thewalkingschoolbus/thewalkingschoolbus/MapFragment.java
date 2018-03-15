@@ -304,7 +304,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             Toast.makeText(getActivity(), "Please enter destination address!", Toast.LENGTH_SHORT).show();
             return;
         }
-        
+
         try {
             // Draw route
             new DirectionFinder(new DirectionFinderListener() {
@@ -742,7 +742,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         return MapFragmentState.values()[getArguments().getInt("state")];
     }
 
-    // SEARCH AUTO COMPELTE CODE //
+    // SEARCH AUTO COMPLETE CODE //
 
     private void init(){
         Log.d(TAG, "initializing");
