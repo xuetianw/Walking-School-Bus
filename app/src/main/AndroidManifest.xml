@@ -54,6 +54,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".AddMonitoredByActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".JoinOrCreateGroupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

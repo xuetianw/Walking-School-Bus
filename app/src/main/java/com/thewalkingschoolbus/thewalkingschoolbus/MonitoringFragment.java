@@ -42,10 +42,15 @@ public class MonitoringFragment extends android.app.Fragment {
         }
         view = inflater.inflate(R.layout.fragment_monitoring, container, false);
 
-        updateListView();
         setupAddMonitoringBtn();
         setUpRefresh();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateListView();
     }
 
     private void updateListView() {
@@ -53,16 +58,17 @@ public class MonitoringFragment extends android.app.Fragment {
             @Override
             public void onSuccess(Object result) {
                 if(result == null){
-                    Toast.makeText(getActivity(),"unable to retrieve user monitoring list", Toast.LENGTH_SHORT)
+                    Toast.makeText(getActivity(),"Unable to update the list", Toast.LENGTH_SHORT)
                             .show();
                 } else {
                     monitoringList = new ArrayList<>();
-                    Toast.makeText(getActivity(),"successfully retrieve user monitoring list", Toast.LENGTH_SHORT)
-                            .show();
                     users = (User[]) result;
                     if(users.length == 0){
-                        Toast.makeText(getActivity(),"not monitoring anyone", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Not monitoring anyone", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+                    Toast.makeText(getActivity(),"Successfully updated the list", Toast.LENGTH_SHORT)
+                            .show();
                     for(User user: users){
                         monitoringList.add("Name: "+user.getName() + " "+"Email: "+ user.getEmail() );
                     }
