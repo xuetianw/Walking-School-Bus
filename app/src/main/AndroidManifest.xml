@@ -51,7 +51,8 @@
         <activity android:name=".JoinOrCreateGroupActivity" />
         <activity android:name=".GroupDetailActivity" />
         <activity android:name=".MonitoringDetailActivity" />
-        <activity android:name=".MonitoredbyDetailActivity"></activity>
+        <activity android:name=".MonitoredbyDetailActivity" />
+        <activity android:name=".AddMonitoredByActivity"></activity>
     </application>
 
 </manifest>

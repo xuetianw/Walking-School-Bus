@@ -15,4 +15,5 @@
     <string name="leader_id_label">LEADER ID:</string>
     <string name="leader_name_label">LEADER NAME:</string>
     <string name="member_of_group">MEMBERS OF THE GROUP</string>
+    <string name="email">EMAIL:</string>
 </resources>

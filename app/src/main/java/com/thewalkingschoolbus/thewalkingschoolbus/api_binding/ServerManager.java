@@ -132,7 +132,11 @@ public class ServerManager {
         // create json file here
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("email",user.getEmail());
-        jsonObject.put("password",enteredPassword);
+        if(enteredPassword == null){
+            jsonObject.put("password",user.getPassword());
+        }else {
+            jsonObject.put("password", enteredPassword);
+        }
 
         HttpURLConnection connection = httpRequestGet(url,jsonObject);
 
