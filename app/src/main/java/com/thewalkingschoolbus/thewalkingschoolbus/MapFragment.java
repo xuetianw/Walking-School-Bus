@@ -1,11 +1,8 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,10 +15,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +26,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +42,6 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -99,24 +92,30 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 public class MapFragment extends android.support.v4.app.Fragment implements GoogleMap.OnInfoWindowClickListener,
         GoogleApiClient.OnConnectionFailedListener {
 
+    // CUSTOM VALUES
+    private static final float DEFAULT_ZOOM = 14; // Larger means more zoomed in
+    private static final int MAXIMUM_ROUTE_DISTANCE_METERS = 10000000; // This distance is approx. Vancouver to Chilliwack
+    private static int DEFAULT_SEARCH_RADIUS_METERS = 1000;
+
     private static final String TAG = "MapFragment";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234;
     private static final int ERROR_DIALOG_REQUEST = 9001;
-    private static final float DEFAULT_ZOOM = 14;
-    private static int DEFAULT_SEARCH_RADIUS_METERS = 1000;//500;
 
     private GoogleMap mMap;
     private Boolean mLocationPermissionGranted = false;
     private Boolean mValidRouteEstablished = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private View view;
-
     private AutoCompleteTextView etOrigin;
     private AutoCompleteTextView etDestination;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
+    private Circle searchRadiusCircle;
+    private Location currentLocation;
+    private static Route currentRoute;
+    private static Group[] groupList;
 
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private GoogleApiClient mGoogleApiClient;
@@ -125,10 +124,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
     private PlaceInfo mPlace;
     private List<Marker> mMarker;
 
-    private Circle searchRadiusCircle;
-    private Location currentLocation;
-    private static Route currentRoute;
-    private static Group[] groupList;
+    // SET UP //
 
     @Nullable
     @Override
@@ -147,7 +143,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendRequest();
+                findRoute();
             }
         });
         Button btnCreateGroup = (Button) view.findViewById(R.id.btnCreateGroup);
@@ -184,138 +180,11 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         return view;
     }
 
-    // TODO: this call may cause crash
     @Override
     public void onPause() {
         super.onPause();
         mGoogleApiClient.stopAutoManage(getActivity());
         mGoogleApiClient.disconnect();
-    }
-
-    private MapFragmentState getMapFragmentState() {
-        return MapFragmentState.values()[getArguments().getInt("state")];
-    }
-
-    private boolean isServicesOK(){
-        Log.d(TAG, "isServicesOK: checking google services version");
-
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
-
-        if(available == ConnectionResult.SUCCESS){
-            //everything is fine and the user can make map requests
-            Log.d(TAG, "isServicesOK: Google Play Services is working");
-            return true;
-        }
-        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-            //an error occurred but we can resolve it
-            Log.d(TAG, "isServicesOK: an error occurred but we can fix it");
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), available, ERROR_DIALOG_REQUEST);
-            dialog.show();
-        }else{
-            Toast.makeText(getActivity(), "You can't make map requests", Toast.LENGTH_SHORT).show();
-        }
-        return false;
-    }
-
-    private void init(){
-        Log.d(TAG, "initializing");
-
-        // TODO: this line caused a crash!
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(getActivity())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
-
-        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(getActivity(), mGoogleApiClient,
-                LAT_LNG_BOUNDS, null);
-
-
-        etOrigin.setOnItemClickListener(mAutocompleteClickListener);
-        etDestination.setOnItemClickListener(mAutocompleteClickListener);
-
-        etOrigin.setAdapter(mPlaceAutocompleteAdapter);
-        etDestination.setAdapter(mPlaceAutocompleteAdapter);
-
-        etOrigin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_DONE
-                        || actionId == EditorInfo.IME_ACTION_DONE
-                        || keyEvent.getAction() == keyEvent.ACTION_DOWN
-                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
-
-                    // execute our method for searching
-                    geoLocate();
-                }
-
-                return false;
-            }
-        });
-
-        etDestination.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_DONE
-                        || actionId == EditorInfo.IME_ACTION_DONE
-                        || keyEvent.getAction() == keyEvent.ACTION_DOWN
-                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
-
-                    // execute our method for searching
-                    geoLocate2();
-                }
-
-                return false;
-            }
-        });
-
-        hideSoftKeyboard();
-    }
-
-
-    private void geoLocate() {
-        Log.d(TAG, "geoLocate: geolocating");
-
-        String searchString = etOrigin.getText().toString();
-        Geocoder geocoder = new Geocoder(getActivity());
-        List<Address> list = new ArrayList<>();
-        try {
-            list = geocoder.getFromLocationName(searchString, 1);
-        }catch (IOException e){
-            Log.e(TAG, "geoLocate: IOException;" + e.getMessage());
-        }
-
-        if(list.size() >0 ){
-            Address address = list.get(0);
-
-            Log.d(TAG, "geoLocate found a location " + address.toString());
-
-            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM,
-                    address.getAddressLine(0));
-        }
-    }
-
-    private void geoLocate2() {
-        Log.d(TAG, "geoLocate: geolocating");
-
-        String searchString = etDestination.getText().toString();
-        Geocoder geocoder = new Geocoder(getActivity());
-        List<Address> list = new ArrayList<>();
-        try {
-            list = geocoder.getFromLocationName(searchString, 1);
-        }catch (IOException e){
-            Log.e(TAG, "geoLocate: IOException;" + e.getMessage());
-        }
-
-        if(list.size() >0 ){
-            Address address = list.get(0);
-
-            Log.d(TAG, "geoLocate found a location " + address.toString());
-
-            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM,
-                    address.getAddressLine(0));
-        }
     }
 
     private void getLocationPermission() {
@@ -387,6 +256,8 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         });
     }
 
+    // MAIN MAP FUNCTIONS - GENERAL //
+
     private void getDeviceLocation() {
     /*
      * Get the best and most recent location of the device, which may be null in rare
@@ -422,57 +293,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         }
     }
 
-    private void moveCamera(LatLng latLng, float zoom) {
-        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-    }
-
-    private void moveCamera(LatLng latLng, float zoom, String title) {
-        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-
-        mMap.clear();
-
-        if(!title .equals("My Location")){
-            MarkerOptions options = new MarkerOptions()
-                    .position(latLng)
-                    .title(title);
-            mMarker.add(mMap.addMarker(options));
-        }
-        hideSoftKeyboard();
-
-        // Invalidate previously established route
-        mValidRouteEstablished = false;
-    }
-    private void moveCamera(LatLng latLng, float zoom, PlaceInfo placeInfo) {
-        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-
-        mMap.clear();
-
-        if(placeInfo != null){
-            try {
-                String snippet = placeInfo.getAddress();
-
-                MarkerOptions options = new MarkerOptions()
-                        .position(latLng)
-                        .title(placeInfo.getName())
-                        .snippet(snippet);
-                mMarker.add(mMap.addMarker(options));
-            }catch (NullPointerException e) {
-                Log.e(TAG, "moveCamera: NullPointerException " + e.getMessage() );
-            }
-        }else {
-            mMarker.add(mMap.addMarker(new MarkerOptions().position(latLng)));
-        }
-
-        hideSoftKeyboard();
-
-        // Invalidate previously established route
-        mValidRouteEstablished = false;
-    }
-
-    private void sendRequest() {
+    private void findRoute() {
         String origin = etOrigin.getText().toString();
         String destination = etDestination.getText().toString();
         if (origin.isEmpty()) {
@@ -483,7 +304,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             Toast.makeText(getActivity(), "Please enter destination address!", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        
         try {
             // Draw route
             new DirectionFinder(new DirectionFinderListener() {
@@ -520,40 +341,50 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
 
                 @Override
                 public void onDirectionFinderSuccess(List<Route> routes) {
-                    mValidRouteEstablished = true;
                     progressDialog.dismiss();
-                    polylinePaths = new ArrayList<>();
-                    originMarkers = new ArrayList<>();
-                    destinationMarkers = new ArrayList<>();
 
-                    for (Route route : routes) {
-                        moveCamera(route.destinationLocation, DEFAULT_ZOOM);
-                        ((TextView) view.findViewById(R.id.tvDuration)).setText(route.duration.text);
-                        ((TextView) view.findViewById(R.id.tvDistance)).setText(route.distance.text);
+                    if (routes.size() < 0) {
+                        Toast.makeText(getActivity(), "No result. Try rephrasing direction.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (isTooFar(routes.get(0).originLocation, routes.get(0).destinationLocation)) {
+                            Toast.makeText(getActivity(), "Your route is too long!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                        Log.d(TAG, "onDirectionFinderSuccess: Current route: FROM: " + route.originAddress + ", TO: " + route.destinationAddress);
-                        currentRoute = route;
+                        mValidRouteEstablished = true;
+                        polylinePaths = new ArrayList<>();
+                        originMarkers = new ArrayList<>();
+                        destinationMarkers = new ArrayList<>();
 
-                        originMarkers.add(mMap.addMarker(new MarkerOptions()
-                                .icon(BitmapDescriptorFactory.defaultMarker(210))
-                                .title("Origin")
-                                .snippet(route.originAddress)
-                                .position(route.originLocation)));
-                        destinationMarkers.add(mMap.addMarker(new MarkerOptions()
-                                .icon(BitmapDescriptorFactory.defaultMarker(210))
-                                .title("Destination")
-                                .snippet(route.destinationAddress)
-                                .position(route.destinationLocation)));
+                        for (Route route : routes) {
+                            moveCamera(route.destinationLocation, DEFAULT_ZOOM);
+                            ((TextView) view.findViewById(R.id.tvDuration)).setText(route.duration.text);
+                            ((TextView) view.findViewById(R.id.tvDistance)).setText(route.distance.text);
 
-                        PolylineOptions polylineOptions = new PolylineOptions().
-                                geodesic(true).
-                                color(getResources().getColor(R.color.logoBlue)).
-                                width(10);
+                            Log.d(TAG, "onDirectionFinderSuccess: Current route: FROM: " + route.originAddress + ", TO: " + route.destinationAddress);
+                            currentRoute = route;
 
-                        for (int i = 0; i < route.points.size(); i++)
-                            polylineOptions.add(route.points.get(i));
+                            originMarkers.add(mMap.addMarker(new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.defaultMarker(210))
+                                    .title("Origin")
+                                    .snippet(route.originAddress)
+                                    .position(route.originLocation)));
+                            destinationMarkers.add(mMap.addMarker(new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.defaultMarker(210))
+                                    .title("Destination")
+                                    .snippet(route.destinationAddress)
+                                    .position(route.destinationLocation)));
 
-                        polylinePaths.add(mMap.addPolyline(polylineOptions));
+                            PolylineOptions polylineOptions = new PolylineOptions().
+                                    geodesic(true).
+                                    color(getResources().getColor(R.color.logoBlue)).
+                                    width(10);
+
+                            for (int i = 0; i < route.points.size(); i++)
+                                polylineOptions.add(route.points.get(i));
+
+                            polylinePaths.add(mMap.addPolyline(polylineOptions));
+                        }
                     }
                 }
             }, origin, destination).execute();
@@ -568,6 +399,8 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
     }
+
+    // MAIN MAP FUNCTIONS - CREATE GROUP //
 
     private void displayCreateGroupDialog() {
         if (mValidRouteEstablished) {
@@ -587,7 +420,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             // Build group to add
             double[] routeLatArray = {currentRoute.originLocation.latitude, currentRoute.destinationLocation.latitude, 0};
             double[] routeLngArray = {currentRoute.originLocation.longitude, currentRoute.destinationLocation.longitude, 0};
-            Group group = new Group(name, routeLatArray, routeLngArray);
+            final Group group = new Group(name, routeLatArray, routeLngArray);
 
             new GetUserAsyncTask(CREATE_GROUP, null, null, group, null, new OnTaskComplete() {
                 @Override
@@ -597,6 +430,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                     } else {
                         //Group[] group = (Group[]) result;
                         Toast.makeText(context, "Group created!", Toast.LENGTH_SHORT).show();
+                        joinGroup(context, (Group) result, false);
                         alertDialog.dismiss();
                     }
                 }
@@ -608,6 +442,8 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             }).execute();
         }
     }
+
+    // MAIN MAP FUNCTIONS - JOIN GROUP //
 
     private void displayNearbyGroups() {
         if (mValidRouteEstablished) {
@@ -661,11 +497,11 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
 
     // Use this method to display all groups who's origin or destination is within search radius
     // Update currentLocation first, retrieve group from server, then check groups against currentLocation
-    // TODO: simplify method
+    // TODO: Simplify method
     private void displayGroupsNearbyCurrentPosition() {
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         try {
             if (mLocationPermissionGranted) {
+                mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
                 Task locationResult = mFusedLocationProviderClient.getLastLocation();
                 locationResult.addOnCompleteListener(new OnCompleteListener() {
                     @Override
@@ -674,25 +510,23 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                             currentLocation = (Location) task.getResult();
                             if (currentLocation == null) {
                                 Toast.makeText(getActivity(), "Cannot find current location. (error code 1)", Toast.LENGTH_SHORT).show();
-                                return;
                             } else {
                                 // Retrieve group data, and compare group to currentLocation
                                 new GetUserAsyncTask(LIST_GROUPS, null, null, null, null, new OnTaskComplete() {
                                     @Override
                                     public void onSuccess(Object result) {
                                         if (result == null) {
-                                            Toast.makeText(getActivity(), "Failed to retrieve group data.", Toast.LENGTH_SHORT).show();
-                                            return;
+                                            Toast.makeText(getActivity(), "Failed to retrieve data.", Toast.LENGTH_SHORT).show();
                                         } else {
                                             Boolean groupNearBy = false;
                                             groupList = (Group[]) result;
 
                                             // Display groups within search radius
                                             for (Group group : groupList) {
-                                                Log.d(TAG, "@@@@@@ ID: " + group.getId());
-                                                Log.d(TAG, "@@@@@@ DESCRIPTION: " + group.getGroupDescription());
-                                                Log.d(TAG, "@@@@@@ ORIGIN LATLNG: " + group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0]);
-                                                Log.d(TAG, "@@@@@@ DESTINATION LATLNG: " + group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1]);
+                                                Log.d(TAG, "currentGroup: ID:                 " + group.getId());
+                                                Log.d(TAG, "currentGroup: DESCRIPTION:        " + group.getGroupDescription());
+                                                Log.d(TAG, "currentGroup: ORIGIN LATLNG:      " + group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0]);
+                                                Log.d(TAG, "currentGroup: DESTINATION LATLNG: " + group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1]);
                                                 // Compare distance between current location to current group's DESTINATION
                                                 float[] results = new float[1];
                                                 Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
@@ -709,7 +543,6 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                                                         group.getRouteLatArray()[0], group.getRouteLngArray()[0],
                                                         results);
                                                 if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
-                                                    Log.d(TAG, "@@@@@: DISPLAY ROUTE");
                                                     // Display this result on map.
                                                     displayGroup(group);
                                                     groupNearBy = true;
@@ -748,8 +581,8 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         // Enable info window click
         mMap.setOnInfoWindowClickListener(this);
 
-        Log.d(TAG, "displayGroup ORIGIN ####: " + group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0]);
-        Log.d(TAG, "displayGroup DESTINATION ####: " + group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1]);
+        Log.d(TAG, "displayGroup: ORIGIN:      " + group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0]);
+        Log.d(TAG, "displayGroup: DESTINATION: " + group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1]);
 
         try {
             new DirectionFinder(new DirectionFinderListener() {
@@ -771,7 +604,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                         Marker marker = mMap.addMarker(new MarkerOptions()
                                         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
                                         .title(group.getGroupDescription())
-                                        .snippet("Click to join group!")
+                                        .snippet("Origin: Click to join group!")
                                         .position(route.originLocation));
                         marker.setTag(group.getId());
                         originMarkers.add(marker);
@@ -779,7 +612,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                         marker = mMap.addMarker(new MarkerOptions()
                                         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
                                         .title(group.getGroupDescription())
-                                        .snippet("Click to join group!")
+                                        .snippet("Destination: Click to join group!")
                                         .position(route.destinationLocation));
                         marker.setTag(group.getId());
                         destinationMarkers.add(marker);
@@ -800,7 +633,6 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                     group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1])
                     .execute();
         } catch (UnsupportedEncodingException e) {
-            Log.d(TAG, "displayGroup: ####");
             e.printStackTrace();
         }
     }
@@ -816,24 +648,24 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
     private void displayConfirmJoinGroup(final String groupName) {
 
         // Group to join by name
-        Group joinGroup = new Group();
+        Group groupToJoin = new Group();
         for (Group group : groupList) {
             if (Objects.equals(group.getId(), groupName)) {
-                joinGroup = group;
+                groupToJoin = group;
             }
         }
-        if (joinGroup.getId() == null) {
+        if (groupToJoin.getId() == null) {
             Toast.makeText(getActivity(), "Unexpected error.", Toast.LENGTH_SHORT).show();
             return;
         }
-        final Group finalJoinGroup = joinGroup;
+        final Group finalGroupToJoin = groupToJoin;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                .setMessage("Join \"" + joinGroup.getGroupDescription() + "\" ?")
+                .setMessage("Join \"" + groupToJoin.getGroupDescription() + "\" ?")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        joinGroup(finalJoinGroup);
+                        joinGroup(getActivity(), finalGroupToJoin, true);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null);
@@ -842,23 +674,35 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         dialog.show();
     }
 
-    private void joinGroup(final Group group) {
+    private static void joinGroup(final Context context, final Group group, final boolean makeToasts) {
+        if (group == null) {
+            Toast.makeText(context, "Unexpected error.", Toast.LENGTH_SHORT).show();
+        }
         User user = User.getLoginUser();
         new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, user, null, group, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if(result == null) {
-                    Toast.makeText(getActivity(), "Failed to join group.", Toast.LENGTH_SHORT).show();
+                    if (makeToasts)
+                        Toast.makeText(context, "Failed to join group.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getActivity(), "Joined \"" + group.getGroupDescription() + "\" !", Toast.LENGTH_SHORT).show();
+                    if (makeToasts)
+                        Toast.makeText(context, "Joined \"" + group.getGroupDescription() + "\" !", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(getActivity(), "Unexpected error.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Unexpected error.", Toast.LENGTH_SHORT).show();
             }
         }).execute();
+    }
+
+    // HELPER FUNCTIONS //
+
+    private void moveCamera(LatLng latLng, float zoom) {
+        Log.d(TAG, "moveCameraSetMarker: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
     private void drawSearchRadius(LatLng centerCoordinate, int radiusMeters) {
@@ -866,11 +710,20 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             searchRadiusCircle.remove();
         CircleOptions circleOptions = new CircleOptions();
         circleOptions.center(centerCoordinate);
-        circleOptions.radius(radiusMeters);
+        circleOptions.radius(radiusMeters); //TODO: Calibrate to match search radius actual to visual
         circleOptions.strokeColor(0xFFffc300);
         circleOptions.fillColor(0x40f7f056);
         circleOptions.strokeWidth(4);
         searchRadiusCircle = mMap.addCircle(circleOptions);
+    }
+
+    private boolean isTooFar(LatLng origin, LatLng destination) {
+        float[] results = new float[1];
+        Location.distanceBetween(origin.latitude, origin.longitude,
+                destination.latitude, destination.latitude,
+                results);
+        Log.d(TAG, "isTooFar: distance between origin and destination in meters: " + results[0]);
+        return results[0] > MAXIMUM_ROUTE_DISTANCE_METERS;
     }
 
     private void relocateMyLocationButton() {
@@ -885,7 +738,152 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         rlp.setMargins(0, 0, 30, 30);
     }
 
-    // TODO: review autocomplete code below
+    private MapFragmentState getMapFragmentState() {
+        return MapFragmentState.values()[getArguments().getInt("state")];
+    }
+
+    // SEARCH AUTO COMPELTE CODE //
+
+    private void init(){
+        Log.d(TAG, "initializing");
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(getActivity())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(getActivity(), this)
+                .build();
+
+        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(getActivity(), mGoogleApiClient,
+                LAT_LNG_BOUNDS, null);
+
+        etOrigin.setOnItemClickListener(mAutocompleteClickListener);
+        etDestination.setOnItemClickListener(mAutocompleteClickListener);
+
+        etOrigin.setAdapter(mPlaceAutocompleteAdapter);
+        etDestination.setAdapter(mPlaceAutocompleteAdapter);
+
+        etOrigin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_DONE
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || keyEvent.getAction() == keyEvent.ACTION_DOWN
+                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
+                    // execute our method for searching
+                    geoLocate();
+                }
+                return false;
+            }
+        });
+
+        etDestination.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_DONE
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || keyEvent.getAction() == keyEvent.ACTION_DOWN
+                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
+                    // execute our method for searching
+                    geoLocate2();
+                }
+                return false;
+            }
+        });
+
+        hideSoftKeyboard();
+    }
+
+    private void geoLocate() {
+        Log.d(TAG, "geoLocate: geolocating");
+
+        String searchString = etOrigin.getText().toString();
+        Geocoder geocoder = new Geocoder(getActivity());
+        List<Address> list = new ArrayList<>();
+        try {
+            list = geocoder.getFromLocationName(searchString, 1);
+        }catch (IOException e){
+            Log.e(TAG, "geoLocate: IOException;" + e.getMessage());
+        }
+
+        if(list.size() >0 ){
+            Address address = list.get(0);
+
+            Log.d(TAG, "geoLocate found a location " + address.toString());
+
+            moveCameraSetMarker(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM,
+                    address.getAddressLine(0));
+        }
+    }
+
+    private void geoLocate2() {
+        Log.d(TAG, "geoLocate: geolocating");
+
+        String searchString = etDestination.getText().toString();
+        Geocoder geocoder = new Geocoder(getActivity());
+        List<Address> list = new ArrayList<>();
+        try {
+            list = geocoder.getFromLocationName(searchString, 1);
+        }catch (IOException e){
+            Log.e(TAG, "geoLocate: IOException;" + e.getMessage());
+        }
+
+        if(list.size() >0 ){
+            Address address = list.get(0);
+
+            Log.d(TAG, "geoLocate found a location " + address.toString());
+
+            moveCameraSetMarker(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM,
+                    address.getAddressLine(0));
+        }
+    }
+
+    private void moveCameraSetMarker(LatLng latLng, float zoom, String title) {
+        Log.d(TAG, "moveCameraSetMarker: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
+        mMap.clear();
+
+        if(!title .equals("My Location")){
+            MarkerOptions options = new MarkerOptions()
+                    .position(latLng)
+                    .title(title);
+            mMarker.add(mMap.addMarker(options));
+        }
+        hideSoftKeyboard();
+
+        // Invalidate previously established route
+        mValidRouteEstablished = false;
+    }
+
+    private void moveCameraSetMarker(LatLng latLng, float zoom, PlaceInfo placeInfo) {
+        Log.d(TAG, "moveCameraSetMarker: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
+        mMap.clear();
+
+        if(placeInfo != null){
+            try {
+                String snippet = placeInfo.getAddress();
+
+                MarkerOptions options = new MarkerOptions()
+                        .position(latLng)
+                        .title(placeInfo.getName())
+                        .snippet(snippet);
+                mMarker.add(mMap.addMarker(options));
+            }catch (NullPointerException e) {
+                Log.e(TAG, "moveCameraSetMarker: NullPointerException " + e.getMessage() );
+            }
+        }else {
+            mMarker.add(mMap.addMarker(new MarkerOptions().position(latLng)));
+        }
+
+        hideSoftKeyboard();
+
+        // Invalidate previously established route
+        mValidRouteEstablished = false;
+    }
+
     private void hideSoftKeyboard(){
         View view = getActivity().getCurrentFocus();
         if (view != null) {
@@ -947,7 +945,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                 Log.e(TAG, "onResult: NullPointerException: " + e.getMessage() );
             }
 
-            moveCamera(new LatLng(place.getViewport().getCenter().latitude,
+            moveCameraSetMarker(new LatLng(place.getViewport().getCenter().latitude,
                     place.getViewport().getCenter().longitude), DEFAULT_ZOOM, mPlace);
 
             places.release();
