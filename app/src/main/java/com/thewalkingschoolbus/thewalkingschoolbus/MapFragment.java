@@ -137,6 +137,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         //if (isServicesOK()) // TODO: improve this
             getLocationPermission();
 
+
         etOrigin = (AutoCompleteTextView) view.findViewById(R.id.etOrigin);
         etDestination = (AutoCompleteTextView) view.findViewById(R.id.etDestination);
         Button btnFindPath = (Button) view.findViewById(R.id.btnFindPath);
@@ -180,12 +181,16 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         return view;
     }
 
+
     @Override
     public void onPause() {
         super.onPause();
-        mGoogleApiClient.stopAutoManage(getActivity());
-        mGoogleApiClient.disconnect();
+        if(mGoogleApiClient!=null) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
+        }
     }
+
 
     private void getLocationPermission() {
     /*
