@@ -129,7 +129,7 @@ public class MonitoringFragment extends android.app.Fragment {
         switch (requestCode) {
             case DELETE_MORNITORING_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
-                    new GetUserAsyncTask(DELETE_MONITORING, loginUser, MonitoringDetailActivity.deleteUser, null, null, new OnTaskComplete() {
+                    new GetUserAsyncTask(DELETE_MONITORING, User.getLoginUser(), MonitoringDetailActivity.deleteUser, null, null, new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
                             if(result == null){

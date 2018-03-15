@@ -22,9 +22,6 @@ import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.LOGIN_FAIL_MESSAGE;
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.SUCCESSFUL_LOGIN_MESSAGE;
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.loginUser;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class MonitoredByFragment extends android.app.Fragment {
@@ -51,7 +48,7 @@ public class MonitoredByFragment extends android.app.Fragment {
     }
 
     private void updateListView() {
-        new GetUserAsyncTask(USER_MONITORING_BY_LIST, MainActivity.loginUser,null, null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(USER_MONITORING_BY_LIST, User.getLoginUser(),null, null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if(result == null){
@@ -130,7 +127,7 @@ public class MonitoredByFragment extends android.app.Fragment {
         switch (requestCode) {
             case DELETE_BEING_MONITORED_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
-                    new GetUserAsyncTask(DELETE_MONITORING, MonitoredbyDetailActivity.deleteUser, loginUser, null, null, new OnTaskComplete() {
+                    new GetUserAsyncTask(DELETE_MONITORING, MonitoredbyDetailActivity.deleteUser, User.getLoginUser(), null, null, new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
                             if(result == null){
