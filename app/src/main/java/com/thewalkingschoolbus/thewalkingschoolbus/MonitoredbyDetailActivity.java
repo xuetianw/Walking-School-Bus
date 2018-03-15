@@ -42,11 +42,9 @@ public class MonitoredbyDetailActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Object result) {
                 if(result == null){
-                    Toast.makeText(getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(),"Failed to retrieve user.", Toast.LENGTH_SHORT)
                             .show();
                 } else {
-                    Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
-                            .show();
                     deleteUser = (User) result;
                     TextView name = (TextView)findViewById(R.id.textView10);
                     TextView displayName = (TextView)findViewById(R.id.textView12);
