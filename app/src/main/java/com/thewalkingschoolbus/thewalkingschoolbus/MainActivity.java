@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                     User.setLoginUser((User)result);
                     Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
                     startActivity(intent);
+                    finish();
                 }
             }
             @Override

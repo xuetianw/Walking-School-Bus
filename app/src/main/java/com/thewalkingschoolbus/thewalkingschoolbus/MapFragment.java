@@ -134,7 +134,6 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         }
         view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        //if (isServicesOK()) // TODO: improve this
             getLocationPermission();
 
 
