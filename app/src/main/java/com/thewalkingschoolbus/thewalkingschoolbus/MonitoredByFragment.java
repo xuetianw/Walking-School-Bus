@@ -39,14 +39,15 @@ public class MonitoredByFragment extends android.app.Fragment {
         }
         view = inflater.inflate(R.layout.fragment_monitored_by, container, false);
 
+        updateListView();
         setUpAddMonitoredByBut();
         setUpRefresh();
         return view;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         updateListView();
     }
 
@@ -62,7 +63,6 @@ public class MonitoredByFragment extends android.app.Fragment {
                     users = (User[]) result;
                     if(users.length == 0){
                         Toast.makeText(getActivity(),"Not monitoring anyone", Toast.LENGTH_SHORT).show();
-                        return;
                     }
                     Toast.makeText(getActivity(),"Successfully updated the list", Toast.LENGTH_SHORT)
                             .show();
