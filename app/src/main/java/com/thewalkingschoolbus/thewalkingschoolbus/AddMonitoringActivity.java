@@ -76,6 +76,7 @@ public class AddMonitoringActivity extends AppCompatActivity {
             public void onSuccess(Object result) {
                 if(result != null){
                     Toast.makeText(AddMonitoringActivity.this,"user added" , Toast.LENGTH_SHORT).show();
+                    finish();
                 }else{
                     Toast.makeText(AddMonitoringActivity.this,"unable to add user" , Toast.LENGTH_SHORT).show();
                 }
