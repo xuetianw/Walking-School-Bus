@@ -48,7 +48,7 @@ public class MonitoringDetailActivity extends AppCompatActivity {
                     name.setText("Name: ");
                     displayName.setText(""+ deleteUser.getName());
                     deleteUser.getName();
-                    email.setText("Email");
+                    email.setText("Email: ");
                     displayEmail.setText(""+ deleteUser.getEmail());
 
                 }
