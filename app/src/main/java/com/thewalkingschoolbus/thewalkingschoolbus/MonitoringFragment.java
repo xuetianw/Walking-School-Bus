@@ -23,7 +23,6 @@ import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class MonitoringFragment extends android.app.Fragment {
@@ -139,10 +138,10 @@ public class MonitoringFragment extends android.app.Fragment {
                         @Override
                         public void onSuccess(Object result) {
                             if(result == null){
-                                Toast.makeText(getActivity().getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                Toast.makeText(getActivity().getApplicationContext(),"Failed to remove user", Toast.LENGTH_SHORT)
                                         .show();
                             } else {
-                                Toast.makeText(getActivity().getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                                Toast.makeText(getActivity().getApplicationContext(),"Removed user", Toast.LENGTH_SHORT)
                                         .show();
 
                             }
