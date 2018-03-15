@@ -60,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
         registerEmail = preferences.getString(MainActivity.REGISTER_EMAIL, null);
         loginPassword = preferences.getString(MainActivity.LOGIN_PASSWORD, null);
         if(registerEmail != null && loginPassword != null) {
+            loginUser = new User();
+            loginUser.setEmail(registerEmail);
+            loginUser.setPassword(loginPassword);
             login();
         }
     }
@@ -91,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Temporary - delete after proper login is written.
     private void setupLoginButton() {
-        Button loginButton = (Button) findViewById(R.id.loginid);
+        final Button loginButton = (Button) findViewById(R.id.loginid);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
                 loginUser = new User();
                 loginUser.setEmail(registerEmail);
-
+                loginUser.setPassword(loginPassword);
                 login();
 
             }
@@ -125,8 +128,6 @@ public class MainActivity extends AppCompatActivity {
                             .show();
                     storeUserInfoToSharePreferences();
                     setLoginUser(loginUser);
-                    Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
-                    startActivity(intent);
                 }
             }
             @Override
@@ -142,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(Object result) {
                 if(result != null){
                     User.setLoginUser((User)result);
+                    Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
+                    startActivity(intent);
                 }
             }
             @Override

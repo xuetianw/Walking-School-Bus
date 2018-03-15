@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +22,6 @@ import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.LOGIN_FAIL_MESSAGE;
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.SUCCESSFUL_LOGIN_MESSAGE;
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.loginUser;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class MonitoredByFragment extends android.app.Fragment {
@@ -42,32 +41,27 @@ public class MonitoredByFragment extends android.app.Fragment {
 
 
         updateListView();
+        setUpAddMonitoredByBut();
+        setUpRefresh();
         return view;
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        updateListView();
-    }
-
     private void updateListView() {
-        new GetUserAsyncTask(USER_MONITORING_BY_LIST, MainActivity.loginUser,null, null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(USER_MONITORING_BY_LIST, User.getLoginUser(),null, null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if(result == null){
-                    Toast.makeText(getActivity().getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                    Toast.makeText(getActivity(),"unable to update the list", Toast.LENGTH_SHORT)
                             .show();
                 } else {
                     monitoredList = new ArrayList<>();
-                    Toast.makeText(getActivity().getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                    Toast.makeText(getActivity(),"successfully update the list", Toast.LENGTH_SHORT)
                             .show();
                     users = (User[]) result;
                     for(User user: users){
                         System.out.println(user);
-                        monitoredList.add(user.getName() + "    "+ user.getEmail() );
+                        monitoredList.add("Name: "+user.getName() + " "+"Email: "+ user.getEmail() );
                     }
                     // build adapter
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.monitoring_entry, monitoredList);
@@ -93,22 +87,39 @@ public class MonitoredByFragment extends android.app.Fragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-                TextView textView = (TextView) viewClicked;
-                String message = "You clicked #" + (position + 1) + ", which is string: " + textView.getText().toString();
-                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-            }
-        });
-        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View viewClicked, int position, long id) {
-                //MainMenuActivity.monitoringUsers.remove(position);
-                //updateListView();
                 MonitoredbyDetailActivity.userEmail = users[position].getEmail();
                 Intent intent = MonitoredbyDetailActivity.makeIntent(getActivity());
                 startActivityForResult(intent, DELETE_BEING_MONITORED_REQUEST_CODE);
-                return true;
             }
         });
+
+    }
+
+    private void setUpAddMonitoredByBut() {
+        FloatingActionButton but = view.findViewById(R.id.addMonitoredByBut);
+        but.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = AddMonitoredByActivity.makeIntent(getActivity());
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void setUpRefresh(){
+        final SwipeRefreshLayout mySwipeRefreshLayout = view.findViewById(R.id.swiperefreshForMonitoredBy);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        updateListView();
+                        // This method performs the actual data-refresh operation.
+                        // The method calls setRefreshing(false) when it's finished.
+                        mySwipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
+
     }
 
     @Override
@@ -116,14 +127,14 @@ public class MonitoredByFragment extends android.app.Fragment {
         switch (requestCode) {
             case DELETE_BEING_MONITORED_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
-                    new GetUserAsyncTask(DELETE_MONITORING, MonitoredbyDetailActivity.deleteUser, loginUser, null, null, new OnTaskComplete() {
+                    new GetUserAsyncTask(DELETE_MONITORING, MonitoredbyDetailActivity.deleteUser, User.getLoginUser(), null, null, new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
                             if(result == null){
-                                Toast.makeText(getActivity().getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                Toast.makeText(getActivity(),"unable to delete monitoring", Toast.LENGTH_SHORT)
                                         .show();
                             } else {
-                                Toast.makeText(getActivity().getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                                Toast.makeText(getActivity(),"delete Monitoring", Toast.LENGTH_SHORT)
                                         .show();
 
                             }
