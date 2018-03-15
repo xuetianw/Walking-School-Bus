@@ -84,6 +84,7 @@ import java.util.Objects;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.ADD_MEMBER_TO_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.CREATE_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LIST_GROUPS;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
 
 /*
 * SOURCES - Based on following tutorials:
@@ -231,7 +232,6 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(getActivity(), mGoogleApiClient,
                 LAT_LNG_BOUNDS, null);
 
-
         etOrigin.setOnItemClickListener(mAutocompleteClickListener);
         etDestination.setOnItemClickListener(mAutocompleteClickListener);
 
@@ -245,11 +245,9 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                         || actionId == EditorInfo.IME_ACTION_DONE
                         || keyEvent.getAction() == keyEvent.ACTION_DOWN
                         || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
-
                     // execute our method for searching
                     geoLocate();
                 }
-
                 return false;
             }
         });
@@ -261,18 +259,15 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                         || actionId == EditorInfo.IME_ACTION_DONE
                         || keyEvent.getAction() == keyEvent.ACTION_DOWN
                         || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
-
                     // execute our method for searching
                     geoLocate2();
                 }
-
                 return false;
             }
         });
 
         hideSoftKeyboard();
     }
-
 
     private void geoLocate() {
         Log.d(TAG, "geoLocate: geolocating");
@@ -444,6 +439,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         // Invalidate previously established route
         mValidRouteEstablished = false;
     }
+
     private void moveCamera(LatLng latLng, float zoom, PlaceInfo placeInfo) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
@@ -587,7 +583,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             // Build group to add
             double[] routeLatArray = {currentRoute.originLocation.latitude, currentRoute.destinationLocation.latitude, 0};
             double[] routeLngArray = {currentRoute.originLocation.longitude, currentRoute.destinationLocation.longitude, 0};
-            Group group = new Group(name, routeLatArray, routeLngArray);
+            final Group group = new Group(name, routeLatArray, routeLngArray);
 
             new GetUserAsyncTask(CREATE_GROUP, null, null, group, null, new OnTaskComplete() {
                 @Override
@@ -597,6 +593,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                     } else {
                         //Group[] group = (Group[]) result;
                         Toast.makeText(context, "Group created!", Toast.LENGTH_SHORT).show();
+                        joinGroup(context, (Group) result, false);
                         alertDialog.dismiss();
                     }
                 }
@@ -689,10 +686,10 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
 
                                             // Display groups within search radius
                                             for (Group group : groupList) {
-                                                Log.d(TAG, "@@@@@@ ID: " + group.getId());
-                                                Log.d(TAG, "@@@@@@ DESCRIPTION: " + group.getGroupDescription());
-                                                Log.d(TAG, "@@@@@@ ORIGIN LATLNG: " + group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0]);
-                                                Log.d(TAG, "@@@@@@ DESTINATION LATLNG: " + group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1]);
+                                                Log.d(TAG, "currentGroup: ID:                 " + group.getId());
+                                                Log.d(TAG, "currentGroup: DESCRIPTION:        " + group.getGroupDescription());
+                                                Log.d(TAG, "currentGroup: ORIGIN LATLNG:      " + group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0]);
+                                                Log.d(TAG, "currentGroup: DESTINATION LATLNG: " + group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1]);
                                                 // Compare distance between current location to current group's DESTINATION
                                                 float[] results = new float[1];
                                                 Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
@@ -709,7 +706,6 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                                                         group.getRouteLatArray()[0], group.getRouteLngArray()[0],
                                                         results);
                                                 if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
-                                                    Log.d(TAG, "@@@@@: DISPLAY ROUTE");
                                                     // Display this result on map.
                                                     displayGroup(group);
                                                     groupNearBy = true;
@@ -748,8 +744,8 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         // Enable info window click
         mMap.setOnInfoWindowClickListener(this);
 
-        Log.d(TAG, "displayGroup ORIGIN ####: " + group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0]);
-        Log.d(TAG, "displayGroup DESTINATION ####: " + group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1]);
+        Log.d(TAG, "displayGroup: ORIGIN:      " + group.getRouteLatArray()[0] + ", " + group.getRouteLngArray()[0]);
+        Log.d(TAG, "displayGroup: DESTINATION: " + group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1]);
 
         try {
             new DirectionFinder(new DirectionFinderListener() {
@@ -800,7 +796,6 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                     group.getRouteLatArray()[1] + ", " + group.getRouteLngArray()[1])
                     .execute();
         } catch (UnsupportedEncodingException e) {
-            Log.d(TAG, "displayGroup: ####");
             e.printStackTrace();
         }
     }
@@ -816,24 +811,24 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
     private void displayConfirmJoinGroup(final String groupName) {
 
         // Group to join by name
-        Group joinGroup = new Group();
+        Group groupToJoin = new Group();
         for (Group group : groupList) {
             if (Objects.equals(group.getId(), groupName)) {
-                joinGroup = group;
+                groupToJoin = group;
             }
         }
-        if (joinGroup.getId() == null) {
+        if (groupToJoin.getId() == null) {
             Toast.makeText(getActivity(), "Unexpected error.", Toast.LENGTH_SHORT).show();
             return;
         }
-        final Group finalJoinGroup = joinGroup;
+        final Group finalGroupToJoin = groupToJoin;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                .setMessage("Join \"" + joinGroup.getGroupDescription() + "\" ?")
+                .setMessage("Join \"" + groupToJoin.getGroupDescription() + "\" ?")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        joinGroup(finalJoinGroup);
+                        joinGroup(getActivity(), finalGroupToJoin, true);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null);
@@ -842,21 +837,26 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         dialog.show();
     }
 
-    private void joinGroup(final Group group) {
+    private static void joinGroup(final Context context, final Group group, final boolean makeToasts) {
+        if (group == null) {
+            Toast.makeText(context, "Unexpected error.", Toast.LENGTH_SHORT).show();
+        }
         User user = User.getLoginUser();
         new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, user, null, group, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if(result == null) {
-                    Toast.makeText(getActivity(), "Failed to join group.", Toast.LENGTH_SHORT).show();
+                    if (makeToasts)
+                        Toast.makeText(context, "Failed to join group.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getActivity(), "Joined \"" + group.getGroupDescription() + "\" !", Toast.LENGTH_SHORT).show();
+                    if (makeToasts)
+                        Toast.makeText(context, "Joined \"" + group.getGroupDescription() + "\" !", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(getActivity(), "Unexpected error.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Unexpected error.", Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
