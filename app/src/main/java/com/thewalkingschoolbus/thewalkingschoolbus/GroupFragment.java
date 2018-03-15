@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
@@ -20,6 +22,7 @@ import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
 import java.util.List;
 
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_ONE_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 
 public class GroupFragment extends android.app.Fragment {
@@ -39,24 +42,11 @@ public class GroupFragment extends android.app.Fragment {
         getGroupListAndPopulateList();
         setUpAddButton();
         return view;
-
-        /*
-        * How to add content in fragment:
-        *
-        * Fragments function identical to regular activities, except it does not extend from AppCompatActivity.
-        * Hence, some things such as findViewByID or executing context related code works differently.
-        *
-        * FindViewBYId Example
-        * instead   of: Button btn = findViewById(R.id.example);
-        *           do: Button btn = view.findViewById(R.id.example);
-        *
-        * Context Example
-        * Instead   of: Toast.makeText(this, "example", Toast.LENGTH_SHORT).show()
-        *           do: Toast.makeText(getActivity(), "example.", Toast.LENGTH_SHORT).show()
-        *
-        * If this is unclear, look at example code in MonitoringFragment.
-        */
     }
+
+    private static boolean populateListReady = false;
+    private static int loopCount = 0;
+
     private void getGroupListAndPopulateList(){
         new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, null, new OnTaskComplete() {
             @Override
@@ -65,7 +55,45 @@ public class GroupFragment extends android.app.Fragment {
                 List<Group> mGroupList = returnUser.getMemberOfGroups();
                 mGroup = new Group[mGroupList.size()];
                 mGroupList.toArray(mGroup);
-                stringsPrep();
+
+                // Without this return statement app will from ArrayIndexOutOfBoundsException!
+                if (mGroupList.isEmpty()) {
+                    Toast.makeText(getActivity(), "Not in any group!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Begin get group detail recursion
+                getGroupWithDetail();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+            }
+        }).execute();
+    }
+
+    private void getGroupWithDetail() {
+        // Set up recursion
+        populateListReady = false;
+        loopCount = 0;
+        getGroupWithDetailLoop();
+    }
+
+    private void getGroupWithDetailLoop() {
+        if (loopCount >= mGroup.length - 1) {
+            populateListReady = true;
+        }
+        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mGroup[loopCount], null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                mGroup[loopCount] = (Group) result;
+
+                if (populateListReady) {
+                    stringsPrep();
+                } else {
+                    loopCount++;
+                    getGroupWithDetailLoop();
+                }
             }
 
             @Override
@@ -86,7 +114,7 @@ public class GroupFragment extends android.app.Fragment {
         }
 
         for(int i = 0; i < length;i++){
-            String str = "id: "+mGroup[i].getId() +" "+"Group Name:"+mGroup[i].getGroupDescription();
+            String str = "id: "+mGroup[i].getId() +" "+"Group Name: "+mGroup[i].getGroupDescription();
             mGroupDisplay[i]=str;
         }
 
@@ -94,6 +122,7 @@ public class GroupFragment extends android.app.Fragment {
     }
 
     private void populateListView(String[] mGroupDisplay){
+        Toast.makeText(getActivity(),"Successfully updated the list", Toast.LENGTH_SHORT).show();
         // create list of item
         String[] myItems = mGroupDisplay;
         // Build adapter
@@ -104,6 +133,16 @@ public class GroupFragment extends android.app.Fragment {
 
         //registerClickCallback
         registerClickCallback();
+    }
+
+    private void clearListView(){
+        // create list of item
+        String[] myItems = {};
+        // Build adapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.group_entry, myItems);
+        // configure the list view
+        ListView list = view.findViewById(R.id.groupListViewId);
+        list.setAdapter(adapter);
     }
 
     private void registerClickCallback() {
@@ -136,6 +175,7 @@ public class GroupFragment extends android.app.Fragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
+                        clearListView();
                         getGroupListAndPopulateList();
                         // This method performs the actual data-refresh operation.
                         // The method calls setRefreshing(false) when it's finished.
@@ -143,6 +183,5 @@ public class GroupFragment extends android.app.Fragment {
                     }
                 }
         );
-
     }
 }

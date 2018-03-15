@@ -181,7 +181,6 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         return view;
     }
 
-
     @Override
     public void onPause() {
         super.onPause();
@@ -190,7 +189,6 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             mGoogleApiClient.disconnect();
         }
     }
-
 
     private void getLocationPermission() {
     /*
