@@ -1,11 +1,8 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,10 +15,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +26,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +42,6 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -84,7 +77,6 @@ import java.util.Objects;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.ADD_MEMBER_TO_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.CREATE_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LIST_GROUPS;
-import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
 
 /*
 * SOURCES - Based on following tutorials:
@@ -103,8 +95,11 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
     private static final String TAG = "MapFragment";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1234;
     private static final int ERROR_DIALOG_REQUEST = 9001;
-    private static final float DEFAULT_ZOOM = 14;
-    private static int DEFAULT_SEARCH_RADIUS_METERS = 1000;//500;
+
+    // CUSTOM VALUES
+    private static final float DEFAULT_ZOOM = 14; // Larger means more zoomed in
+    private static final int MAXIMUM_ROUTE_DISTANCE_METERS = 10000000; // This distance is approx. Vancouver to Chilliwack
+    private static int DEFAULT_SEARCH_RADIUS_METERS = 1050;
 
     private GoogleMap mMap;
     private Boolean mLocationPermissionGranted = false;
@@ -148,7 +143,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendRequest();
+                findRoute();
             }
         });
         Button btnCreateGroup = (Button) view.findViewById(R.id.btnCreateGroup);
@@ -468,7 +463,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         mValidRouteEstablished = false;
     }
 
-    private void sendRequest() {
+    private void findRoute() {
         String origin = etOrigin.getText().toString();
         String destination = etDestination.getText().toString();
         if (origin.isEmpty()) {
@@ -479,7 +474,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             Toast.makeText(getActivity(), "Please enter destination address!", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        
         try {
             // Draw route
             new DirectionFinder(new DirectionFinderListener() {
@@ -516,40 +511,50 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
 
                 @Override
                 public void onDirectionFinderSuccess(List<Route> routes) {
-                    mValidRouteEstablished = true;
                     progressDialog.dismiss();
-                    polylinePaths = new ArrayList<>();
-                    originMarkers = new ArrayList<>();
-                    destinationMarkers = new ArrayList<>();
 
-                    for (Route route : routes) {
-                        moveCamera(route.destinationLocation, DEFAULT_ZOOM);
-                        ((TextView) view.findViewById(R.id.tvDuration)).setText(route.duration.text);
-                        ((TextView) view.findViewById(R.id.tvDistance)).setText(route.distance.text);
+                    if (routes.size() < 0) {
+                        Toast.makeText(getActivity(), "No result. Try rephrasing direction.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (isTooFar(routes.get(0).originLocation, routes.get(0).destinationLocation)) {
+                            Toast.makeText(getActivity(), "Your route is too long!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                        Log.d(TAG, "onDirectionFinderSuccess: Current route: FROM: " + route.originAddress + ", TO: " + route.destinationAddress);
-                        currentRoute = route;
+                        mValidRouteEstablished = true;
+                        polylinePaths = new ArrayList<>();
+                        originMarkers = new ArrayList<>();
+                        destinationMarkers = new ArrayList<>();
 
-                        originMarkers.add(mMap.addMarker(new MarkerOptions()
-                                .icon(BitmapDescriptorFactory.defaultMarker(210))
-                                .title("Origin")
-                                .snippet(route.originAddress)
-                                .position(route.originLocation)));
-                        destinationMarkers.add(mMap.addMarker(new MarkerOptions()
-                                .icon(BitmapDescriptorFactory.defaultMarker(210))
-                                .title("Destination")
-                                .snippet(route.destinationAddress)
-                                .position(route.destinationLocation)));
+                        for (Route route : routes) {
+                            moveCamera(route.destinationLocation, DEFAULT_ZOOM);
+                            ((TextView) view.findViewById(R.id.tvDuration)).setText(route.duration.text);
+                            ((TextView) view.findViewById(R.id.tvDistance)).setText(route.distance.text);
 
-                        PolylineOptions polylineOptions = new PolylineOptions().
-                                geodesic(true).
-                                color(getResources().getColor(R.color.logoBlue)).
-                                width(10);
+                            Log.d(TAG, "onDirectionFinderSuccess: Current route: FROM: " + route.originAddress + ", TO: " + route.destinationAddress);
+                            currentRoute = route;
 
-                        for (int i = 0; i < route.points.size(); i++)
-                            polylineOptions.add(route.points.get(i));
+                            originMarkers.add(mMap.addMarker(new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.defaultMarker(210))
+                                    .title("Origin")
+                                    .snippet(route.originAddress)
+                                    .position(route.originLocation)));
+                            destinationMarkers.add(mMap.addMarker(new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.defaultMarker(210))
+                                    .title("Destination")
+                                    .snippet(route.destinationAddress)
+                                    .position(route.destinationLocation)));
 
-                        polylinePaths.add(mMap.addPolyline(polylineOptions));
+                            PolylineOptions polylineOptions = new PolylineOptions().
+                                    geodesic(true).
+                                    color(getResources().getColor(R.color.logoBlue)).
+                                    width(10);
+
+                            for (int i = 0; i < route.points.size(); i++)
+                                polylineOptions.add(route.points.get(i));
+
+                            polylinePaths.add(mMap.addPolyline(polylineOptions));
+                        }
                     }
                 }
             }, origin, destination).execute();
@@ -767,7 +772,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                         Marker marker = mMap.addMarker(new MarkerOptions()
                                         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
                                         .title(group.getGroupDescription())
-                                        .snippet("Click to join group!")
+                                        .snippet("Origin: Click to join group!")
                                         .position(route.originLocation));
                         marker.setTag(group.getId());
                         originMarkers.add(marker);
@@ -775,7 +780,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                         marker = mMap.addMarker(new MarkerOptions()
                                         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
                                         .title(group.getGroupDescription())
-                                        .snippet("Click to join group!")
+                                        .snippet("Destination: Click to join group!")
                                         .position(route.destinationLocation));
                         marker.setTag(group.getId());
                         destinationMarkers.add(marker);
@@ -866,11 +871,20 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             searchRadiusCircle.remove();
         CircleOptions circleOptions = new CircleOptions();
         circleOptions.center(centerCoordinate);
-        circleOptions.radius(radiusMeters);
+        circleOptions.radius(radiusMeters - 50); //TODO: Calibrate to match search radius actual to visual
         circleOptions.strokeColor(0xFFffc300);
         circleOptions.fillColor(0x40f7f056);
         circleOptions.strokeWidth(4);
         searchRadiusCircle = mMap.addCircle(circleOptions);
+    }
+
+    private boolean isTooFar(LatLng origin, LatLng destination) {
+        float[] results = new float[1];
+        Location.distanceBetween(origin.latitude, origin.longitude,
+                destination.latitude, destination.latitude,
+                results);
+        Log.d(TAG, "isTooFar: distance between origin and destination in meters: " + results[0]);
+        return results[0] > MAXIMUM_ROUTE_DISTANCE_METERS;
     }
 
     private void relocateMyLocationButton() {
