@@ -14,6 +14,7 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
+import static com.thewalkingschoolbus.thewalkingschoolbus.MainMenuActivity.USER_LOGSTATUS;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 
@@ -40,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     String registerEmail;
     public static final String AppStates = "UUERLOGIN";
 
-    public static User loginUser;
 
 
     @Override
@@ -51,19 +51,7 @@ public class MainActivity extends AppCompatActivity {
         setupTextviews();
         setupLoginButton();
         setupRegisterButton();
-        getUserLastState(getApplicationContext());
-    }
-
-    private void getUserLastState(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences(AppStates, MODE_PRIVATE);
-        registerEmail = preferences.getString(MainActivity.REGISTER_EMAIL, null);
-        loginPassword = preferences.getString(MainActivity.LOGIN_PASSWORD, null);
-        if(registerEmail != null && loginPassword != null) {
-            loginUser = new User();
-            loginUser.setEmail(registerEmail);
-            loginUser.setPassword(loginPassword);
-            login();
-        }
+        //getUserLastState(getApplicationContext());
     }
 
 
@@ -105,10 +93,9 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),FIELD_NOT_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
                 }
-
-                loginUser = new User();
-                loginUser.setEmail(registerEmail);
-                loginUser.setPassword(loginPassword);
+                User.setLoginUser(new User());
+                User.getLoginUser().setEmail(registerEmail);
+                User.getLoginUser().setPassword(loginPassword);
                 login();
 
             }
@@ -116,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void login() {
-        new GetUserAsyncTask(LOGIN_REQUEST, loginUser,null, null, loginPassword, new OnTaskComplete() {
+        new GetUserAsyncTask(LOGIN_REQUEST, User.getLoginUser(),null, null, loginPassword, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if(result == null){
@@ -126,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
                     storeUserInfoToSharePreferences();
-                    setLoginUser(loginUser);
+                    setLoginUser(User.getLoginUser());
                 }
             }
             @Override
@@ -144,6 +131,13 @@ public class MainActivity extends AppCompatActivity {
                     User.setLoginUser((User)result);
                     Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
                     startActivity(intent);
+                    finish();
+
+                    SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+
+                    editor.putBoolean(USER_LOGSTATUS, true);
+                    editor.commit();
                 }
             }
             @Override
@@ -163,6 +157,11 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(LOGIN_PASSWORD, loginPassword );
         editor.commit();
 
+    }
+
+    public static Intent makeIntent(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        return intent;
     }
 
 }
