@@ -52,7 +52,7 @@ public class AddMonitoringActivity extends AppCompatActivity {
     private void addMonitoringUser(String email){
         addMonitoringUser = new User();
         addMonitoringUser.setEmail(email);
-        new GetUserAsyncTask(GET_USER_BY_EMAIL,addMonitoringUser , null, null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_USER_BY_EMAIL,addMonitoringUser , null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if(result != null){
@@ -71,7 +71,7 @@ public class AddMonitoringActivity extends AppCompatActivity {
     }
 
     private void createMonitoring(){
-        new GetUserAsyncTask(CREATE_MONITORING, User.getLoginUser(), addMonitoringUser, null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(CREATE_MONITORING, User.getLoginUser(), addMonitoringUser, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if(result != null){

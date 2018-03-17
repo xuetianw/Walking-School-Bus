@@ -58,7 +58,7 @@ public class JoinOrCreateGroupActivity extends AppCompatActivity {
             group.setId(groupIdEditText.getText().toString());
             Log.i(TAG, "number entered" );
 
-            new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, User.getLoginUser(), null, group, null, new OnTaskComplete() {
+            new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, User.getLoginUser(), null, group, new OnTaskComplete() {
                 @Override
                 public void onSuccess(Object result) {
                     if(result!=null) {

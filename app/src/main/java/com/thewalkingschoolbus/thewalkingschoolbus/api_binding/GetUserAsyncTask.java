@@ -19,13 +19,17 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
     private Exception mException;
     private Group mGroup;
 
-    public GetUserAsyncTask(functionType functionType, User parentUser, User childUser, Group group, String password, OnTaskComplete listener){
+    public GetUserAsyncTask(functionType functionType, User parentUser, User childUser, Group group, OnTaskComplete listener){
         functionChoice = functionType;
         mlistener = listener;
         mGroup = group;
         mParentUser = parentUser;
         mChildUser = childUser;
-        passwordEntered = password;
+        if(parentUser != null || parentUser.getPassword() != null) {
+            passwordEntered = parentUser.getPassword();
+        }else{
+            passwordEntered = null;
+        }
     }
 
     protected Object doInBackground(Void... urls){
@@ -36,7 +40,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
                     returnObject = server.loginRequest(mParentUser,passwordEntered);
                     break;
                 case CREATE_USER:
-                    returnObject = server.createUser(mParentUser,passwordEntered);
+                    returnObject = server.createUser(mParentUser);
                     break;
                 case LIST_USERS:
                     returnObject = server.listUsers();

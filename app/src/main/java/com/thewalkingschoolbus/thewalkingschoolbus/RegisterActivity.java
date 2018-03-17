@@ -48,8 +48,9 @@ public class RegisterActivity extends AppCompatActivity {
                 User user = new User();
                 user.setEmail(registerEmail);
                 user.setName(loginName);
+                user.setPassword(registerPassword);
 
-                new GetUserAsyncTask(CREATE_USER, user,null, null, registerPassword, new OnTaskComplete() {
+                new GetUserAsyncTask(CREATE_USER, user,null, null, new OnTaskComplete() {
                     @Override
                     public void onSuccess(Object result) {
                         if(result != null){

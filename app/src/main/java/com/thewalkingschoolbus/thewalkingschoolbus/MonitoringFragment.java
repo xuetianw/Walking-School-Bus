@@ -54,7 +54,7 @@ public class MonitoringFragment extends android.app.Fragment {
     }
 
     private void updateListView() {
-        new GetUserAsyncTask(USR_MONITORING_LIST, User.getLoginUser(),null, null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(USR_MONITORING_LIST, User.getLoginUser(),null, null,new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if(result == null){
@@ -134,7 +134,7 @@ public class MonitoringFragment extends android.app.Fragment {
         switch (requestCode) {
             case DELETE_MORNITORING_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
-                    new GetUserAsyncTask(DELETE_MONITORING, User.getLoginUser(), MonitoringDetailActivity.deleteUser, null, null, new OnTaskComplete() {
+                    new GetUserAsyncTask(DELETE_MONITORING, User.getLoginUser(), MonitoringDetailActivity.deleteUser, null, new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
                             if(result == null){

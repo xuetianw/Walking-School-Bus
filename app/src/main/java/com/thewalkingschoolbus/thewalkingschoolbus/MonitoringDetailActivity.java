@@ -31,7 +31,7 @@ public class MonitoringDetailActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        new GetUserAsyncTask(GET_USER_BY_EMAIL, deleteUser,null, null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_USER_BY_EMAIL, deleteUser,null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if(result == null){

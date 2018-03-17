@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void login() {
-        new GetUserAsyncTask(LOGIN_REQUEST, User.getLoginUser(),null, null, loginPassword, new OnTaskComplete() {
+        new GetUserAsyncTask(LOGIN_REQUEST, User.getLoginUser(),null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if(result == null){
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setLoginUser(User user){
-        new GetUserAsyncTask(GET_USER_BY_EMAIL, user, null, null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_USER_BY_EMAIL, user, null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if(result != null){
