@@ -40,7 +40,7 @@ public class MainMenuActivity extends AppCompatActivity
         setContentView(R.layout.activity_main_menu);
 
 
-        boolean feedback = getloginStatus();
+        boolean feedback = getLoginStatus();
         if (!feedback){
             startActivity(MainActivity.makeIntent(getApplicationContext()));
             finish();
@@ -70,26 +70,25 @@ public class MainMenuActivity extends AppCompatActivity
             openDefaultFragment();
         }
 
-
         // SET UP TEST //
         //setupTest();
     }
 
-    private boolean getloginStatus() {
+    private boolean getLoginStatus() {
         SharedPreferences preferences = getApplication().getSharedPreferences(AppStates, MODE_PRIVATE);
         return preferences.getBoolean(USER_LOGSTATUS, false);
     }
 
     private void openDefaultFragment() {
-        navigationView.setCheckedItem(R.id.nav_fragment_monitoring);
+        navigationView.setCheckedItem(R.id.nav_fragment_profile);
         getFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, new MonitoringFragment())
+                .replace(R.id.content_frame, new ProfileFragment())
                 .commit();
         // Brief delay to prevent new title from being overwritten by default title.
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                toolbar.setTitle("Monitoring");
+                toolbar.setTitle("Profile");
             }
         }, 1);
     }
@@ -135,7 +134,12 @@ public class MainMenuActivity extends AppCompatActivity
         int id = item.getItemId();
         FragmentManager fragmentManager = getFragmentManager();
 
-        if (id == R.id.nav_fragment_monitoring) {
+        if (id == R.id.nav_fragment_profile) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, new ProfileFragment())
+                    .commit();
+            toolbar.setTitle("Profile");
+        } else if (id == R.id.nav_fragment_monitoring) {
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, new MonitoringFragment())
                     .commit();

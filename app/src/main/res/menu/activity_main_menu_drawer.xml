@@ -5,6 +5,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_fragment_profile"
+            android:icon="@android:drawable/btn_star"
+            android:title="Profile" />
+        <item
             android:id="@+id/nav_fragment_monitoring"
             android:icon="@android:drawable/btn_star"
             android:title="Monitoring" />
