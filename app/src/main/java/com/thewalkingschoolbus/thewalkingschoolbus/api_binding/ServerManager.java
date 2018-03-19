@@ -251,7 +251,7 @@ public class ServerManager {
     // delete user with id
     // user parentUser as the user class and use their id to delete
 
-    public String deleteSingleUser(User user) throws Exception{
+    public String deleteUser(User user) throws Exception{
         String url = BASE_URL + String.format(DELETE_USER,user.getId());
         HttpURLConnection connection = httpRequestDelete(url);
 
