@@ -34,25 +34,21 @@ public class MonitoringDetailActivity extends AppCompatActivity {
         new GetUserAsyncTask(GET_USER_BY_EMAIL, deleteUser,null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                if(result == null){
-                    Toast.makeText(getApplicationContext(),"Failed to retrieve user.", Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    deleteUser = (User) result;
-                    TextView name = (TextView)findViewById(R.id.textView);
-                    TextView displayName = (TextView)findViewById(R.id.textView7);
-                    TextView email = (TextView)findViewById(R.id.textView8);
-                    TextView displayEmail = (TextView)findViewById(R.id.textView9);
-                    name.setText("Name: ");
-                    displayName.setText(""+ deleteUser.getName());
-                    deleteUser.getName();
-                    email.setText("Email: ");
-                    displayEmail.setText(""+ deleteUser.getEmail());
-
-                }
+                deleteUser = (User) result;
+                TextView name = (TextView)findViewById(R.id.textView);
+                TextView displayName = (TextView)findViewById(R.id.textView7);
+                TextView email = (TextView)findViewById(R.id.textView8);
+                TextView displayEmail = (TextView)findViewById(R.id.textView9);
+                name.setText("Name: ");
+                displayName.setText(""+ deleteUser.getName());
+                deleteUser.getName();
+                email.setText("Email: ");
+                displayEmail.setText(""+ deleteUser.getEmail());
             }
             @Override
             public void onFailure(Exception e) {
+                Toast.makeText(getApplicationContext(),"Failed to retrieve user.", Toast.LENGTH_SHORT)
+                        .show();
                 Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }).execute();

@@ -68,6 +68,7 @@ public class GroupFragment extends android.app.Fragment {
 
             @Override
             public void onFailure(Exception e) {
+                Toast.makeText(getActivity(),"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
@@ -98,6 +99,7 @@ public class GroupFragment extends android.app.Fragment {
 
             @Override
             public void onFailure(Exception e) {
+                Toast.makeText(getActivity(),"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }

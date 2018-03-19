@@ -55,17 +55,14 @@ public class AddMonitoringActivity extends AppCompatActivity {
         new GetUserAsyncTask(GET_USER_BY_EMAIL,addMonitoringUser , null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                if(result != null){
-                    addMonitoringUser = (User) result;
-                    createMonitoring();
-                }else{
-                    Toast.makeText(AddMonitoringActivity.this,"unable to find this email" , Toast.LENGTH_SHORT).show();
-                }
+                addMonitoringUser = (User) result;
+                createMonitoring();
             }
 
             @Override
             public void onFailure(Exception e) {
                 Toast.makeText(AddMonitoringActivity.this,"unable to find this email" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddMonitoringActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
@@ -74,17 +71,14 @@ public class AddMonitoringActivity extends AppCompatActivity {
         new GetUserAsyncTask(CREATE_MONITORING, User.getLoginUser(), addMonitoringUser, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                if(result != null){
-                    Toast.makeText(AddMonitoringActivity.this,"user added" , Toast.LENGTH_SHORT).show();
-                    finish();
-                }else{
-                    Toast.makeText(AddMonitoringActivity.this,"unable to add user" , Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(AddMonitoringActivity.this,"user added" , Toast.LENGTH_SHORT).show();
+                finish();
             }
 
             @Override
             public void onFailure(Exception e) {
                 Toast.makeText(AddMonitoringActivity.this,"unable to add user" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddMonitoringActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }

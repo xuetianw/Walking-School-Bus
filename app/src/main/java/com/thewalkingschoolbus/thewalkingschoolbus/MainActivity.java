@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 registerEmail = emailET.getText().toString();
                 loginPassword = passwordET.getText().toString();
 
@@ -142,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Exception e) {
-
+                Toast.makeText(MainActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }

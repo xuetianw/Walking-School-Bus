@@ -53,18 +53,15 @@ public class RegisterActivity extends AppCompatActivity {
                 new GetUserAsyncTask(CREATE_USER, user,null, null, new OnTaskComplete() {
                     @Override
                     public void onSuccess(Object result) {
-                        if(result != null){
-                            Toast.makeText(getApplicationContext(),REGISTER_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
+                        Toast.makeText(getApplicationContext(),REGISTER_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
-                            //Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
-                            //startActivity(intent);
-                        } else {
-                            Toast.makeText(getApplicationContext(),REGISTER_FAIL_MESSAGE, Toast.LENGTH_SHORT)
-                                    .show();
-                        }
+                        //Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
+                        //startActivity(intent);
                     }
                     @Override
                     public void onFailure(Exception e) {
+                        Toast.makeText(getApplicationContext(),REGISTER_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                .show();
                         Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }).execute();

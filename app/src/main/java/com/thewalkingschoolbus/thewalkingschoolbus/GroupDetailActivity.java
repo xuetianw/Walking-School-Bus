@@ -64,14 +64,12 @@ public class GroupDetailActivity extends AppCompatActivity {
         new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                if(result!=null){
-                    User.setLoginUser((User)result);
-                }
+                User.setLoginUser((User)result);
             }
 
             @Override
             public void onFailure(Exception e) {
-
+                Toast.makeText(GroupDetailActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
@@ -84,16 +82,13 @@ public class GroupDetailActivity extends AppCompatActivity {
         new GetUserAsyncTask(GET_ONE_GROUP, null, null, mSelectedGroup, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                if(result != null) {
-                    mSelectedGroup = (Group) result;
-                    showGroupDetail();
-                }else{
-                    Toast.makeText(GroupDetailActivity.this, "Unable to get Group data", Toast.LENGTH_LONG).show();
-                }
+                mSelectedGroup = (Group) result;
+                showGroupDetail();
             }
             @Override
             public void onFailure(Exception e) {
                 Toast.makeText(GroupDetailActivity.this, "Unable to get Group data", Toast.LENGTH_LONG).show();
+                Toast.makeText(GroupDetailActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
@@ -114,17 +109,14 @@ public class GroupDetailActivity extends AppCompatActivity {
         new GetUserAsyncTask(GET_MEMBERS_OF_GROUP, null, null, mSelectedGroup, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                if(result == null){
-                    Toast.makeText(GroupDetailActivity.this, "unable to get members of the mSelectedGroup", Toast.LENGTH_LONG).show();
-                }else{
-                    mMembers = (User[]) result;
-                    stringsPrep();
-                }
+                mMembers = (User[]) result;
+                stringsPrep();
             }
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(GroupDetailActivity.this, "Exception", Toast.LENGTH_LONG).show();
+                Toast.makeText(GroupDetailActivity.this, "unable to get members of the mSelectedGroup", Toast.LENGTH_LONG).show();
+                Toast.makeText(GroupDetailActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
@@ -213,16 +205,13 @@ public class GroupDetailActivity extends AppCompatActivity {
         new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, mMembers[positionOfUser], null, mSelectedGroup, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                if(result != null){
-                    Toast.makeText(GroupDetailActivity.this, "successfully removed",Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(GroupDetailActivity.this, "unsuccessfully removed",Toast.LENGTH_LONG).show();
-                }
+                Toast.makeText(GroupDetailActivity.this, "successfully removed",Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(GroupDetailActivity.this, "Exception",Toast.LENGTH_LONG).show();
+                Toast.makeText(GroupDetailActivity.this, "unsuccessfully removed",Toast.LENGTH_LONG).show();
+                Toast.makeText(GroupDetailActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
@@ -244,17 +233,13 @@ public class GroupDetailActivity extends AppCompatActivity {
         new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, User.getLoginUser(), null, mSelectedGroup, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                if(result!= null){
-                    Toast.makeText(GroupDetailActivity.this, "successfully leave group",Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(GroupDetailActivity.this, "unsuccessfully leave group",Toast.LENGTH_LONG).show();
-                }
+                Toast.makeText(GroupDetailActivity.this, "successfully leave group",Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(GroupDetailActivity.this, "Exception",Toast.LENGTH_LONG).show();
-
+                Toast.makeText(GroupDetailActivity.this, "unsuccessfully leave group",Toast.LENGTH_LONG).show();
+                Toast.makeText(GroupDetailActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
@@ -333,18 +318,13 @@ public class GroupDetailActivity extends AppCompatActivity {
         new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, inviteMember.get(position), null, mSelectedGroup, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                if(result!=null){
-                    Toast.makeText(GroupDetailActivity.this, "added to group",Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(GroupDetailActivity.this, "unable to add to group",Toast.LENGTH_LONG).show();
-
-                }
+                Toast.makeText(GroupDetailActivity.this, "added to group",Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onFailure(Exception e) {
                 Toast.makeText(GroupDetailActivity.this, "unable to add to group",Toast.LENGTH_LONG).show();
-
+                Toast.makeText(GroupDetailActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }

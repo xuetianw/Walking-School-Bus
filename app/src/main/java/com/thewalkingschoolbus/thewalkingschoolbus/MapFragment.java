@@ -428,19 +428,16 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             new GetUserAsyncTask(CREATE_GROUP, null, null, group, new OnTaskComplete() {
                 @Override
                 public void onSuccess(Object result) {
-                    if(result == null) {
-                        Toast.makeText(context, "Name already exists.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        //Group[] group = (Group[]) result;
-                        Toast.makeText(context, "Group created!", Toast.LENGTH_SHORT).show();
-                        joinGroup(context, (Group) result, false);
-                        alertDialog.dismiss();
-                    }
+                    //Group[] group = (Group[]) result;
+                    Toast.makeText(context, "Group created!", Toast.LENGTH_SHORT).show();
+                    joinGroup(context, (Group) result, false);
+                    alertDialog.dismiss();
                 }
 
                 @Override
                 public void onFailure(Exception e) {
-                    Toast.makeText(context, "Unexpected error.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Name already exists.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }).execute();
         }
@@ -453,43 +450,40 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             new GetUserAsyncTask(LIST_GROUPS, null, null, null, new OnTaskComplete() {
                 @Override
                 public void onSuccess(Object result) {
-                    if (result == null) {
-                        Toast.makeText(getActivity(), "Failed to retrieve group data.", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else {
-                        Boolean groupNearBy = false;
-                        groupList = (Group[]) result;
+                    Boolean groupNearBy = false;
+                    groupList = (Group[]) result;
 
-                        // Display groups within search radius
-                        for (Group group : groupList) {
-                            // Compare destination difference of current route input and current group being examined. Returns distance in meters in results.
-                            float[] results = new float[1];
-                            Log.d(TAG, "displayNearbyGroups: distance between destinations in meters: " + results[0]);
-                            Location.distanceBetween(currentRoute.destinationLocation.latitude, currentRoute.destinationLocation.longitude,
-                                    group.getRouteLatArray()[1], group.getRouteLngArray()[1],
-                                    results);
-                            Log.d(TAG, "displayNearbyGroups: distance between destinations in meters: " + results[0]);
-                            if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
-                                Log.d(TAG, "displayNearbyGroups: INSIDE CIRCLE: " + results[0]);
-                                // Display this result on map.
-                                displayGroup(group);
-                                groupNearBy = true;
-                            } else {
-                                Log.d(TAG, "displayNearbyGroups: OUTSIDE CIRCLE: " + results[0]);
-                            }
+                    // Display groups within search radius
+                    for (Group group : groupList) {
+                        // Compare destination difference of current route input and current group being examined. Returns distance in meters in results.
+                        float[] results = new float[1];
+                        Log.d(TAG, "displayNearbyGroups: distance between destinations in meters: " + results[0]);
+                        Location.distanceBetween(currentRoute.destinationLocation.latitude, currentRoute.destinationLocation.longitude,
+                                group.getRouteLatArray()[1], group.getRouteLngArray()[1],
+                                results);
+                        Log.d(TAG, "displayNearbyGroups: distance between destinations in meters: " + results[0]);
+                        if (results[0] < DEFAULT_SEARCH_RADIUS_METERS) {
+                            Log.d(TAG, "displayNearbyGroups: INSIDE CIRCLE: " + results[0]);
+                            // Display this result on map.
+                            displayGroup(group);
+                            groupNearBy = true;
+                        } else {
+                            Log.d(TAG, "displayNearbyGroups: OUTSIDE CIRCLE: " + results[0]);
                         }
-                        if (!groupNearBy) {
-                            Toast.makeText(getActivity(), "No groups near destination.", Toast.LENGTH_SHORT).show();
-                        }
-
-                        // Draw visual circle for search radius
-                        drawSearchRadius(currentRoute.destinationLocation, DEFAULT_SEARCH_RADIUS_METERS);
-                        moveCamera(currentRoute.destinationLocation, DEFAULT_ZOOM);
                     }
+                    if (!groupNearBy) {
+                        Toast.makeText(getActivity(), "No groups near destination.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    // Draw visual circle for search radius
+                    drawSearchRadius(currentRoute.destinationLocation, DEFAULT_SEARCH_RADIUS_METERS);
+                    moveCamera(currentRoute.destinationLocation, DEFAULT_ZOOM);
                 }
 
                 @Override
                 public void onFailure(Exception e) {
+                    Toast.makeText(getActivity(), "Failed to retrieve group data.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
 
                 }
             }).execute();
@@ -685,18 +679,17 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
         new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, user, null, group, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                if(result == null) {
-                    if (makeToasts)
-                        Toast.makeText(context, "Failed to join group.", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (makeToasts)
-                        Toast.makeText(context, "Joined \"" + group.getGroupDescription() + "\" !", Toast.LENGTH_SHORT).show();
+                if (makeToasts) {
+                    Toast.makeText(context, "Joined \"" + group.getGroupDescription() + "\" !", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(context, "Unexpected error.", Toast.LENGTH_SHORT).show();
+                if(makeToasts) {
+                    Toast.makeText(context, "Failed to join group.", Toast.LENGTH_SHORT).show();
+                }
+                Toast.makeText(context, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
