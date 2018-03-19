@@ -40,9 +40,22 @@ public class User {
         id = null;
         name = null;
         email = null;
+        password = null;
+        birthYear = null;
+        birthMonth = null;
+        address = null;
+        cellPhone = null;
+        homePhone = null;
+        grade = null;
+        teacherName = null;
+        emergencyContactInfo = null;
+        lastGpsLocation = null;
+
         monitorsUsers = null;
         monitoredByUsers = null;
+
         memberOfGroups = null;
+        leadsGroups = null;
     }
 
     public User (String id, String name, String email) {

@@ -25,7 +25,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
         mGroup = group;
         mParentUser = parentUser;
         mChildUser = childUser;
-        if(parentUser != null || parentUser.getPassword() != null) {
+        if(parentUser != null) {
             passwordEntered = parentUser.getPassword();
         }else{
             passwordEntered = null;

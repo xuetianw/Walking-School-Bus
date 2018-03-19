@@ -11,6 +11,18 @@ public class ApiException extends Exception{
     private String message;
     private String path;
 
+    public ApiException(String str){
+        super(str);
+    }
+
+    public ApiException(String str, Throwable cause){
+        super(str,cause);
+    }
+
+    public ApiException(Throwable message){
+        super(message);
+    }
+
     public String getTimestamp() {
         return timestamp;
     }
