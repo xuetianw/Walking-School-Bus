@@ -52,38 +52,36 @@ public class MonitoredByFragment extends android.app.Fragment {
     }
 
     private void updateListView() {
-        new GetUserAsyncTask(USER_MONITORING_BY_LIST, User.getLoginUser(),null, null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(USER_MONITORING_BY_LIST, User.getLoginUser(),null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                if(result == null){
-                    Toast.makeText(getActivity(),"Unable to update the list", Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    monitoredList = new ArrayList<>();
-                    users = (User[]) result;
-                    if(users.length == 0){
-                        Toast.makeText(getActivity(),"Not monitoring anyone", Toast.LENGTH_SHORT).show();
-                    }
-                    Toast.makeText(getActivity(),"Successfully updated the list", Toast.LENGTH_SHORT)
-                            .show();
-                    for(User user: users){
-                        System.out.println(user);
-                        monitoredList.add("Name: "+user.getName() + " "+"Email: "+ user.getEmail() );
-                    }
-                    // build adapter
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.monitoring_entry, monitoredList);
-
-                    // configure the list view
-                    ListView list = getActivity().findViewById(R.id.listViewMonitored);
-                    list.setAdapter(adapter);
-
-                    // update clicks
-                    registerClickCallback();
+                monitoredList = new ArrayList<>();
+                users = (User[]) result;
+                if(users.length == 0){
+                    Toast.makeText(getActivity(),"Not monitoring anyone", Toast.LENGTH_SHORT).show();
                 }
+                Toast.makeText(getActivity(),"Successfully updated the list", Toast.LENGTH_SHORT)
+                        .show();
+                for(User user: users){
+                    System.out.println(user);
+                    monitoredList.add("Name: "+user.getName() + " "+"Email: "+ user.getEmail() );
+                }
+                // build adapter
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.monitoring_entry, monitoredList);
+
+                // configure the list view
+                ListView list = getActivity().findViewById(R.id.listViewMonitored);
+                list.setAdapter(adapter);
+
+                // update clicks
+                registerClickCallback();
+
             }
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(getActivity().getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),"Unable to update the list", Toast.LENGTH_SHORT)
+                        .show();
+                Toast.makeText(getActivity().getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }).execute();
 
@@ -134,20 +132,17 @@ public class MonitoredByFragment extends android.app.Fragment {
         switch (requestCode) {
             case DELETE_BEING_MONITORED_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
-                    new GetUserAsyncTask(DELETE_MONITORING, MonitoredbyDetailActivity.deleteUser, User.getLoginUser(), null, null, new OnTaskComplete() {
+                    new GetUserAsyncTask(DELETE_MONITORING, MonitoredbyDetailActivity.deleteUser, User.getLoginUser(), null, new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
-                            if(result == null){
-                                Toast.makeText(getActivity(),"unable to delete monitoring", Toast.LENGTH_SHORT)
-                                        .show();
-                            } else {
-                                Toast.makeText(getActivity(),"delete Monitoring", Toast.LENGTH_SHORT)
-                                        .show();
 
-                            }
+                            Toast.makeText(getActivity(),"delete Monitoring", Toast.LENGTH_SHORT)
+                                    .show();
                         }
                         @Override
                         public void onFailure(Exception e) {
+                            Toast.makeText(getActivity(),"unable to delete monitoring", Toast.LENGTH_SHORT)
+                                    .show();
                             Toast.makeText(getActivity().getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }).execute();

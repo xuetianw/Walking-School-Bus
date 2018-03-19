@@ -58,19 +58,17 @@ public class JoinOrCreateGroupActivity extends AppCompatActivity {
             group.setId(groupIdEditText.getText().toString());
             Log.i(TAG, "number entered" );
 
-            new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, User.getLoginUser(), null, group, null, new OnTaskComplete() {
+            new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, User.getLoginUser(), null, group, new OnTaskComplete() {
                 @Override
                 public void onSuccess(Object result) {
-                    if(result!=null) {
-                        Toast.makeText(JoinOrCreateGroupActivity.this, "joined group", Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(JoinOrCreateGroupActivity.this, "unable to join group", Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(JoinOrCreateGroupActivity.this, "joined group", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
                 public void onFailure(Exception e) {
                     Toast.makeText(JoinOrCreateGroupActivity.this, "unable to join group", Toast.LENGTH_LONG).show();
+                    Toast.makeText(JoinOrCreateGroupActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
+
                 }
             }).execute();
         }

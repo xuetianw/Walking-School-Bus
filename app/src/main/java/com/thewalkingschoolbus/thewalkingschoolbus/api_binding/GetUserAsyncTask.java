@@ -19,13 +19,17 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
     private Exception mException;
     private Group mGroup;
 
-    public GetUserAsyncTask(functionType functionType, User parentUser, User childUser, Group group, String password, OnTaskComplete listener){
+    public GetUserAsyncTask(functionType functionType, User parentUser, User childUser, Group group, OnTaskComplete listener){
         functionChoice = functionType;
         mlistener = listener;
         mGroup = group;
         mParentUser = parentUser;
         mChildUser = childUser;
-        passwordEntered = password;
+        if(parentUser != null) {
+            passwordEntered = parentUser.getPassword();
+        }else{
+            passwordEntered = null;
+        }
     }
 
     protected Object doInBackground(Void... urls){
@@ -36,7 +40,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
                     returnObject = server.loginRequest(mParentUser,passwordEntered);
                     break;
                 case CREATE_USER:
-                    returnObject = server.createUser(mParentUser,passwordEntered);
+                    returnObject = server.createUser(mParentUser);
                     break;
                 case LIST_USERS:
                     returnObject = server.listUsers();
@@ -86,6 +90,12 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
                 case REMOVE_MEMBER_OF_GROUP:
                     returnObject = server.removeMemberOfGroup(mParentUser,mGroup);
                     break;
+                case DELETE_USER:
+                    returnObject = server.deleteUser(mParentUser);
+                    break;
+                case EDIT_USER:
+                    returnObject = server.editUser(mParentUser);
+                    break;
                 default:
                     returnObject = null;
                     break;
@@ -114,7 +124,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
     public enum functionType {
         LOGIN_REQUEST, CREATE_USER, LIST_USERS, GET_USER_BY_ID,GET_USER_BY_EMAIL,
         USR_MONITORING_LIST,USER_MONITORING_BY_LIST, CREATE_MONITORING, DELETE_MONITORING,
-        LIST_GROUPS,CREATE_GROUP,CREATE_GROUP_WITH_DETAIL,
+        LIST_GROUPS,CREATE_GROUP,CREATE_GROUP_WITH_DETAIL,DELETE_USER,EDIT_USER,
         GET_ONE_GROUP,UPDATE_EXISTING_GROUP,DELETE_GROUP,
         GET_MEMBERS_OF_GROUP,ADD_MEMBER_TO_GROUP,REMOVE_MEMBER_OF_GROUP
     }

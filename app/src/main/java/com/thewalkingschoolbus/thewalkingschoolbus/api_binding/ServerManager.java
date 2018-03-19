@@ -2,6 +2,7 @@ package com.thewalkingschoolbus.thewalkingschoolbus.api_binding;
 
 import android.util.Log;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.ApiException;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
@@ -29,6 +30,8 @@ public class ServerManager {
     private String LIST_USERS = "/users";
     private String GET_USER_BY_ID = "/users/%s";
     private String GET_USER_BY_EMAIL = "/users/byEmail?email=%s";
+    private String DELETE_USER = "/users/%s";
+    private String EDIT_USER = "/users/%s";
     private String USER_MONITORING_LIST = "/users/%s/monitorsUsers";
     private String USER_MONITORING_BY_LIST = "/users/%s/monitoredByUsers";
     private String CREATE_MONITORING = "/users/%s/monitorsUsers";
@@ -127,7 +130,7 @@ public class ServerManager {
     // return null for login error:
     //      wrong password/email, server connection error..
     // return SUCCESSFUL if server approve login
-    public String loginRequest(User user,String enteredPassword)throws Exception{
+    public String loginRequest(User user,String enteredPassword)throws Exception, ApiException{
         String url = BASE_URL+LOGIN;
         // create json file here
         JSONObject jsonObject = new JSONObject();
@@ -142,8 +145,10 @@ public class ServerManager {
 
         int responseCode = connection.getResponseCode();
 
-        if(responseCode >= 400) {
-            return null;
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
         // save token
         String token = connection.getHeaderField("authorization");
@@ -156,21 +161,20 @@ public class ServerManager {
     // return null if server returns error:
     //      user already exist ...
     // return user object for with server generated ID
-    public User createUser(User user,String enteredPassword)throws Exception{
+    public User createUser(User user)throws Exception, ApiException{
 
         String url = BASE_URL+CREATE_USER;
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("name",user.getName());
-        jsonObject.put("email",user.getEmail());
-        jsonObject.put("password",enteredPassword);
+        String jsonFile = new Gson().toJson(user);
+        JSONObject jsonObject = new JSONObject(jsonFile);
 
         HttpURLConnection connection = httpRequestPost(url,jsonObject);
         // send json file
 
         if (connection.getResponseCode() >= 400) {
             // failed
-            return null;
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
 
         // read json file and save in User
@@ -191,7 +195,9 @@ public class ServerManager {
         HttpURLConnection connection = httpRequestGet(url,null);
 
         if (connection.getResponseCode() >= 400) {
-            return null;
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
 
         StringBuffer response = readJsonIntoString(connection);
@@ -212,7 +218,8 @@ public class ServerManager {
 
         if (connection.getResponseCode() >= 400) {
             // failed
-            return null;
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
 
         StringBuffer response = readJsonIntoString(connection);
@@ -232,7 +239,8 @@ public class ServerManager {
 
         if (connection.getResponseCode() >= 400) {
             // failed
-            return null;
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
 
         StringBuffer response = readJsonIntoString(connection);
@@ -240,26 +248,67 @@ public class ServerManager {
         return user;
     }
 
+    // delete user with id
+    // user parentUser as the user class and use their id to delete
+
+    public String deleteUser(User user) throws Exception{
+        String url = BASE_URL + String.format(DELETE_USER,user.getId());
+        HttpURLConnection connection = httpRequestDelete(url);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+
+        return SUCCESSFUL;
+    }
+
+    // find user using ID and update all user info
+    // need to have all the info not just the updated ones
+    // throw exception :
+    //  user must have unique email addresses. Trying to change the current user to an email
+    //  address which is already in use by another user will generate an error.
+    public String editUser(User user)throws Exception{
+        String url = BASE_URL + String.format(EDIT_USER,user.getId());
+        String jsonFile = new Gson().toJson(user);
+        JSONObject jsonObject = new JSONObject(jsonFile);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+
+        return SUCCESSFUL;
+    }
+
+
+
     // take parentUser as the one that want to return list
-    // return null if server returns error
+    // throw exception : if server returns error
     //      id not found+ more
     // return a array of User if need can be convert to list
     public User[] userMonitoringList(User user) throws Exception {
+
         if(user.getId() == null) {
             user = getUserByEmail(user);
         }
+
         String url = BASE_URL+String.format(USER_MONITORING_LIST, user.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
 
-        int responseCode = connection.getResponseCode();
-        if ( responseCode >= 400) {
+        if (connection.getResponseCode() >= 400) {
             // failed
-            return null;
-        } else {
-            StringBuffer response = readJsonIntoString(connection);
-            User[] listMonitoring = new Gson().fromJson(response.toString(), User[].class);
-            return listMonitoring;
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
+
+        StringBuffer response = readJsonIntoString(connection);
+        User[] listMonitoring = new Gson().fromJson(response.toString(), User[].class);
+        return listMonitoring;
+
     }
 
     // take parentUser as parameter
@@ -272,10 +321,11 @@ public class ServerManager {
         }
         String url = BASE_URL+String.format(USER_MONITORING_BY_LIST,user.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
-        int responseCode = connection.getResponseCode();
-        if (responseCode >= 400) {
+
+        if (connection.getResponseCode() >= 400) {
             // failed
-            return null;
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
 
         StringBuffer response = readJsonIntoString(connection);
@@ -288,13 +338,21 @@ public class ServerManager {
     //      parent not found, child not found, already exist(maybe)
     // return Arrary of User monitoring by parent User
     public User[] createMonitoring(User parentUser, User childUser) throws Exception {
+        if(parentUser.getId() == null) {
+            parentUser = getUserByEmail(parentUser);
+        }
+        if(childUser.getId() == null) {
+            childUser = getUserByEmail(childUser);
+        }
         String url = BASE_URL+String.format(CREATE_MONITORING,parentUser.getId());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id",childUser.getId());
         HttpURLConnection connection = httpRequestPost(url,jsonObject);
 
         if (connection.getResponseCode() >= 400) {
-            return null;
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
 
         StringBuffer response = readJsonIntoString(connection);
@@ -320,8 +378,10 @@ public class ServerManager {
 
         if (connection.getResponseCode() >= 400) {
             // failed
-            return null;
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
+
         return SUCCESSFUL;
     }
 
@@ -333,9 +393,12 @@ public class ServerManager {
         String url = BASE_URL+LIST_GROUPS;
         HttpURLConnection connection = httpRequestGet(url,null);
 
-        if(connection.getResponseCode() >= 400){
-            return null;
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
+
         StringBuffer response = readJsonIntoString(connection);
         Group [] groups = new Gson().fromJson(response.toString(),Group[].class);
         return groups;
@@ -351,8 +414,10 @@ public class ServerManager {
         JSONObject jsonObject = new JSONObject(string);
         HttpURLConnection connection = httpRequestPost(url,jsonObject);
 
-        if(connection.getResponseCode() >= 400) {
-            return null;
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
 
         StringBuffer response = readJsonIntoString(connection);
@@ -370,9 +435,12 @@ public class ServerManager {
         JSONObject jsonObject = new JSONObject(string);
         HttpURLConnection connection = httpRequestPost(url,jsonObject);
 
-        if(connection.getResponseCode() >= 400) {
-            return null;
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
+
         StringBuffer response = readJsonIntoString(connection);
         group = new Gson().fromJson(response.toString(),Group.class);
         return group;
@@ -386,8 +454,10 @@ public class ServerManager {
         String url = BASE_URL+String.format(GET_ONE_GROUP,group.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
 
-        if(connection.getResponseCode() >= 400) {
-            return null;
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
 
         StringBuffer response = readJsonIntoString(connection);
@@ -405,8 +475,10 @@ public class ServerManager {
         JSONObject jsonObject = new JSONObject(string);
         HttpURLConnection connection = httpRequestPost(url, jsonObject);
 
-        if(connection.getResponseCode() >= 400) {
-            return null;
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
 
         StringBuffer response = readJsonIntoString(connection);
@@ -420,9 +492,13 @@ public class ServerManager {
     public String deleteGroup(Group group)throws Exception{
         String url = BASE_URL + String.format(DELETE_GROUP,group.getId());
         HttpURLConnection connection = httpRequestDelete(url);
-        if(connection.getResponseCode() >= 400) {
-            return null;
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
+
         return SUCCESSFUL;
     }
 
@@ -433,9 +509,11 @@ public class ServerManager {
     public User[] getMembersOfGroup (Group group) throws Exception{
         String url = BASE_URL+ String.format(GET_MEMBERS_OF_GROUP,group.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
-        Log.i("TAG","responseCode is:"+connection.getResponseCode());
-        if(connection.getResponseCode() >= 400) {
-            return null;
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
 
         StringBuffer response = readJsonIntoString(connection);
@@ -453,8 +531,10 @@ public class ServerManager {
         jsonObject.put("id",user.getId());
         HttpURLConnection connection = httpRequestPost(url,jsonObject);
 
-        if(connection.getResponseCode() >= 400) {
-            return null;
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
 
         StringBuffer response = readJsonIntoString(connection);
@@ -469,74 +549,14 @@ public class ServerManager {
         String url = BASE_URL+ String.format(REMOVE_MEMBER_OF_GROUP,group.getId(),user.getId());
         HttpURLConnection connection = httpRequestDelete(url);
         Log.i("TAG",url);
-        if(connection.getResponseCode() >= 400){
-            return null;
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
         }
 
         return SUCCESSFUL;
     }
 
 }
-
-
-
-/*
-    garbage for now... i do hope this stay as garbage...
-    /*
-    private HttpURLConnection httpRequest(String url,String requestMethod) throws Exception{
-        URL obj = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestMethod(requestMethod);
-        connection.setRequestProperty("Content-Type","application/json");
-        connection.setRequestProperty("apiKey",API_KEY);
-        return connection;
-    }
-
-    private void sendJson(HttpURLConnection connection,JSONObject jsonObject)throws Exception{
-        PrintStream printStream = new PrintStream(connection.getOutputStream());
-        printStream.println(jsonObject.toString());
-        printStream.close();
-    }
-
-    private void authorizationWithOutBody(HttpURLConnection connection) throws Exception{
-        connection.setRequestProperty("Authorization", User.getToken());
-        PrintStream printStream = new PrintStream(connection.getOutputStream());
-        printStream.close();
-    }
-
-    private void saveJsonArraysWithIds(JSONObject returnJson,User user)throws Exception{
-        JSONArray monitorsUsers = returnJson.getJSONArray("monitorsUsers");
-        JSONArray monitoredByUsers = returnJson.getJSONArray("monitoredByUsers");
-        // save monitors Users
-        for (int i = 0;i < monitorsUsers.length(); i++){
-            JSONObject tmpJsonObject = monitorsUsers.getJSONObject(i);
-            User tmpUser = new User();
-            tmpUser.setId(tmpJsonObject.getString("id"));
-            user.appendMonitoringUser(i,tmpUser);
-        }
-
-        for (int i = 0;i < monitoredByUsers.length(); i++){
-            JSONObject tmpJsonObject = monitoredByUsers.getJSONObject(i);
-            User tmpUser = new User();
-            tmpUser.setId(tmpJsonObject.getString("id"));
-            user.appendMonitoringByUser(i,tmpUser);
-        }
-    }
-
-    private void saveJsonArrays(JSONArray responseJson,User user,int flag)throws Exception{
-        for (int i = 0; i < responseJson.length();i++){
-            JSONObject tmpJsonObject = responseJson.getJSONObject(i);
-            User tmpUser = new User();
-            tmpUser.setId(tmpJsonObject.getString("id"));
-            tmpUser.setName(tmpJsonObject.getString("name"));
-            tmpUser.setId(tmpJsonObject.getString("email"));
-            saveJsonArraysWithIds(tmpJsonObject,tmpUser);
-            if(flag == 0) {
-                user.appendMonitoringUser(i, tmpUser);
-            }else if(flag == 1){
-                user.appendAllUsers(i,tmpUser);
-            }
-        }
-    }
-    */

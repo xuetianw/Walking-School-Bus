@@ -48,7 +48,7 @@ public class GroupFragment extends android.app.Fragment {
     private static int loopCount = 0;
 
     private void getGroupListAndPopulateList(){
-        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 User returnUser = (User) result;
@@ -68,6 +68,7 @@ public class GroupFragment extends android.app.Fragment {
 
             @Override
             public void onFailure(Exception e) {
+                Toast.makeText(getActivity(),"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
@@ -83,7 +84,7 @@ public class GroupFragment extends android.app.Fragment {
         if (loopCount >= mGroup.length - 1) {
             populateListReady = true;
         }
-        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mGroup[loopCount], null, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mGroup[loopCount], new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 mGroup[loopCount] = (Group) result;
@@ -98,6 +99,7 @@ public class GroupFragment extends android.app.Fragment {
 
             @Override
             public void onFailure(Exception e) {
+                Toast.makeText(getActivity(),"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
@@ -112,10 +114,14 @@ public class GroupFragment extends android.app.Fragment {
             mGroupDisplay = new String[mGroup.length];
             length = mGroup.length;
         }
-
+        String str;
         for(int i = 0; i < length;i++){
-            String str = "id: "+mGroup[i].getId() +" "+"Group Name: "+mGroup[i].getGroupDescription();
-            mGroupDisplay[i]=str;
+            if(mGroup[i].getGroupDescription() == null){
+                str = "id: "+mGroup[i].getId();
+            }else {
+                str = "id: " + mGroup[i].getId() + " " + "Group Name: " + mGroup[i].getGroupDescription();
+            }
+            mGroupDisplay[i] = str;
         }
 
         populateListView(mGroupDisplay);

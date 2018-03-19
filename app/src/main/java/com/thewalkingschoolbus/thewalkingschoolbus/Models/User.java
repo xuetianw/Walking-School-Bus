@@ -18,6 +18,15 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private String birthYear;
+    private String birthMonth;
+    private String address;
+    private String cellPhone;
+    private String homePhone;
+    private String grade;
+    private String teacherName;
+    private String emergencyContactInfo;
+    private GpsLocation lastGpsLocation;
 
     private List<User> monitoredByUsers;
     private List<User> monitorsUsers;
@@ -31,15 +40,112 @@ public class User {
         id = null;
         name = null;
         email = null;
+        password = null;
+        birthYear = null;
+        birthMonth = null;
+        address = null;
+        cellPhone = null;
+        homePhone = null;
+        grade = null;
+        teacherName = null;
+        emergencyContactInfo = null;
+        lastGpsLocation = null;
+
         monitorsUsers = null;
         monitoredByUsers = null;
+
         memberOfGroups = null;
+        leadsGroups = null;
     }
 
     public User (String id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
+    }
+
+    public String getBirthYear() {
+        return birthYear;
+    }
+
+    public void setBirthYear(String birthYear) {
+        this.birthYear = birthYear;
+    }
+
+    public String getBirthMonth() {
+        return birthMonth;
+    }
+
+    public void setBirthMonth(String birthMonth) {
+        this.birthMonth = birthMonth;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCellPhone() {
+        return cellPhone;
+    }
+
+    public void setCellPhone(String cellPhone) {
+        this.cellPhone = cellPhone;
+    }
+
+    public String getHomePhone() {
+        return homePhone;
+    }
+
+    public void setHomePhone(String homePhone) {
+        this.homePhone = homePhone;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public String getEmergencyContactInfo() {
+        return emergencyContactInfo;
+    }
+
+    public void setEmergencyContactInfo(String emergencyContactInfo) {
+        this.emergencyContactInfo = emergencyContactInfo;
+    }
+
+    public GpsLocation getLastGpsLocation() {
+        return lastGpsLocation;
+    }
+
+    public void setLastGpsLocation(GpsLocation lastGpsLocation) {
+        this.lastGpsLocation = lastGpsLocation;
+    }
+
+    public void setMonitoredByUsers(List<User> monitoredByUsers) {
+        this.monitoredByUsers = monitoredByUsers;
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
     }
 
     public String getPassword() {
