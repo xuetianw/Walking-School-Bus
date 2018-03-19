@@ -51,6 +51,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         extractDataAndShowDetail();
         setUpLeaveGroupBut();
         setUpInviteToGroupBut();
+        setUpStartWalkBut();
         setUpRefresh();
     }
 
@@ -258,6 +259,17 @@ public class GroupDetailActivity extends AppCompatActivity {
                         Toast.makeText(GroupDetailActivity.this, "not one to add",Toast.LENGTH_LONG).show();
                     }
                 }
+            }
+        });
+    }
+
+    private void setUpStartWalkBut() {
+        Button but = findViewById(R.id.startWalkBut);
+        but.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = WalkingActivity.makeIntent(GroupDetailActivity.this);
+                startActivity(intent);
             }
         });
     }

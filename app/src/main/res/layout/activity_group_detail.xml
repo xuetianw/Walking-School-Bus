@@ -147,7 +147,6 @@ tools:context="com.thewalkingschoolbus.thewalkingschoolbus.GroupDetailActivity">
         android:background="#c0c0c0"/>
 
     <TextView
-        android:id="@+id/textView9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -156,16 +155,22 @@ tools:context="com.thewalkingschoolbus.thewalkingschoolbus.GroupDetailActivity">
         android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
 
     <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swiperefreshGroupDetail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="245dp">
 
-    <ListView
-        android:id="@+id/memberListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <ListView
+            android:id="@+id/memberListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <Button
+        android:id="@+id/startWalkBut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="START WALK" />
 
 
 </android.widget.LinearLayout>

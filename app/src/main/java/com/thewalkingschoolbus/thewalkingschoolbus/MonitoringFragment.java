@@ -6,14 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
@@ -43,6 +41,7 @@ public class MonitoringFragment extends android.app.Fragment {
 
         updateListView();
         setupAddMonitoringBtn();
+        setupOpenMapMonitoringBtn();
         setUpRefresh();
         return view;
     }
@@ -105,6 +104,17 @@ public class MonitoringFragment extends android.app.Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = AddMonitoringActivity.makeIntent(getActivity());
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void setupOpenMapMonitoringBtn() {
+        FloatingActionButton btn = view.findViewById(R.id.btnMapMonitoring);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = MapMonitoringActivity.makeIntent(getActivity());
                 startActivity(intent);
             }
         });
