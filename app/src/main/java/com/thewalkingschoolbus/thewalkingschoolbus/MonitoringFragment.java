@@ -82,7 +82,7 @@ public class MonitoringFragment extends android.app.Fragment {
             public void onFailure(Exception e) {
                 Toast.makeText(getActivity(),"Unable to update the list", Toast.LENGTH_SHORT)
                         .show();
-                Toast.makeText(getActivity(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "ERROR: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
@@ -140,7 +140,7 @@ public class MonitoringFragment extends android.app.Fragment {
                         }
                         @Override
                         public void onFailure(Exception e) {
-                            Toast.makeText(getActivity().getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity().getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             Toast.makeText(getActivity().getApplicationContext(),"Failed to remove user", Toast.LENGTH_SHORT)
                                     .show();
                         }
