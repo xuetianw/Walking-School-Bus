@@ -28,6 +28,9 @@ public class User {
     private String emergencyContactInfo;
     private GpsLocation lastGpsLocation;
 
+    private List<Message> unreadMessages;
+    private List<Message> readMessages;
+
     private List<User> monitoredByUsers;
     private List<User> monitorsUsers;
 
