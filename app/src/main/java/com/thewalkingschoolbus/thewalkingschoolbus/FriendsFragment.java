@@ -66,8 +66,8 @@ public class FriendsFragment extends Fragment {
         ViewPager viewPager = view.findViewById(R.id.containerFriends);
         setupViewPager(viewPager);
 
-        TabLayout tablayout = view.findViewById(R.id.tabsFriends);
-        tablayout.setupWithViewPager(viewPager);
+        TabLayout tabs = view.findViewById(R.id.tabsFriends);
+        tabs.setupWithViewPager(viewPager);
 
         return view;
     }

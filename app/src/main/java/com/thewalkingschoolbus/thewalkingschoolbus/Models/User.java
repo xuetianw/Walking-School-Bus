@@ -32,7 +32,7 @@ public class User {
     private List<User> monitorsUsers;
 
     private List<Group> memberOfGroups;
-    private List<Group> leadsGroups;
+    private List<Group> leaderOfGroups;
 
     private String href;
 
@@ -55,7 +55,7 @@ public class User {
         monitoredByUsers = null;
 
         memberOfGroups = null;
-        leadsGroups = null;
+        leaderOfGroups = null;
     }
 
     public User (String id, String name, String email) {
@@ -210,12 +210,12 @@ public class User {
         this.memberOfGroups = memberOfGroups;
     }
 
-    public List<Group> getLeadsGroups() {
-        return leadsGroups;
+    public List<Group> getLeaderOfGroups() {
+        return leaderOfGroups;
     }
 
-    public void setLeadsGroups(List<Group> leadsGroups) {
-        this.leadsGroups = leadsGroups;
+    public void setLeaderOfGroups(List<Group> leaderOfGroups) {
+        this.leaderOfGroups = leaderOfGroups;
     }
 
     public static String getToken() throws Exception{

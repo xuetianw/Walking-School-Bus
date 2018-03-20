@@ -66,8 +66,8 @@ public class GroupFragment extends Fragment {
         ViewPager viewPager = view.findViewById(R.id.containerGroup);
         setupViewPager(viewPager);
 
-        TabLayout tablayout = view.findViewById(R.id.tabsGroup);
-        tablayout.setupWithViewPager(viewPager);
+        TabLayout tabs = view.findViewById(R.id.tabsGroup);
+        tabs.setupWithViewPager(viewPager);
 
         return view;
     }

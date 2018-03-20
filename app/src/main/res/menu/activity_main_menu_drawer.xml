@@ -9,17 +9,13 @@
             android:icon="@android:drawable/btn_star"
             android:title="Profile" />
         <item
-            android:id="@+id/nav_fragment_monitoring"
+            android:id="@+id/nav_fragment_friends"
             android:icon="@android:drawable/btn_star"
-            android:title="Monitoring" />
-        <item
-            android:id="@+id/nav_fragment_monitored_by"
-            android:icon="@android:drawable/btn_star"
-            android:title="Monitored By" />
+            android:title="Friends" />
         <item
             android:id="@+id/nav_fragment_group"
             android:icon="@android:drawable/btn_star"
-            android:title="Group" />
+            android:title="Groups" />
         <item
             android:id="@+id/nav_fragment_map_create_group"
             android:icon="@android:drawable/btn_star"

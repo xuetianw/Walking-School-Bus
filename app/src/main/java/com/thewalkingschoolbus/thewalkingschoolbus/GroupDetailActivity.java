@@ -222,7 +222,7 @@ public class GroupDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(User.getLoginUser().getId().equals(mSelectedGroup.getLeader().getId())){
-                    Toast.makeText(GroupDetailActivity.this, "cant leave group as leader",Toast.LENGTH_LONG).show();
+                    Toast.makeText(GroupDetailActivity.this, "Group leader cannot leave group",Toast.LENGTH_LONG).show();
                 }else{
                     leaveGroup();
                 }
@@ -233,12 +233,13 @@ public class GroupDetailActivity extends AppCompatActivity {
         new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, User.getLoginUser(), null, mSelectedGroup, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                Toast.makeText(GroupDetailActivity.this, "successfully leave group",Toast.LENGTH_LONG).show();
+                Toast.makeText(GroupDetailActivity.this, "Successfully left group",Toast.LENGTH_LONG).show();
+                finish();
             }
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(GroupDetailActivity.this, "unsuccessfully leave group",Toast.LENGTH_LONG).show();
+                Toast.makeText(GroupDetailActivity.this, "Failed to leave group",Toast.LENGTH_LONG).show();
                 Toast.makeText(GroupDetailActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }).execute();
@@ -249,13 +250,13 @@ public class GroupDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(User.getLoginUser().getMonitorsUsers().size() == 0 || mMembers.length == 0){
-                    Toast.makeText(GroupDetailActivity.this, "you are not monitoring anyone",Toast.LENGTH_LONG).show();
+                    Toast.makeText(GroupDetailActivity.this, "You are not monitoring anyone",Toast.LENGTH_LONG).show();
                 }else {
                     List<String> inviteMemberList = inviteMemberList();
                     if(inviteMemberList.size()>0){
                         alertDialogForInvite(inviteMemberList.toArray(new String[inviteMemberList.size()]));
                     }else {
-                        Toast.makeText(GroupDetailActivity.this, "not one to add",Toast.LENGTH_LONG).show();
+                        Toast.makeText(GroupDetailActivity.this, "No one to add",Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -288,7 +289,7 @@ public class GroupDetailActivity extends AppCompatActivity {
                     break;
                 }
             }
-            if(aMember == false){
+            if(!aMember){
                 inviteMember.add(listMonitoring.get(i));
                 inviteMembersStrList.add("ID: "+listMonitoring.get(i).getId());
             }

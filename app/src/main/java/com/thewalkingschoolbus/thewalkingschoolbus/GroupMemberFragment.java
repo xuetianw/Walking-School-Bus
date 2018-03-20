@@ -32,21 +32,30 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
     private View view;
     private Group[] mGroup;
 
+    // Used for recursive loop in getGroupWithDetailLoop()
+    private static boolean populateListReady = false;
+    private static int loopCount = 0;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (container != null) {
-            container.removeAllViews();
-        }
+//        if (container != null) {
+//            container.removeAllViews();
+//        }
         view = inflater.inflate(R.layout.fragment_group_member, container, false);
+
+        //getGroupListAndPopulateList();
         setUpRefresh();
-        getGroupListAndPopulateList();
         setUpAddButton();
         return view;
     }
 
-    private static boolean populateListReady = false;
-    private static int loopCount = 0;
+    @Override
+    public void onResume() {
+        super.onResume();
+        clearListView();
+        getGroupListAndPopulateList();
+    }
 
     private void getGroupListAndPopulateList(){
         new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, new OnTaskComplete() {
@@ -59,7 +68,7 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
 
                 // Without this return statement app will from ArrayIndexOutOfBoundsException!
                 if (mGroupList.isEmpty()) {
-                    Toast.makeText(getActivity(), "Not in any group!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Not a member of any group!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -129,7 +138,7 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
     }
 
     private void populateListView(String[] mGroupDisplay){
-        Toast.makeText(getActivity(),"Successfully updated the list", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),"Group member list updated", Toast.LENGTH_SHORT).show();
         // create list of item
         String[] myItems = mGroupDisplay;
         // Build adapter

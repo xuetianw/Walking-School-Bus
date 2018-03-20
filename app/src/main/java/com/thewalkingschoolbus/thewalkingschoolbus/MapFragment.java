@@ -430,7 +430,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                 public void onSuccess(Object result) {
                     //Group[] group = (Group[]) result;
                     Toast.makeText(context, "Group created!", Toast.LENGTH_SHORT).show();
-                    joinGroup(context, (Group) result, false);
+                    //joinGroup(context, (Group) result, false); // TODO: comment this out to disable auto join after creating group
                     alertDialog.dismiss();
                 }
 
