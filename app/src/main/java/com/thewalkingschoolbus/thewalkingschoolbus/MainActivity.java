@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         }).execute();
     }
 
-    private void setLoginUser(User user){
+    public void setLoginUser(User user){
         new GetUserAsyncTask(GET_USER_BY_EMAIL, user, null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
