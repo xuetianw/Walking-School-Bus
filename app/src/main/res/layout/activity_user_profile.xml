@@ -27,11 +27,12 @@
                 android:layout_marginTop="35dp"
                 android:src="@drawable/profile_pic"/>
 
-            <TextView
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="0dp"
+                android:inputType="text|textPersonName"
                 android:text="@string/user_name"
                 android:textColor="#fff"
                 android:textSize="21sp"
@@ -57,12 +58,13 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <TextView
+                    <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/profile_group_name"
+                        android:hint="@string/profile_group_name_hint"
+                        android:inputType="text"
                         android:textSize="20sp" />
-
+<!--
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -71,6 +73,7 @@
                         android:textColor="@color/logoBlue"
                         android:textSize="20sp"
                         android:textStyle="bold" />
+                    -->
 
                 </LinearLayout>
 
@@ -81,12 +84,13 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:layout_width="119dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/profile_group_id"
+                        android:hint="@string/profile_group_id_hint"
+                        android:inputType="number"
                         android:textSize="20sp" />
-
+<!--
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -95,6 +99,7 @@
                         android:textColor="@color/logoBlue"
                         android:textSize="20sp"
                         android:textStyle="bold" />
+                        -->
 
                 </LinearLayout>
 
@@ -143,13 +148,15 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 app:srcCompat="@drawable/ic_email"/>
+
             <EditText
-                android:textStyle="bold"
-                android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:inputType="textWebEmailAddress"
                 android:paddingLeft="20dp"
-                android:text="vigiri@sfu.ca"/>
+                android:text="vigiri@sfu.ca"
+                android:textStyle="bold" />
         </LinearLayout>
 
 
@@ -163,16 +170,36 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 app:srcCompat="@drawable/ic_local_phone"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:inputType="number"
+                android:paddingLeft="20dp"
+                android:text="604 444 4444"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal"
+            android:paddingLeft="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                app:srcCompat="@drawable/ic_location"/>
             <EditText
                 android:textStyle="bold"
-
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
-                android:text="604 444 4444"/>
+                android:text="@string/profile_address"/>
         </LinearLayout>
-
 
     </LinearLayout>
 </LinearLayout>

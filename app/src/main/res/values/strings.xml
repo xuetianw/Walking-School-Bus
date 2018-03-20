@@ -17,8 +17,7 @@
     <string name="member_of_group">MEMBERS OF THE GROUP</string>
     <string name="email">EMAIL:</string>
     <string name="user_name">Vaanyi Igiri</string>
-    <string name="profile_group_name">Group Name</string>
-    <string name="profile_name_of_group">my_group</string>
-    <string name="profile_group_id">Group ID</string>
-    <string name="profile_my_id">my_id</string>
+    <string name="profile_address">4444 WalkingGroup Ave.</string>
+    <string name="profile_group_name_hint">Group Name</string>
+    <string name="profile_group_id_hint">Group ID</string>
 </resources>
