@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +26,7 @@ import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
-public class MonitoringFragment extends android.app.Fragment {
+public class MonitoringFragment extends Fragment {
     public static final int DELETE_MORNITORING_REQUEST_CODE = 100;
     private static final String TAG = "MonitoringFragment";
     private static final int REQUEST_CODE_GET_EMAIL = 42;

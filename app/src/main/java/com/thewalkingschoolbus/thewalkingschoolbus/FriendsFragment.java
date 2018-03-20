@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupFragment extends Fragment {
+public class FriendsFragment extends Fragment {
 
-    private static final String TAG = "GroupFragment";
+    private static final String TAG = "FriendsFragment";
     private View view;
 
     /**
@@ -60,13 +60,13 @@ public class GroupFragment extends Fragment {
         if (container != null) {
             container.removeAllViews();
         }
-        view = inflater.inflate(R.layout.fragment_group, container, false);
+        view = inflater.inflate(R.layout.fragment_friends, container, false);
 
         // Set up the viewPager with the sections adapter.
-        ViewPager viewPager = view.findViewById(R.id.containerGroup);
+        ViewPager viewPager = view.findViewById(R.id.containerFriends);
         setupViewPager(viewPager);
 
-        TabLayout tablayout = view.findViewById(R.id.tabsGroup);
+        TabLayout tablayout = view.findViewById(R.id.tabsFriends);
         tablayout.setupWithViewPager(viewPager);
 
         return view;
@@ -74,8 +74,8 @@ public class GroupFragment extends Fragment {
 
     private void setupViewPager(ViewPager viewPager) {
         SectionsPageAdapter adapter = new SectionsPageAdapter(getFragmentManager());
-        adapter.addFragment(new GroupMemberFragment(), "Member");
-        adapter.addFragment(new GroupLeaderFragment(), "Leader");
+        adapter.addFragment(new MonitoringFragment(), "Monitoring");
+        adapter.addFragment(new MonitoredByFragment(), "Monitored By");
         viewPager.setAdapter(adapter);
     }
 }
