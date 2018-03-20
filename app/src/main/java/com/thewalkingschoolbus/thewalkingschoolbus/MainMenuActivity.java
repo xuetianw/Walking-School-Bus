@@ -26,12 +26,16 @@ public class MainMenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String USER_LOGSTATUS = "USER_LOGSTATUS";
+    private static Context contextOfApplication;
     private Toolbar toolbar;
     private NavigationView navigationView;
 
-
     public static Intent makeIntent(Context context) {
         return new Intent(context, MainMenuActivity.class);
+    }
+
+    public static Context getContextOfApplication() {
+        return contextOfApplication;
     }
 
     @Override
@@ -39,6 +43,7 @@ public class MainMenuActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
+        contextOfApplication = this;
 
         boolean feedback = getLoginStatus();
         if (!feedback){
