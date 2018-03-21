@@ -196,6 +196,11 @@ public class MainMenuActivity extends AppCompatActivity
             openMapFragment(MapFragmentState.CREATE_GROUP);
         } else if (id == R.id.nav_fragment_map_join_group) {
             openMapFragment(MapFragmentState.JOIN_GROUP);
+        } else if (id == R.id.nav_fragment_messages) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, new MessagesFragment())
+                    .commit();
+            toolbar.setTitle("Messages");
         } else if (id == R.id.nav_lougout) {
             storeLogoutInfoToSharePreferences();
             Intent intent = MainActivity.makeIntent(getApplicationContext());

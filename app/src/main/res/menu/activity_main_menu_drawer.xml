@@ -25,6 +25,10 @@
             android:icon="@android:drawable/btn_star"
             android:title="Join Group" />
         <item
+            android:id="@+id/nav_fragment_messages"
+            android:icon="@android:drawable/btn_star"
+            android:title="Messages" />
+        <item
             android:checkable="false"
             android:enabled="false"
             android:title=" " />
