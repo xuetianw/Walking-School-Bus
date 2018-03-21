@@ -17,6 +17,7 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 
 public class RegisterActivity extends AppCompatActivity {
 
+    public static final String PLEASE_CORRECT_YOUR_DATE_OF_BIRTH = "Please correct your date of birth";
     private EditText nameET, emailET, passwordET,
             birthYearET, birthMonthET, addressET,
             cellPhoneET, homePhoneET, gradeET,
@@ -44,33 +45,61 @@ public class RegisterActivity extends AppCompatActivity {
                 loginName = nameET.getText().toString();
                 registerEmail = emailET.getText().toString();
                 registerPassword = passwordET.getText().toString();
+                birthYear = birthYearET.getText().toString();
+                birthMonth = birthMonthET.getText().toString();
+                address = addressET.getText().toString();
+                cellPhone = cellPhoneET.getText().toString();
+                homePhone = homePhoneET.getText().toString();
+                grade = gradeET.getText().toString();
+                teacherName = teacherNameDT.getText().toString();
+                emergencyContactInfo = emergencyContactInfoET.getText().toString();
+
+
 
                 if(loginName.isEmpty() || registerEmail.isEmpty()|| registerPassword.isEmpty()){
-                    Toast.makeText(getApplicationContext(),MainActivity.FIELD_NOT_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(),MainActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
+                } else if(!birthYear.isEmpty()){
+                    if(Integer.parseInt(birthYear) > 2018 || Integer.parseInt(birthYear)< 1900){
+                        Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                } else if(!birthMonth.isEmpty()){
+                    if(Integer.parseInt(birthMonth) > 12 || Integer.parseInt(birthMonth) < 0){
+                        Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                } else {
+                    User user = new User();
+                    user.setEmail(registerEmail);
+                    user.setName(loginName);
+                    user.setPassword(registerPassword);
+                    user.setBirthYear(birthYear);
+                    user.setBirthMonth(birthMonth);
+                    user.setAddress(address);
+                    user.setCellPhone(cellPhone);
+                    user.setGrade(grade);
+                    user.setTeacherName(teacherName);
+                    user.setEmergencyContactInfo(emergencyContactInfo);
+
+
+                    new GetUserAsyncTask(CREATE_USER, user,null, null, new OnTaskComplete() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            Toast.makeText(getApplicationContext(),REGISTER_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
+                                    .show();
+                            //Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
+                            //startActivity(intent);
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            Toast.makeText(getApplicationContext(),REGISTER_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                    .show();
+                            Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }).execute();
                 }
 
-                User user = new User();
-                user.setEmail(registerEmail);
-                user.setName(loginName);
-                user.setPassword(registerPassword);
-
-
-                new GetUserAsyncTask(CREATE_USER, user,null, null, new OnTaskComplete() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        Toast.makeText(getApplicationContext(),REGISTER_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
-                                    .show();
-                        //Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
-                        //startActivity(intent);
-                    }
-                    @Override
-                    public void onFailure(Exception e) {
-                        Toast.makeText(getApplicationContext(),REGISTER_FAIL_MESSAGE, Toast.LENGTH_SHORT)
-                                .show();
-                        Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }).execute();
 
             }
         });
