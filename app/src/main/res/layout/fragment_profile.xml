@@ -4,14 +4,14 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/fullname"
         android:layout_width="75dp"
         android:layout_height="30dp"
         android:layout_alignParentTop="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_toEndOf="@+id/imageView"
-        android:text="Name"
+        android:text="@string/textview_name"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -23,12 +23,12 @@
         app:srcCompat="@drawable/logo" />
 
     <EditText
-        android:id="@+id/fullname"
+        android:id="@+id/enter_fullname"
         android:layout_width="250dp"
         android:layout_height="40dp"
         android:layout_alignBottom="@+id/imageView"
-        android:layout_alignStart="@+id/textView14"
-        android:hint="Enter Name"
+        android:layout_alignStart="@+id/fullname"
+        android:hint="@string/textview_enter_name"
         android:inputType="textPersonName" />
 
     <TextView
@@ -39,7 +39,7 @@
         android:layout_below="@+id/imageView"
         android:layout_marginTop="19dp"
         android:paddingLeft="20dp"
-        android:text="Email"
+        android:text="@string/textview_email"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -49,7 +49,8 @@
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/useremail"
-        android:hint="Enter Email"
+        android:inputType="textEmailAddress"
+        android:hint="@string/textview_enter_email"
         android:paddingLeft="20dp"/>
 
     <TextView
@@ -60,7 +61,7 @@
         android:layout_below="@+id/enter_email"
         android:layout_marginTop="11dp"
         android:paddingLeft="20dp"
-        android:text="Phone Number"
+        android:text="@string/textview_phone_number"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -70,7 +71,8 @@
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/phone_number"
-        android:hint="Enter Phone Number"
+        android:inputType="phone"
+        android:hint="@string/textview_enter_phone_number"
         android:paddingLeft="20dp" />
 
     <TextView
@@ -81,7 +83,7 @@
         android:layout_below="@+id/enter_phone"
         android:layout_marginTop="12dp"
         android:paddingLeft="20dp"
-        android:text="Address"
+        android:text="@string/textview_address"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -91,7 +93,8 @@
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/address"
-        android:hint="Enter Address"
+        android:inputType="textPostalAddress"
+        android:hint="@string/textview_enter_address"
         android:paddingLeft="20dp" />
 
     <TextView
@@ -102,7 +105,7 @@
         android:layout_below="@+id/enter_address"
         android:layout_marginTop="12dp"
         android:paddingLeft="20dp"
-        android:text="Birth Month/Year (MM/YYYY)"
+        android:text="@string/textview_birth_month_year_mm_yyyy"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -112,7 +115,7 @@
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/birth_month"
-        android:hint="Enter Birth Month/Year"
+        android:hint="@string/textview_enter_birth_month"
         android:paddingLeft="20dp" />
 
     <TextView
@@ -123,7 +126,7 @@
         android:layout_below="@+id/enter_birth_month"
         android:layout_marginTop="11dp"
         android:paddingLeft="20dp"
-        android:text="Teacher Name"
+        android:text="@string/textview_teacher_name"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -134,7 +137,7 @@
         android:layout_alignEnd="@+id/birth_month"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/teacher_name"
-        android:hint="Enter Name"
+        android:hint="@string/textview_enter_teacher_name"
         android:paddingLeft="20dp" />
 
     <TextView
@@ -143,7 +146,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/enter_teacher_name"
         android:layout_toEndOf="@+id/enter_birth_month"
-        android:text="Current Grade"
+        android:text="@string/textview_current_grade"
         android:textColor="@color/black"
         android:textStyle="bold" />
 
@@ -153,7 +156,7 @@
         android:layout_height="40dp"
         android:layout_alignStart="@+id/current_grade"
         android:layout_below="@+id/current_grade"
-        android:hint="Grade"
+        android:hint="@string/textview_enter_grade"
         android:paddingLeft="20dp" />
 
     <TextView
@@ -164,7 +167,7 @@
         android:layout_below="@+id/enter_teacher_name"
         android:layout_marginTop="11dp"
         android:paddingLeft="20dp"
-        android:text="Emergency Contact"
+        android:text="@string/textview_emergency_contact"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -176,7 +179,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/emergency_contact"
         android:ems="10"
-        android:hint="Enter info"
+        android:hint="@string/textview_enter_emrgency_info"
         android:inputType="textMultiLine"
         android:paddingLeft="20dp" />
 </RelativeLayout>

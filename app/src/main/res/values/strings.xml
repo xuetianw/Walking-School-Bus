@@ -20,4 +20,23 @@
     <string name="profile_address">4444 WalkingGroup Ave.</string>
     <string name="profile_group_name_hint">Group Name</string>
     <string name="profile_group_id_hint">Group ID</string>
+    <!--
+    profile fragment begins here
+    -->
+    <string name="textview_name">Name</string>
+    <string name="textview_enter_name">Enter Name</string>
+    <string name="textview_email">Email</string>
+    <string name="textview_enter_email">Enter Email</string>
+    <string name="textview_phone_number">Phone Number</string>
+    <string name="textview_enter_phone_number">Enter Phone Number</string>
+    <string name="textview_address">Address</string>
+    <string name="textview_enter_address">Enter Address</string>
+    <string name="textview_birth_month_year_mm_yyyy">Birth Month/Year (MM/YYYY)</string>
+    <string name="textview_enter_birth_month">Enter Birth Month/Year</string>
+    <string name="textview_teacher_name">Teacher Name</string>
+    <string name="textview_enter_teacher_name">Enter Name</string>
+    <string name="textview_current_grade">Current Grade</string>
+    <string name="textview_enter_grade">Grade</string>
+    <string name="textview_emergency_contact">Emergency Contact</string>
+    <string name="textview_enter_emrgency_info">Enter info</string>
 </resources>
