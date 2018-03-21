@@ -16,12 +16,17 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText nameET;
-    EditText emailET;
-    EditText passwordET;
-    String loginName;
-    String registerPassword;
-    String registerEmail;
+
+    private EditText nameET, emailET, passwordET,
+            birthYearET, birthMonthET, addressET,
+            cellPhoneET, homePhoneET, gradeET,
+            teacherNameDT, emergencyContactInfoET;
+
+    private String loginName, registerEmail, registerPassword,
+            birthYear, birthMonth, address, cellPhone, homePhone,
+            grade, teacherName, emergencyContactInfo;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
                 user.setName(loginName);
                 user.setPassword(registerPassword);
 
+
                 new GetUserAsyncTask(CREATE_USER, user,null, null, new OnTaskComplete() {
                     @Override
                     public void onSuccess(Object result) {
@@ -74,6 +80,16 @@ public class RegisterActivity extends AppCompatActivity {
         nameET = (EditText)findViewById(R.id.registernameid);
         emailET = (EditText)findViewById(R.id.registeremailid);
         passwordET = (EditText) findViewById(R.id.registerpasswordid);
+        birthYearET = (EditText) findViewById(R.id.yearid);
+        birthMonthET = (EditText) findViewById(R.id.monthid);
+        birthYearET = (EditText) findViewById(R.id.yearid);
+        addressET = (EditText) findViewById(R.id.addressid);
+        cellPhoneET = (EditText) findViewById(R.id.cellphoneid);
+        homePhoneET = (EditText) findViewById(R.id.homePhoneid);
+        gradeET = (EditText) findViewById(R.id.gradeid);
+        teacherNameDT = (EditText) findViewById(R.id.teacherNameid);
+        emergencyContactInfoET = (EditText) findViewById(R.id.emergencyid);
+
     }
 
     public static Intent makeIntent(MainActivity mainActivity) {
