@@ -39,4 +39,9 @@
     <string name="textview_enter_grade">Grade</string>
     <string name="textview_emergency_contact">Emergency Contact</string>
     <string name="textview_enter_emrgency_info">Enter info</string>
+    <string name="prof_act_email_icon">email_icon</string>
+    <string name="prof_act_phone_icon">phone_icon</string>
+    <string name="prof_act_location_icon">location_icon</string>
+    <string name="profile_phoneNumber">604 444 4444</string>
+    <string name="profile_email">vigiri@sfu.ca</string>
 </resources>
