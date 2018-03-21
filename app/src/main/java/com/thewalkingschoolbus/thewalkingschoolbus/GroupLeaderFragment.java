@@ -61,7 +61,7 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
             @Override
             public void onSuccess(Object result) {
                 User returnUser = (User) result;
-                List<Group> mGroupList = returnUser.getMemberOfGroups(); // TODO: change this to getLeaderOfGroups() when it is implemented
+                List<Group> mGroupList = returnUser.getLeadsGroups();
 
                 mGroup = new Group[mGroupList.size()];
                 mGroupList.toArray(mGroup);
