@@ -1,6 +1,7 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -59,16 +60,6 @@ public class RegisterActivity extends AppCompatActivity {
                 if(loginName.isEmpty() || registerEmail.isEmpty()|| registerPassword.isEmpty()){
                     Toast.makeText(getApplicationContext(),MainActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
-                } else if(!birthYear.isEmpty()){
-                    if(Integer.parseInt(birthYear) > 2018 || Integer.parseInt(birthYear)< 1900){
-                        Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                } else if(!birthMonth.isEmpty()){
-                    if(Integer.parseInt(birthMonth) > 12 || Integer.parseInt(birthMonth) < 0){
-                        Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
-                                .show();
-                    }
                 } else {
                     User user = new User();
                     user.setEmail(registerEmail);
@@ -88,8 +79,10 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onSuccess(Object result) {
                             Toast.makeText(getApplicationContext(),REGISTER_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
-                            //Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
-                            //startActivity(intent);
+                            storeUserInfoToSharePreferences();
+                            Intent intent = MainMenuActivity.makeIntent(getApplicationContext());
+                            startActivity(intent);
+                            finish();
                         }
                         @Override
                         public void onFailure(Exception e) {
@@ -103,6 +96,16 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void storeUserInfoToSharePreferences() {
+        SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString(REGISTER_EMAIL, registerEmail );
+        editor.putString(LOGIN_PASSWORD, registerPassword );
+        editor.commit();
+
     }
 
     private void setupTextviews() {
