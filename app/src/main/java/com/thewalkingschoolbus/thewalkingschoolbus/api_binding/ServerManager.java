@@ -651,8 +651,9 @@ public class ServerManager {
         return messages;
     }
 
+
     public Message[] getUnreadMessagesForUser(User user)throws Exception{
-        String url = BASE_URL+ String.format(GET_UNREAD_EMERGENCY_MESSAGES_FOR_USER,user.getId());
+        String url = BASE_URL+ String.format(GET_UNREAD_MESSAGES_FOR_USER,user.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
 
         if (connection.getResponseCode() >= 400) {
