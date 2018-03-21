@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.thewalkingschoolbus.thewalkingschoolbus.UserProfileActivity"
-    android:background="@color/transparent"
+    android:background="@color/graylight"
     android:orientation="vertical">
 
 
@@ -16,11 +16,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="280dp"
             android:background="@drawable/gradientbackground"
             android:orientation="vertical">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
@@ -40,10 +40,11 @@
         </LinearLayout>
 
         <android.support.v7.widget.CardView
-            android:layout_width="400dp"
+            android:layout_width="350dp"
             android:layout_height="110dp"
+            android:elevation="@dimen/cardview_default_elevation"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="230dp">
+            android:layout_marginTop="200dp">
 
             <LinearLayout
                 android:layout_width="match_parent"

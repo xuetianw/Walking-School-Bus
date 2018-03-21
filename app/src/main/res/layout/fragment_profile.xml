@@ -1,11 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/textView14"
+        android:layout_width="75dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/imageView"
+        android:text="Name"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        app:srcCompat="@drawable/profile_pic" />
+
+    <EditText
+        android:id="@+id/fullname"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_alignStart="@+id/textView14"
+        android:hint="Enter Name"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/useremail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="PROFILE" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/imageView"
+        android:layout_marginTop="19dp"
+        android:paddingLeft="20dp"
+        android:text="Email"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/enter_email"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/useremail"
+        android:hint="Enter Email"
+        android:paddingLeft="20dp"/>
+
+    <TextView
+        android:id="@+id/phone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/enter_email"
+        android:layout_marginTop="11dp"
+        android:paddingLeft="20dp"
+        android:text="Phone Number"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/enter_phone"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/phone_number"
+        android:hint="Enter Phone Number"
+        android:paddingLeft="20dp" />
+
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/enter_phone"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="20dp"
+        android:text="Address"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/enter_address"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/address"
+        android:hint="Enter Address"
+        android:paddingLeft="20dp" />
+
+    <TextView
+        android:id="@+id/birth_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/enter_address"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="20dp"
+        android:text="Birth Month/Year (MM/YYYY)"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/enter_birth_month"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/birth_month"
+        android:hint="Enter Birth Month/Year"
+        android:paddingLeft="20dp" />
+
+    <TextView
+        android:id="@+id/teacher_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/enter_birth_month"
+        android:layout_marginTop="11dp"
+        android:paddingLeft="20dp"
+        android:text="Teacher Name"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/enter_teacher_name"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_alignEnd="@+id/birth_month"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/teacher_name"
+        android:hint="Enter Name"
+        android:paddingLeft="20dp" />
+
+    <TextView
+        android:id="@+id/current_grade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/enter_teacher_name"
+        android:layout_toEndOf="@+id/enter_birth_month"
+        android:text="Current Grade"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/enter_current_grade"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/current_grade"
+        android:layout_below="@+id/current_grade"
+        android:hint="Grade"
+        android:paddingLeft="20dp" />
+
+    <TextView
+        android:id="@+id/emergency_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/enter_teacher_name"
+        android:layout_marginTop="11dp"
+        android:paddingLeft="20dp"
+        android:text="Emergency Contact"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/emergency_contact_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/enter_current_grade"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/emergency_contact"
+        android:ems="10"
+        android:hint="Enter info"
+        android:inputType="textMultiLine"
+        android:paddingLeft="20dp" />
 </RelativeLayout>
