@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
@@ -24,22 +24,23 @@ import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
-public class MonitoredByFragment extends android.app.Fragment {
+public class MonitoredByFragment extends Fragment {
 
+    private static final String TAG = "MonitoredByFragment";
+    final public static int DELETE_MONITORED_BY_REQUEST_CODE = 99;
     private View view;
     List<String> monitoredList;
     User []users;
-    final public static int DELETE_BEING_MONITORED_REQUEST_CODE = 99;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (container != null) {
-            container.removeAllViews();
-        }
+//        if (container != null) {
+//            container.removeAllViews();
+//        }
         view = inflater.inflate(R.layout.fragment_monitored_by, container, false);
 
-        updateListView();
+        //updateListView();
         setUpAddMonitoredByBut();
         setUpRefresh();
         return view;
@@ -58,9 +59,9 @@ public class MonitoredByFragment extends android.app.Fragment {
                 monitoredList = new ArrayList<>();
                 users = (User[]) result;
                 if(users.length == 0){
-                    Toast.makeText(getActivity(),"Not monitoring anyone", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Not monitored by anyone", Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(getActivity(),"Successfully updated the list", Toast.LENGTH_SHORT)
+                Toast.makeText(getActivity(),"Monitored by list updated", Toast.LENGTH_SHORT)
                         .show();
                 for(User user: users){
                     System.out.println(user);
@@ -75,7 +76,6 @@ public class MonitoredByFragment extends android.app.Fragment {
 
                 // update clicks
                 registerClickCallback();
-
             }
             @Override
             public void onFailure(Exception e) {
@@ -94,10 +94,9 @@ public class MonitoredByFragment extends android.app.Fragment {
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 MonitoredbyDetailActivity.userEmail = users[position].getEmail();
                 Intent intent = MonitoredbyDetailActivity.makeIntent(getActivity());
-                startActivityForResult(intent, DELETE_BEING_MONITORED_REQUEST_CODE);
+                startActivityForResult(intent, DELETE_MONITORED_BY_REQUEST_CODE);
             }
         });
-
     }
 
     private void setUpAddMonitoredByBut() {
@@ -124,13 +123,12 @@ public class MonitoredByFragment extends android.app.Fragment {
                     }
                 }
         );
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case DELETE_BEING_MONITORED_REQUEST_CODE:
+            case DELETE_MONITORED_BY_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
                     new GetUserAsyncTask(DELETE_MONITORING, MonitoredbyDetailActivity.deleteUser, User.getLoginUser(), null, new OnTaskComplete() {
                         @Override
