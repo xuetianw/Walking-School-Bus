@@ -73,7 +73,7 @@ public class FriendsFragment extends Fragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        SectionsPageAdapter adapter = new SectionsPageAdapter(getFragmentManager());
+        SectionsPageAdapter adapter = new SectionsPageAdapter(getChildFragmentManager());
         adapter.addFragment(new MonitoringFragment(), "Monitoring");
         adapter.addFragment(new MonitoredByFragment(), "Monitored By");
         viewPager.setAdapter(adapter);
