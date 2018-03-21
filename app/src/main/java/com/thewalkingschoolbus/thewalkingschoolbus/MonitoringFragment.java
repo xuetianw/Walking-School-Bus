@@ -5,15 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
@@ -25,10 +24,10 @@ import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
-public class MonitoringFragment extends android.app.Fragment {
-    public static final int DELETE_MORNITORING_REQUEST_CODE = 100;
+public class MonitoringFragment extends Fragment {
+
     private static final String TAG = "MonitoringFragment";
-    private static final int REQUEST_CODE_GET_EMAIL = 42;
+    public static final int DELETE_MONITORING_REQUEST_CODE = 100;
     private View view;
     List<String> monitoringList;
     User []users;
@@ -36,12 +35,12 @@ public class MonitoringFragment extends android.app.Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (container != null) {
-            container.removeAllViews();
-        }
+//        if (container != null) {
+//            container.removeAllViews();
+//        }
         view = inflater.inflate(R.layout.fragment_monitoring, container, false);
 
-        updateListView();
+        //updateListView();
         setupAddMonitoringBtn();
         setUpRefresh();
         return view;
@@ -62,7 +61,7 @@ public class MonitoringFragment extends android.app.Fragment {
                 if(users.length == 0){
                     Toast.makeText(getActivity(),"Not monitoring anyone", Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(getActivity(),"Successfully updated the list", Toast.LENGTH_SHORT)
+                Toast.makeText(getActivity(),"Monitoring list updated", Toast.LENGTH_SHORT)
                         .show();
                 for(User user: users){
                     monitoringList.add("Name: "+user.getName() + " "+"Email: "+ user.getEmail() );
@@ -76,7 +75,6 @@ public class MonitoringFragment extends android.app.Fragment {
 
                 // update clicks
                 registerClickCallback();
-
             }
             @Override
             public void onFailure(Exception e) {
@@ -94,7 +92,7 @@ public class MonitoringFragment extends android.app.Fragment {
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 MonitoringDetailActivity.userEmail = users[position].getEmail();
                 Intent intent = MonitoringDetailActivity.makeIntent(getActivity());
-                startActivityForResult(intent, DELETE_MORNITORING_REQUEST_CODE);
+                startActivityForResult(intent, DELETE_MONITORING_REQUEST_CODE);
             }
         });
     }
@@ -123,14 +121,13 @@ public class MonitoringFragment extends android.app.Fragment {
                     }
                 }
         );
-
     }
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case DELETE_MORNITORING_REQUEST_CODE:
+            case DELETE_MONITORING_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
                     new GetUserAsyncTask(DELETE_MONITORING, User.getLoginUser(), MonitoringDetailActivity.deleteUser, null, new OnTaskComplete() {
                         @Override

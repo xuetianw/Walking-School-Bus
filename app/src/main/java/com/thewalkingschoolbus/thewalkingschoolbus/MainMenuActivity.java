@@ -182,25 +182,25 @@ public class MainMenuActivity extends AppCompatActivity
                     .replace(R.id.content_frame, new ProfileFragment())
                     .commit();
             toolbar.setTitle("Profile");
-        } else if (id == R.id.nav_fragment_monitoring) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, new MonitoringFragment())
-                    .commit();
-            toolbar.setTitle("Monitoring");
-        } else if (id == R.id.nav_fragment_monitored_by) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, new MonitoredByFragment())
-                    .commit();
-            toolbar.setTitle("Monitored By");
+        } else if (id == R.id.nav_fragment_friends) {
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, new FriendsFragment());
+            fragmentTransaction.commit();
+            toolbar.setTitle("Friends");
         } else if (id == R.id.nav_fragment_group) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, new GroupFragment())
-                    .commit();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, new GroupFragment());
+            fragmentTransaction.commit();
             toolbar.setTitle("Groups");
         } else if (id == R.id.nav_fragment_map_create_group) {
             openMapFragment(MapFragmentState.CREATE_GROUP);
         } else if (id == R.id.nav_fragment_map_join_group) {
             openMapFragment(MapFragmentState.JOIN_GROUP);
+        } else if (id == R.id.nav_fragment_messages) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, new MessagesFragment())
+                    .commit();
+            toolbar.setTitle("Messages");
         } else if (id == R.id.nav_lougout) {
             storeLogoutInfoToSharePreferences();
             Intent intent = MainActivity.makeIntent(getApplicationContext());
