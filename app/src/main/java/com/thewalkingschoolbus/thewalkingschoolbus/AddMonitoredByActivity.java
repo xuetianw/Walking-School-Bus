@@ -48,7 +48,7 @@ public class AddMonitoredByActivity extends AppCompatActivity {
     private void addMonitoringUser(String email){
         addMonitoredUser = new User();
         addMonitoredUser.setEmail(email);
-        new GetUserAsyncTask(GET_USER_BY_EMAIL, addMonitoredUser, null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_USER_BY_EMAIL, addMonitoredUser, null, null,null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 addMonitoredUser = (User) result;
@@ -64,7 +64,7 @@ public class AddMonitoredByActivity extends AppCompatActivity {
     }
 
     private void createMonitoring(){
-        new GetUserAsyncTask(CREATE_MONITORING, addMonitoredUser, User.getLoginUser(),null, new OnTaskComplete() {
+        new GetUserAsyncTask(CREATE_MONITORING, addMonitoredUser, User.getLoginUser(),null,null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 Toast.makeText(AddMonitoredByActivity.this,"user added" , Toast.LENGTH_SHORT).show();

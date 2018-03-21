@@ -53,7 +53,7 @@ public class MonitoringFragment extends Fragment {
     }
 
     private void updateListView() {
-        new GetUserAsyncTask(USR_MONITORING_LIST, User.getLoginUser(),null, null,new OnTaskComplete() {
+        new GetUserAsyncTask(USR_MONITORING_LIST, User.getLoginUser(),null, null,null,new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 monitoringList = new ArrayList<>();
@@ -129,7 +129,7 @@ public class MonitoringFragment extends Fragment {
         switch (requestCode) {
             case DELETE_MONITORING_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
-                    new GetUserAsyncTask(DELETE_MONITORING, User.getLoginUser(), MonitoringDetailActivity.deleteUser, null, new OnTaskComplete() {
+                    new GetUserAsyncTask(DELETE_MONITORING, User.getLoginUser(), MonitoringDetailActivity.deleteUser, null,null, new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
                             Toast.makeText(getActivity().getApplicationContext(),"Removed user", Toast.LENGTH_SHORT)
