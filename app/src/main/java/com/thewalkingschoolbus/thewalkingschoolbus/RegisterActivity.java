@@ -60,6 +60,14 @@ public class RegisterActivity extends AppCompatActivity {
                 if(loginName.isEmpty() || registerEmail.isEmpty()|| registerPassword.isEmpty()){
                     Toast.makeText(getApplicationContext(),MainActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
+                } else if(!birthMonth.isEmpty()
+                        && ((Integer.parseInt(birthMonth) > 12 || Integer.parseInt(birthMonth) < 0))){
+                    Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
+                            .show();
+                } else if(!birthYear.isEmpty()
+                        && (Integer.parseInt(birthYear)>2018 || Integer.parseInt(birthYear)<1900)) {
+                    Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
+                            .show();
                 } else {
                     User user = new User();
                     user.setEmail(registerEmail);
