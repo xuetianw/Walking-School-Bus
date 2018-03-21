@@ -53,7 +53,7 @@ public class MonitoredByFragment extends Fragment {
     }
 
     private void updateListView() {
-        new GetUserAsyncTask(USER_MONITORING_BY_LIST, User.getLoginUser(),null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(USER_MONITORING_BY_LIST, User.getLoginUser(),null, null, null,new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 monitoredList = new ArrayList<>();
@@ -130,7 +130,7 @@ public class MonitoredByFragment extends Fragment {
         switch (requestCode) {
             case DELETE_MONITORED_BY_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
-                    new GetUserAsyncTask(DELETE_MONITORING, MonitoredbyDetailActivity.deleteUser, User.getLoginUser(), null, new OnTaskComplete() {
+                    new GetUserAsyncTask(DELETE_MONITORING, MonitoredbyDetailActivity.deleteUser, User.getLoginUser(), null,null, new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
 

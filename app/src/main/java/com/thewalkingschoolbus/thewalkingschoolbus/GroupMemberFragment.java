@@ -58,7 +58,7 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
     }
 
     private void getGroupListAndPopulateList(){
-        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null,null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 User returnUser = (User) result;
@@ -94,7 +94,7 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
         if (loopCount >= mGroup.length - 1) {
             populateListReady = true;
         }
-        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mGroup[loopCount], new OnTaskComplete() {
+        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mGroup[loopCount], null,new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 mGroup[loopCount] = (Group) result;

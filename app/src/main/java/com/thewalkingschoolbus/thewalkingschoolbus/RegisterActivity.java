@@ -50,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
                 user.setName(loginName);
                 user.setPassword(registerPassword);
 
-                new GetUserAsyncTask(CREATE_USER, user,null, null, new OnTaskComplete() {
+                new GetUserAsyncTask(CREATE_USER, user,null, null,null ,new OnTaskComplete() {
                     @Override
                     public void onSuccess(Object result) {
                         Toast.makeText(getApplicationContext(),REGISTER_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)

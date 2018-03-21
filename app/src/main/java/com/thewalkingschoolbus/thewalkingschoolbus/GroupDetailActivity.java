@@ -61,7 +61,7 @@ public class GroupDetailActivity extends AppCompatActivity {
     }
 
     private void updateLoginUser(){
-        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, null,new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 User.setLoginUser((User)result);
@@ -79,7 +79,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         String groupId = intent.getStringExtra(GROUP_ID);
         mSelectedGroup = new Group();
         mSelectedGroup.setId(groupId);
-        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mSelectedGroup, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mSelectedGroup, null,new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 mSelectedGroup = (Group) result;
@@ -106,7 +106,7 @@ public class GroupDetailActivity extends AppCompatActivity {
     }
 
     private void getMembersOfGroup(){
-        new GetUserAsyncTask(GET_MEMBERS_OF_GROUP, null, null, mSelectedGroup, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_MEMBERS_OF_GROUP, null, null, mSelectedGroup,null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 mMembers = (User[]) result;
@@ -202,7 +202,7 @@ public class GroupDetailActivity extends AppCompatActivity {
     }
 
     private void removeUserFromGroup(){
-        new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, mMembers[positionOfUser], null, mSelectedGroup, new OnTaskComplete() {
+        new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, mMembers[positionOfUser], null, mSelectedGroup,null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 Toast.makeText(GroupDetailActivity.this, "successfully removed",Toast.LENGTH_LONG).show();
@@ -230,7 +230,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         });
     }
     private void leaveGroup(){
-        new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, User.getLoginUser(), null, mSelectedGroup, new OnTaskComplete() {
+        new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, User.getLoginUser(), null, mSelectedGroup, null,new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 Toast.makeText(GroupDetailActivity.this, "Successfully left group",Toast.LENGTH_LONG).show();
@@ -316,7 +316,7 @@ public class GroupDetailActivity extends AppCompatActivity {
     }
 
     private void addMemberToGroup(int position){
-        new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, inviteMember.get(position), null, mSelectedGroup, new OnTaskComplete() {
+        new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, inviteMember.get(position), null, mSelectedGroup,null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 Toast.makeText(GroupDetailActivity.this, "added to group",Toast.LENGTH_LONG).show();
