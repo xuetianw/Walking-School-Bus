@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Message;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
 public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
@@ -18,8 +19,9 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
     private String passwordEntered;
     private Exception mException;
     private Group mGroup;
+    private Message mMessage;
 
-    public GetUserAsyncTask(functionType functionType, User parentUser, User childUser, Group group, OnTaskComplete listener){
+    public GetUserAsyncTask(functionType functionType, User parentUser, User childUser, Group group, Message message,OnTaskComplete listener){
         functionChoice = functionType;
         mlistener = listener;
         mGroup = group;
@@ -30,6 +32,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
         }else{
             passwordEntered = null;
         }
+        mMessage = message;
     }
 
     protected Object doInBackground(Void... urls){
@@ -96,6 +99,42 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
                 case EDIT_USER:
                     returnObject = server.editUser(mParentUser);
                     break;
+                case GET_ALL_MESSAGES:
+                    returnObject = server.getAllMessages();
+                    break;
+                case GET_ALL_EMERGENCY_MESSAGES:
+                    returnObject = server.getAllEmergencyMessages();
+                    break;
+                case GET_MESSAGES_FOR_GROUP:
+                    returnObject = server.getMessagesForGroup(mGroup);
+                    break;
+                case GET_EMERGENCY_MESSAGES_FOR_GROUP:
+                    returnObject = server.getEmergencyMessagesForGroup(mGroup);
+                    break;
+                case GET_MESSAGES_FOR_USER:
+                    returnObject = server.getMessagesForUser(mParentUser);
+                    break;
+                case GET_UNREAD_MESSAGES_FOR_USER:
+                    returnObject = server.getUnreadMessagesForUser(mParentUser);
+                    break;
+                case GET_READ_MESSAGES_FOR_USER:
+                    returnObject = server.getReadMessagesForUser(mParentUser);
+                    break;
+                case GET_UNREAD_EMERGENCY_MESSAGES_FOR_USER:
+                    returnObject = server.getUnreadEmergencyMessagesForUser(mParentUser);
+                    break;
+                case POST_MESSAGE_TO_GROUP:
+                    returnObject = server.postMessageToGroup(mGroup,mMessage);
+                    break;
+                case POST_MESSAGE_TO_PARENTS:
+                    returnObject = server.postMessageToParents(mParentUser,mMessage);
+                    break;
+                case GET_ONE_MESSAGE:
+                    returnObject = server.getOneMessage(mMessage);
+                    break;
+                case SET_MESSAGE_AS_READ_OR_UNREAD:
+                    returnObject = server.setMessageAsReadOrUnread(mParentUser,mMessage);
+                    break;
                 default:
                     returnObject = null;
                     break;
@@ -123,10 +162,17 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
     }
     public enum functionType {
         LOGIN_REQUEST, CREATE_USER, LIST_USERS, GET_USER_BY_ID,GET_USER_BY_EMAIL,
+        DELETE_USER,EDIT_USER,
+
         USR_MONITORING_LIST,USER_MONITORING_BY_LIST, CREATE_MONITORING, DELETE_MONITORING,
-        LIST_GROUPS,CREATE_GROUP,CREATE_GROUP_WITH_DETAIL,DELETE_USER,EDIT_USER,
-        GET_ONE_GROUP,UPDATE_EXISTING_GROUP,DELETE_GROUP,
-        GET_MEMBERS_OF_GROUP,ADD_MEMBER_TO_GROUP,REMOVE_MEMBER_OF_GROUP
+
+        LIST_GROUPS,CREATE_GROUP,CREATE_GROUP_WITH_DETAIL,GET_ONE_GROUP,UPDATE_EXISTING_GROUP,
+        DELETE_GROUP, GET_MEMBERS_OF_GROUP,ADD_MEMBER_TO_GROUP,REMOVE_MEMBER_OF_GROUP,
+
+        GET_ALL_MESSAGES,GET_ALL_EMERGENCY_MESSAGES,GET_MESSAGES_FOR_GROUP,
+        GET_EMERGENCY_MESSAGES_FOR_GROUP,GET_MESSAGES_FOR_USER,GET_UNREAD_MESSAGES_FOR_USER,
+        GET_READ_MESSAGES_FOR_USER,GET_UNREAD_EMERGENCY_MESSAGES_FOR_USER,POST_MESSAGE_TO_GROUP,
+        POST_MESSAGE_TO_PARENTS,GET_ONE_MESSAGE,SET_MESSAGE_AS_READ_OR_UNREAD
     }
 
 }

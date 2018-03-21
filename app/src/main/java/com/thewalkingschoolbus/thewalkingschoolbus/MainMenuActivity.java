@@ -16,10 +16,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.MapFragmentState;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_EMAIL;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
 
 
 public class MainMenuActivity extends AppCompatActivity
@@ -44,44 +50,81 @@ public class MainMenuActivity extends AppCompatActivity
         setContentView(R.layout.activity_main_menu);
 
         contextOfApplication = this;
+        getUserLastState();
 
-        boolean feedback = getLoginStatus();
-        if (!feedback){
-            startActivity(MainActivity.makeIntent(getApplicationContext()));
-            finish();
-        } else {
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.addDrawerListener(toggle);
-            toggle.syncState();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
-            navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-            // OPEN DEFAULT FRAGMENT //
-            openDefaultFragment();
-        }
+        // OPEN DEFAULT FRAGMENT //
+        openDefaultFragment();
+
 
         // SET UP TEST //
         //setupTest();
     }
 
-    private boolean getLoginStatus() {
+    private void getUserLastState() {
         SharedPreferences preferences = getApplication().getSharedPreferences(AppStates, MODE_PRIVATE);
-        return preferences.getBoolean(USER_LOGSTATUS, false);
+        String email = preferences.getString(REGISTER_EMAIL, null);
+        String password = preferences.getString(LOGIN_PASSWORD, null);
+        if( email == null || password == null) {
+            Intent intent = MainActivity.makeIntent(getApplicationContext());
+            startActivity(intent);
+            finish();
+        } else {
+            User.setLoginUser(new User());
+            User.getLoginUser().setEmail(email);
+            User.getLoginUser().setPassword(password);
+            new GetUserAsyncTask(LOGIN_REQUEST, User.getLoginUser(),null, null, null,new OnTaskComplete() {
+                @Override
+                public void onSuccess(Object result) {
+                    if(result == null){
+                        Toast.makeText(getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                .show();
+                    } else {
+                        setLoginUser(User.getLoginUser());
+                    }
+                }
+                @Override
+                public void onFailure(Exception e) {
+                    Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }).execute();
+        }
+    }
+
+
+    public void setLoginUser(User user){
+        new GetUserAsyncTask(GET_USER_BY_EMAIL, user, null, null,null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                if(result != null){
+                    User.setLoginUser((User)result);
+                }
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(MainMenuActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
+            }
+        }).execute();
     }
 
     private void openDefaultFragment() {
@@ -144,25 +187,25 @@ public class MainMenuActivity extends AppCompatActivity
                     .replace(R.id.content_frame, new ProfileFragment())
                     .commit();
             toolbar.setTitle("Profile");
-        } else if (id == R.id.nav_fragment_monitoring) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, new MonitoringFragment())
-                    .commit();
-            toolbar.setTitle("Monitoring");
-        } else if (id == R.id.nav_fragment_monitored_by) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, new MonitoredByFragment())
-                    .commit();
-            toolbar.setTitle("Monitored By");
+        } else if (id == R.id.nav_fragment_friends) {
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, new FriendsFragment());
+            fragmentTransaction.commit();
+            toolbar.setTitle("Friends");
         } else if (id == R.id.nav_fragment_group) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, new GroupFragment())
-                    .commit();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, new GroupFragment());
+            fragmentTransaction.commit();
             toolbar.setTitle("Groups");
         } else if (id == R.id.nav_fragment_map_create_group) {
             openMapFragment(MapFragmentState.CREATE_GROUP);
         } else if (id == R.id.nav_fragment_map_join_group) {
             openMapFragment(MapFragmentState.JOIN_GROUP);
+        } else if (id == R.id.nav_fragment_messages) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, new MessagesFragment())
+                    .commit();
+            toolbar.setTitle("Messages");
         } else if (id == R.id.nav_lougout) {
             storeLogoutInfoToSharePreferences();
             Intent intent = MainActivity.makeIntent(getApplicationContext());
@@ -212,8 +255,8 @@ public class MainMenuActivity extends AppCompatActivity
         SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
-        editor.putBoolean(USER_LOGSTATUS, false);
-
+        editor.putString(REGISTER_EMAIL, null);
+        editor.putString(LOGIN_PASSWORD, null );
         editor.commit();
     }
 
