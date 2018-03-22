@@ -138,7 +138,6 @@
         android:layout_width="360dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/cardView2"
-        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_marginTop="19dp"
         android:orientation="vertical">
@@ -152,7 +151,7 @@
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:contentDescription="@string/prof_act_email_icon"
+                android:contentDescription="@string/proffrag_email_icon"
                 app:srcCompat="@drawable/ic_email" />
 
             <TextView
@@ -162,7 +161,7 @@
 
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="20dp"
-                android:text="@string/profile_email"
+                android:text="@string/proffrag_email"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -177,7 +176,7 @@
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:contentDescription="@string/prof_act_phone_icon"
+                android:contentDescription="@string/proffrag_phone_icon"
                 app:srcCompat="@drawable/ic_local_phone" />
 
             <TextView
@@ -185,7 +184,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="20dp"
-                android:text="@string/profile_phoneNumber"
+                android:text="@string/proffrag_phoneNumber"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -199,7 +198,7 @@
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:contentDescription="@string/prof_act_location_icon"
+                android:contentDescription="@string/proffrag_location_icon"
                 app:srcCompat="@drawable/ic_location" />
 
             <TextView
@@ -214,12 +213,13 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/edit_profile_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="25dp"
         android:background="@drawable/image_style"
-        android:text="@string/profile_fragment_edit_profileBtn"
+        android:text="@string/proffrag_editprofile_Btn"
         android:textColor="#fff" />
 </LinearLayout>
 

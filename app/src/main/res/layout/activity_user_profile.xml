@@ -11,7 +11,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_toEndOf="@+id/imageView"
-        android:text="@string/textview_name"
+        android:text="@string/profact_name"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -29,7 +29,7 @@
         android:layout_height="40dp"
         android:layout_alignBottom="@+id/imageView"
         android:layout_alignStart="@+id/fullname"
-        android:hint="@string/textview_enter_name"
+        android:hint="@string/profact_enter_name"
         android:inputType="textPersonName" />
 
     <TextView
@@ -41,7 +41,7 @@
         android:layout_marginTop="19dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:text="@string/textview_email"
+        android:text="@string/profact_email"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -52,7 +52,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/useremail"
         android:inputType="textEmailAddress"
-        android:hint="@string/textview_enter_email"
+        android:hint="@string/profact_enter_email"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"/>
 
@@ -65,7 +65,7 @@
         android:layout_marginTop="11dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:text="@string/textview_phone_number"
+        android:text="@string/profact_phone_number"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -76,7 +76,31 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/phone_number"
         android:inputType="phone"
-        android:hint="@string/textview_enter_phone_number"
+        android:hint="@string/profact_enter_phone_number"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"/>
+
+    <TextView
+        android:id="@+id/homephone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/enter_phone"
+        android:layout_marginTop="11dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/profact_home_phone"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/enter_homephone_number"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/homephone_number"
+        android:inputType="phone"
+        android:hint="@string/profact_enter_homephone_number"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"/>
 
@@ -85,11 +109,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/enter_phone"
+        android:layout_below="@+id/enter_homephone_number"
         android:layout_marginTop="11dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:text="@string/textview_address"
+        android:text="@string/profact_address"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -100,7 +124,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/address"
         android:inputType="textPostalAddress"
-        android:hint="@string/textview_enter_address"
+        android:hint="@string/profact_enter_address"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"/>
 
@@ -113,7 +137,7 @@
         android:layout_marginTop="12dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:text="@string/textview_birth_month_year_mm_yyyy"
+        android:text="@string/profact_birth_month_year_mm_yyyy"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -123,7 +147,7 @@
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/birth_month"
-        android:hint="@string/textview_enter_birth_month"
+        android:hint="@string/profact_enter_birth_month"
         android:inputType="date"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"/>
@@ -137,7 +161,7 @@
         android:layout_marginTop="11dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:text="@string/textview_teacher_name"
+        android:text="@string/profact_teacher_name"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -148,7 +172,7 @@
         android:layout_alignEnd="@+id/birth_month"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/teacher_name"
-        android:hint="@string/textview_enter_teacher_name"
+        android:hint="@string/profact_enter_teacher_name"
         android:inputType="textPersonName"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"/>
@@ -159,7 +183,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/enter_teacher_name"
         android:layout_toEndOf="@+id/enter_birth_month"
-        android:text="@string/textview_current_grade"
+        android:text="@string/profact_current_grade"
         android:textColor="@color/black"
         android:textStyle="bold" />
 
@@ -169,7 +193,7 @@
         android:layout_height="40dp"
         android:layout_alignStart="@+id/current_grade"
         android:layout_below="@+id/current_grade"
-        android:hint="@string/textview_enter_grade"
+        android:hint="@string/profact_enter_grade"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"/>
 
@@ -182,7 +206,7 @@
         android:layout_marginTop="11dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:text="@string/textview_emergency_contact"
+        android:text="@string/profact_emergency_contact"
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
@@ -194,7 +218,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/emergency_contact"
         android:ems="10"
-        android:hint="@string/textview_enter_emrgency_info"
+        android:hint="@string/profact_enter_emrgency_info"
         android:inputType="textMultiLine"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"/>

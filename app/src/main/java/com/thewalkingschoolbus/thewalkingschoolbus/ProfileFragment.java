@@ -1,16 +1,24 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
+
+/*
+* SOURCES - Based on following tutorials:
+* - Modern Profile UI Design in Android Studio
+*    https://www.youtube.com/watch?v=2pirZvqXza0
+* */
 
 public class ProfileFragment extends android.app.Fragment {
 
@@ -24,6 +32,7 @@ public class ProfileFragment extends android.app.Fragment {
             container.removeAllViews();
         }
         view = inflater.inflate(R.layout.fragment_profile, container, false);
+        setUpEditProfileBtn();
         return view;
 
 
@@ -43,5 +52,15 @@ public class ProfileFragment extends android.app.Fragment {
         *
         * If this is unclear, look at example code in MonitoringFragment.
         */
+    }
+    private void setUpEditProfileBtn(){
+        Button editBtn = view.findViewById(R.id.edit_profile_btn);
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = UserProfileActivity.makeIntent(getActivity());
+                startActivity(intent);
+            }
+        });
     }
 }
