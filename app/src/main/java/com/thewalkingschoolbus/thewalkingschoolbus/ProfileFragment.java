@@ -6,7 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
 
 public class ProfileFragment extends android.app.Fragment {
@@ -22,6 +25,7 @@ public class ProfileFragment extends android.app.Fragment {
         }
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         return view;
+
 
         /*
         * How to add content in fragment:

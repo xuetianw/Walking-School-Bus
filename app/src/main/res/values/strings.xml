@@ -44,4 +44,5 @@
     <string name="prof_act_location_icon">location_icon</string>
     <string name="profile_phoneNumber">604 444 4444</string>
     <string name="profile_email">vigiri@sfu.ca</string>
+    <string name="profile_fragment_edit_profileBtn">Edit Profile</string>
 </resources>
