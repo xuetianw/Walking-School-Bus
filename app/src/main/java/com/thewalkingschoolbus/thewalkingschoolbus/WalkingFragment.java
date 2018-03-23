@@ -109,8 +109,6 @@ public class WalkingFragment extends android.app.Fragment {
         text.setText(statusText);
     }
 
-
-
     public static void uploadCurrentCoordinate() {
         Location currentLocation = MapUtil.getDeviceLocation();
 
@@ -131,9 +129,9 @@ public class WalkingFragment extends android.app.Fragment {
         new GetUserAsyncTask(EDIT_USER, user, null, null,null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                Log.d(TAG, "#### Successfully updated current location.");
+                User user = (User) result;
+                Log.d(TAG, "#### Successfully updated current location. " + ((User) result).getLastGpsLocation().getLat());
             }
-
             @Override
             public void onFailure(Exception e) {
                 Log.d(TAG, "#### Error: "+e.getMessage());

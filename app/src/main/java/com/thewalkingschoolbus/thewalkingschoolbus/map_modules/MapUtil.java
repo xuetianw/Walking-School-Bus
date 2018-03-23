@@ -42,6 +42,10 @@ public class MapUtil {
     private static Location currentLocation = null;
     private Context context;
 
+    public static float getDefaultZoom() {
+        return DEFAULT_ZOOM;
+    }
+
     public static void moveCamera(GoogleMap map, LatLng latLng, float zoom) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));

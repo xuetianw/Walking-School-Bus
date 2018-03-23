@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,15 +17,22 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
+import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.MapUtil;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.UploadLocationService;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 
 public class MapMonitoringActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    private static final String TAG = "MapUtil";
     private GoogleMap map;
+    private List<User> activeMonitoringUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,18 +56,39 @@ public class MapMonitoringActivity extends AppCompatActivity implements AdapterV
     private void updateMap() {
         map.clear();
         List<User> monitoringUsers = User.getLoginUser().getMonitorsUsers();
+        Log.d(TAG, "updateMap: @@ monitoringUsers.size " + monitoringUsers.size());
+        activeMonitoringUsers = new ArrayList<>();
         for (User user : monitoringUsers) {
-            if (user.getLastGpsLocation() != null) {
-                LatLng userLatLng = new LatLng(Double.parseDouble(user.getLastGpsLocation().getLat()), Double.parseDouble(user.getLastGpsLocation().getLng()));
-                MapUtil.setMarker(map, userLatLng, user.getName(), user.getLastGpsLocation().getTimestamp());
-            }
+            new GetUserAsyncTask(GET_USER_BY_ID, user, null, null,null, new OnTaskComplete() {
+                @Override
+                public void onSuccess(Object result) {
+                    User userDetailed = (User) result;
+                    if (userDetailed.getLastGpsLocation().getTimestamp() != null) {
+                        activeMonitoringUsers.add(userDetailed);
+                        LatLng userLatLng = new LatLng(Double.parseDouble(userDetailed.getLastGpsLocation().getLat()), Double.parseDouble(userDetailed.getLastGpsLocation().getLng()));
+                        MapUtil.setMarker(map, userLatLng, userDetailed.getName(), userDetailed.getLastGpsLocation().getTimestamp());
+                        updateDropdown();
+                    }
+                }
+                @Override
+                public void onFailure(Exception e) {
+                    Log.d(TAG, "Error: "+e.getMessage());
+                }
+            }).execute();
+        }
+        if (monitoringUsers.isEmpty() || activeMonitoringUsers.isEmpty()) {
+            Toast.makeText(this, "No one is walking", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void updateDropdown() {
         Spinner dropdown = findViewById(R.id.spinnerSelectMonitoring);
 
-        String[] items = {"A", "B", "C"};
+        List<String> items = new ArrayList<>();
+        for (User user : activeMonitoringUsers) {
+            items.add(user.getName());
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, items);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         dropdown.setAdapter(adapter);
@@ -68,24 +97,15 @@ public class MapMonitoringActivity extends AppCompatActivity implements AdapterV
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-        switch (position) {
-            case 0:
-                Toast.makeText(this, "A", Toast.LENGTH_SHORT).show();
-                break;
-            case 1:
-                Toast.makeText(this, "B", Toast.LENGTH_SHORT).show();
-                break;
-            case 2:
-                Toast.makeText(this, "C", Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                break;
-        }
+        User userSelected = activeMonitoringUsers.get(position);
+        LatLng userLatLng = new LatLng(Double.parseDouble(userSelected.getLastGpsLocation().getLat()), Double.parseDouble((userSelected.getLastGpsLocation().getLng())));
+
+        MapUtil.moveCamera(map, userLatLng, MapUtil.getDefaultZoom());
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        Toast.makeText(this, "wut u doin, fool", Toast.LENGTH_SHORT).show();
+
     }
 
     public static Intent makeIntent(Context context) {
