@@ -425,12 +425,12 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             double[] routeLngArray = {currentRoute.originLocation.longitude, currentRoute.destinationLocation.longitude, 0};
             final Group group = new Group(name, routeLatArray, routeLngArray);
 
-            new GetUserAsyncTask(CREATE_GROUP, null, null, group, new OnTaskComplete() {
+            new GetUserAsyncTask(CREATE_GROUP, null, null, group,null, new OnTaskComplete() {
                 @Override
                 public void onSuccess(Object result) {
                     //Group[] group = (Group[]) result;
                     Toast.makeText(context, "Group created!", Toast.LENGTH_SHORT).show();
-                    joinGroup(context, (Group) result, false);
+                    //joinGroup(context, (Group) result, false); // TODO: comment this out to disable auto join after creating group
                     alertDialog.dismiss();
                 }
 
@@ -447,7 +447,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
 
     private void displayNearbyGroups() {
         if (mValidRouteEstablished) {
-            new GetUserAsyncTask(LIST_GROUPS, null, null, null, new OnTaskComplete() {
+            new GetUserAsyncTask(LIST_GROUPS, null, null, null,null, new OnTaskComplete() {
                 @Override
                 public void onSuccess(Object result) {
                     Boolean groupNearBy = false;
@@ -509,7 +509,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                                 Toast.makeText(getActivity(), "Cannot find current location. (error code 1)", Toast.LENGTH_SHORT).show();
                             } else {
                                 // Retrieve group data, and compare group to currentLocation
-                                new GetUserAsyncTask(LIST_GROUPS, null, null, null, new OnTaskComplete() {
+                                new GetUserAsyncTask(LIST_GROUPS, null, null, null,null, new OnTaskComplete() {
                                     @Override
                                     public void onSuccess(Object result) {
                                         if (result == null) {
@@ -676,7 +676,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
             Toast.makeText(context, "Unexpected error.", Toast.LENGTH_SHORT).show();
         }
         User user = User.getLoginUser();
-        new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, user, null, group, new OnTaskComplete() {
+        new GetUserAsyncTask(ADD_MEMBER_TO_GROUP, user, null, group,null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 if (makeToasts) {

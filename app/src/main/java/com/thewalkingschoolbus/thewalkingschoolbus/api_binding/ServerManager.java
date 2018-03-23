@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.ApiException;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Message;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
 import com.google.gson.Gson;
@@ -25,6 +26,7 @@ public class ServerManager {
     // Debug: Proxy server for plaintext debugging purpose
     // private String BASE_URL = "http://walkgroup.api.tabjy.com/https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
     private String BASE_URL="https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
+
     private String LOGIN = "/login";
     private String CREATE_USER = "/users/signup";
     private String LIST_USERS = "/users";
@@ -32,10 +34,12 @@ public class ServerManager {
     private String GET_USER_BY_EMAIL = "/users/byEmail?email=%s";
     private String DELETE_USER = "/users/%s";
     private String EDIT_USER = "/users/%s";
+
     private String USER_MONITORING_LIST = "/users/%s/monitorsUsers";
     private String USER_MONITORING_BY_LIST = "/users/%s/monitoredByUsers";
     private String CREATE_MONITORING = "/users/%s/monitorsUsers";
     private String DELETE_MONITORING = "/users/%s/monitorsUsers/%s";
+
     private String LIST_GROUPS = "/groups";
     private String CREATE_GROUP = "/groups";
     private String GET_ONE_GROUP = "/groups/%s";
@@ -44,6 +48,21 @@ public class ServerManager {
     private String GET_MEMBERS_OF_GROUP = "/groups/%s/memberUsers";
     private String ADD_MEMBERS_TO_GROUP = "/groups/%s/memberUsers";
     private String REMOVE_MEMBER_OF_GROUP = "/groups/%s/memberUsers/%s";
+
+    private String GET_ALL_MESSAGES = "/messages";
+    private String GET_ALL_EMERGENCY_MESSAGES = "/messages?is-emergency=true";
+    private String GET_MESSAGES_FOR_GROUP = "/messages?togroup=%s";
+    private String GET_EMERGENCY_MESSAGES_FOR_GROUP = "/messages?togroup=%s&is-emergency=true";
+    private String GET_MESSAGES_FOR_USER = "/messages?foruser=%s";
+    private String GET_UNREAD_MESSAGES_FOR_USER = "/messages?foruser=%s&status=unread";
+    private String GET_READ_MESSAGES_FOR_USER = "/messages?foruser=%s&status=read";
+    private String GET_UNREAD_EMERGENCY_MESSAGES_FOR_USER = "/messages?foruser=%s&status=unread&is-emergency=true";
+
+    private String POST_MESSAGE_TO_GROUP = "/messages/togroup/%s";
+    private String POST_MESSAGE_TO_PARENTS = "/messages/toparents/%s";
+    private String GET_ONE_MESSAGE = "/messages/%s";
+    private String SET_MESSAGE_AS_READ_OR_UNREAD =  "/messages/%s/readby/%s";
+
 
     private String SUCCESSFUL = "SUCCESSFUL";
 
@@ -79,6 +98,7 @@ public class ServerManager {
         connection.setRequestMethod(GET);
         connection.setRequestProperty("Content-Type","application/json");
         connection.setRequestProperty("apiKey",API_KEY);
+        connection.setRequestProperty("JSON-DEPTH","2");
 
         if(User.getToken()!= null){
             connection.setRequestProperty("Authorization", User.getToken());
@@ -549,6 +569,185 @@ public class ServerManager {
         String url = BASE_URL+ String.format(REMOVE_MEMBER_OF_GROUP,group.getId(),user.getId());
         HttpURLConnection connection = httpRequestDelete(url);
         Log.i("TAG",url);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+
+        return SUCCESSFUL;
+    }
+
+    // for messages
+
+    public Message[] getAllMessages()throws Exception{
+        String url = BASE_URL+ GET_ALL_MESSAGES;
+        HttpURLConnection connection = httpRequestGet(url,null);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+        StringBuffer result = readJsonIntoString(connection);
+        Message[] messages = new Gson().fromJson(result.toString(),Message[].class);
+        return messages;
+    }
+
+    public Message[] getAllEmergencyMessages()throws Exception{
+        String url = BASE_URL+ GET_ALL_EMERGENCY_MESSAGES;
+        HttpURLConnection connection = httpRequestGet(url,null);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+        StringBuffer result = readJsonIntoString(connection);
+        Message[] messages = new Gson().fromJson(result.toString(),Message[].class);
+        return messages;
+    }
+
+
+    public Message[] getMessagesForGroup(Group group)throws Exception{
+        String url = BASE_URL+ String.format(GET_MESSAGES_FOR_GROUP,group.getId());
+        HttpURLConnection connection = httpRequestGet(url,null);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+        StringBuffer result = readJsonIntoString(connection);
+        Message[] messages = new Gson().fromJson(result.toString(),Message[].class);
+        return messages;
+    }
+
+    public Message[] getEmergencyMessagesForGroup(Group group)throws Exception{
+        String url = BASE_URL+ String.format(GET_EMERGENCY_MESSAGES_FOR_GROUP,group.getId());
+        HttpURLConnection connection = httpRequestGet(url,null);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+        StringBuffer result = readJsonIntoString(connection);
+        Message[] messages = new Gson().fromJson(result.toString(),Message[].class);
+        return messages;
+    }
+
+    public Message[] getMessagesForUser(User user)throws Exception{
+        String url = BASE_URL+ String.format(GET_MESSAGES_FOR_USER,user.getId());
+        HttpURLConnection connection = httpRequestGet(url,null);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+        StringBuffer result = readJsonIntoString(connection);
+        Message[] messages = new Gson().fromJson(result.toString(),Message[].class);
+        return messages;
+    }
+
+
+    public Message[] getUnreadMessagesForUser(User user)throws Exception{
+        String url = BASE_URL+ String.format(GET_UNREAD_MESSAGES_FOR_USER,user.getId());
+        HttpURLConnection connection = httpRequestGet(url,null);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+        StringBuffer result = readJsonIntoString(connection);
+        Message[] messages = new Gson().fromJson(result.toString(),Message[].class);
+        return messages;
+    }
+
+    public Message[] getReadMessagesForUser(User user)throws Exception{
+        String url = BASE_URL+ String.format(GET_READ_MESSAGES_FOR_USER,user.getId());
+        HttpURLConnection connection = httpRequestGet(url,null);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+        StringBuffer result = readJsonIntoString(connection);
+        Message[] messages = new Gson().fromJson(result.toString(),Message[].class);
+        return messages;
+    }
+
+    public Message[] getUnreadEmergencyMessagesForUser(User user)throws Exception{
+        String url = BASE_URL+ String.format(GET_UNREAD_EMERGENCY_MESSAGES_FOR_USER,user.getId());
+        HttpURLConnection connection = httpRequestGet(url,null);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+        StringBuffer result = readJsonIntoString(connection);
+        Message[] messages = new Gson().fromJson(result.toString(),Message[].class);
+        return messages;
+    }
+
+    public Message postMessageToGroup (Group group, Message message)throws Exception{
+        String url = BASE_URL+ String.format(POST_MESSAGE_TO_GROUP,group.getId());
+        String str = new Gson().toJson(message);
+        JSONObject jsonObject = new JSONObject(str);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+
+        StringBuffer result = readJsonIntoString(connection);
+        Message messages = new Gson().fromJson(result.toString(),Message.class);
+        return messages;
+    }
+
+    public Message postMessageToParents(User user,Message message)throws Exception{
+        String url = BASE_URL + String.format(POST_MESSAGE_TO_PARENTS,user.getId());
+        String str = new Gson().toJson(message);
+        JSONObject jsonObject = new JSONObject(str);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+
+        StringBuffer result = readJsonIntoString(connection);
+        Message messages = new Gson().fromJson(result.toString(),Message.class);
+        return messages;
+    }
+
+    public Message getOneMessage(Message message)throws Exception{
+        String url = BASE_URL + String.format(GET_ONE_MESSAGE,message.getId());
+        HttpURLConnection connection = httpRequestGet(url,null);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+
+        StringBuffer result = readJsonIntoString(connection);
+        Message messages = new Gson().fromJson(result.toString(),Message.class);
+        return messages;
+    }
+
+    public String setMessageAsReadOrUnread(User user, Message message)throws Exception{
+        String url = BASE_URL + String.format(SET_MESSAGE_AS_READ_OR_UNREAD,message.getId(),user.getId());
+        JSONObject jsonObject = new JSONObject(String.valueOf(message.isEmergency()));
+        HttpURLConnection connection = httpRequestGet(url,jsonObject);
 
         if (connection.getResponseCode() >= 400) {
             // failed
