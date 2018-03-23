@@ -65,6 +65,22 @@ public class User {
         this.id = id;
         this.name = name;
         this.email = email;
+        password = null;
+        birthYear = null;
+        birthMonth = null;
+        address = null;
+        cellPhone = null;
+        homePhone = null;
+        grade = null;
+        teacherName = null;
+        emergencyContactInfo = null;
+        lastGpsLocation = null;
+
+        monitorsUsers = null;
+        monitoredByUsers = null;
+
+        memberOfGroups = null;
+        leadsGroups = null;
     }
 
     public String getBirthYear() {
