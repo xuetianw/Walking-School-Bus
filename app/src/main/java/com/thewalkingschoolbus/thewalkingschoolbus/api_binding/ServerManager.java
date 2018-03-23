@@ -109,6 +109,7 @@ public class ServerManager {
             printStream.println(jsonObject .toString());
             printStream.close();
         }
+
         return connection;
     }
 
@@ -173,6 +174,7 @@ public class ServerManager {
         String token = connection.getHeaderField("authorization");
 
         User.setToken("Bearer "+token);
+        Log.i("TAG",User.getToken());
         return SUCCESSFUL;
     }
 
