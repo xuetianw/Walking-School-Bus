@@ -1,6 +1,7 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,12 +17,18 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText nameET;
-    EditText emailET;
-    EditText passwordET;
-    String loginName;
-    String registerPassword;
-    String registerEmail;
+
+    public static final String PLEASE_CORRECT_YOUR_DATE_OF_BIRTH = "Please correct your date of birth";
+    private EditText nameET, emailET, passwordET,
+            birthYearET, birthMonthET, addressET,
+            cellPhoneET, homePhoneET, gradeET,
+            teacherNameDT, emergencyContactInfoET;
+
+    private String loginName, registerEmail, registerPassword,
+            birthYear, birthMonth, address, cellPhone, homePhone,
+            grade, teacherName, emergencyContactInfo;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,41 +46,90 @@ public class RegisterActivity extends AppCompatActivity {
                 loginName = nameET.getText().toString();
                 registerEmail = emailET.getText().toString();
                 registerPassword = passwordET.getText().toString();
+                birthYear = birthYearET.getText().toString();
+                birthMonth = birthMonthET.getText().toString();
+                address = addressET.getText().toString();
+                cellPhone = cellPhoneET.getText().toString();
+                homePhone = homePhoneET.getText().toString();
+                grade = gradeET.getText().toString();
+                teacherName = teacherNameDT.getText().toString();
+                emergencyContactInfo = emergencyContactInfoET.getText().toString();
+
+
 
                 if(loginName.isEmpty() || registerEmail.isEmpty()|| registerPassword.isEmpty()){
-                    Toast.makeText(getApplicationContext(),MainActivity.FIELD_NOT_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(),MainActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
-                }
+                } else if(!birthMonth.isEmpty()
+                        && ((Integer.parseInt(birthMonth) > 12 || Integer.parseInt(birthMonth) < 0))){
+                    Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
+                            .show();
+                } else if(!birthYear.isEmpty()
+                        && (Integer.parseInt(birthYear)>2018 || Integer.parseInt(birthYear)<1900)) {
+                    Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    User user = new User();
+                    user.setEmail(registerEmail);
+                    user.setName(loginName);
+                    user.setPassword(registerPassword);
+                    user.setBirthYear(birthYear);
+                    user.setBirthMonth(birthMonth);
+                    user.setAddress(address);
+                    user.setCellPhone(cellPhone);
+                    user.setGrade(grade);
+                    user.setTeacherName(teacherName);
+                    user.setEmergencyContactInfo(emergencyContactInfo);
 
-                User user = new User();
-                user.setEmail(registerEmail);
-                user.setName(loginName);
-                user.setPassword(registerPassword);
 
                 new GetUserAsyncTask(CREATE_USER, user,null, null,null ,new OnTaskComplete() {
                     @Override
                     public void onSuccess(Object result) {
                         Toast.makeText(getApplicationContext(),REGISTER_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
-                        //Intent intent = MonitoringActivity.makeIntent(MainActivity.this);
-                        //startActivity(intent);
-                    }
-                    @Override
-                    public void onFailure(Exception e) {
-                        Toast.makeText(getApplicationContext(),REGISTER_FAIL_MESSAGE, Toast.LENGTH_SHORT)
-                                .show();
-                        Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }).execute();
+                            storeUserInfoToSharePreferences();
+                            Intent intent = MainMenuActivity.makeIntent(getApplicationContext());
+                            startActivity(intent);
+                            finish();
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            Toast.makeText(getApplicationContext(),REGISTER_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                    .show();
+                            Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }).execute();
+                }
+
 
             }
         });
+    }
+
+    private void storeUserInfoToSharePreferences() {
+        SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString(REGISTER_EMAIL, registerEmail );
+        editor.putString(LOGIN_PASSWORD, registerPassword );
+        editor.commit();
+
     }
 
     private void setupTextviews() {
         nameET = (EditText)findViewById(R.id.registernameid);
         emailET = (EditText)findViewById(R.id.registeremailid);
         passwordET = (EditText) findViewById(R.id.registerpasswordid);
+        birthYearET = (EditText) findViewById(R.id.yearid);
+        birthMonthET = (EditText) findViewById(R.id.monthid);
+        birthYearET = (EditText) findViewById(R.id.yearid);
+        addressET = (EditText) findViewById(R.id.addressid);
+        cellPhoneET = (EditText) findViewById(R.id.cellphoneid);
+        homePhoneET = (EditText) findViewById(R.id.homePhoneid);
+        gradeET = (EditText) findViewById(R.id.gradeid);
+        teacherNameDT = (EditText) findViewById(R.id.teacherNameid);
+        emergencyContactInfoET = (EditText) findViewById(R.id.emergencyid);
+
     }
 
     public static Intent makeIntent(MainActivity mainActivity) {

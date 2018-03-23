@@ -6,85 +6,242 @@
     android:layout_height="match_parent"
     tools:context="com.thewalkingschoolbus.thewalkingschoolbus.com.thewalkingschoolbus.RegisterActivity">
 
-    <RelativeLayout
-        android:layout_width="368dp"
-        android:layout_height="495dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignBaseline="@+id/nameid"
-            android:layout_alignBottom="@+id/nameid"
-            android:layout_alignParentStart="true"
-            android:text="name"
-            android:textSize="18dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/registernameid"
-            android:layout_marginTop="18dp"
-            android:text="email"
-            android:textSize="18dp" />
+        <RelativeLayout
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignStart="@+id/textView5"
-            android:layout_below="@+id/registeremailid"
-            android:layout_marginTop="38dp"
-            android:text="password"
-            android:textSize="18sp" />
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:text="*name"
+                android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/registernameid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="32dp"
-            android:ems="10"
-            android:hint="Name"
-            android:inputType="textPersonName" />
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/registernameid"
+                android:text="*email"
+                android:textSize="18dp" />
 
-        <EditText
-            android:id="@+id/registeremailid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/textView5"
-            android:layout_alignStart="@+id/registernameid"
-            android:ems="10"
-            android:hint="email"
-            android:inputType="textPersonName" />
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView5"
+                android:text="*password"
+                android:textSize="18dp" />
 
-        <EditText
-            android:id="@+id/registerpasswordid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/textView6"
-            android:layout_alignStart="@+id/registeremailid"
-            android:ems="10"
-            android:hint="passowrd"
-            android:inputType="textPersonName" />
+            <EditText
+                android:id="@+id/registernameid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="32dp"
+                android:ems="10"
+                android:hint="Name"
+                android:inputType="textPersonName"
+                android:textSize="18dp" />
 
-        <Button
-            android:id="@+id/register2id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/registerpasswordid"
-            android:layout_below="@+id/registerpasswordid"
-            android:layout_marginEnd="55dp"
-            android:layout_marginTop="123dp"
-            android:text="register" />
+            <EditText
+                android:id="@+id/registeremailid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignBottom="@+id/textView5"
+                android:layout_alignStart="@+id/registernameid"
+                android:ems="10"
+                android:hint="email"
+                android:inputType="textPersonName"
+                android:textSize="18dp" />
 
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/registerpasswordid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignBottom="@+id/textView6"
+                android:layout_alignStart="@+id/registeremailid"
+                android:ems="10"
+                android:hint="passowrd"
+                android:inputType="textPersonName"
+                android:textSize="18dp" />
+
+            <Button
+                android:id="@+id/register2id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="register" />
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView6"
+                android:text="Date of birth"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/yearid"
+                android:layout_width="110dp"
+                android:layout_height="40dp"
+                android:layout_alignStart="@+id/registerpasswordid"
+                android:layout_below="@+id/registerpasswordid"
+                android:ems="10"
+                android:hint="year"
+                android:inputType="number"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/monthid"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:layout_below="@+id/registerpasswordid"
+                android:layout_toEndOf="@+id/yearid"
+                android:ems="10"
+                android:hint="month"
+                android:inputType="number"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView14"
+                android:text="address"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/addressid"
+                android:layout_width="280dp"
+                android:layout_height="40dp"
+                android:layout_below="@+id/yearid"
+                android:layout_toEndOf="@+id/textView14"
+                android:ems="10"
+                android:hint="address"
+                android:inputType="textPersonName"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView15"
+                android:text="cellPhone"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/cellphoneid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignStart="@+id/yearid"
+                android:layout_below="@+id/addressid"
+                android:ems="10"
+                android:hint="cellphone"
+                android:inputType="number"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView16"
+                android:text="homePhone"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/homePhoneid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignEnd="@+id/cellphoneid"
+                android:layout_below="@+id/cellphoneid"
+                android:ems="10"
+                android:hint="homePhone"
+                android:inputType="phone"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView17"
+                android:text="grade"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/gradeid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignEnd="@+id/homePhoneid"
+                android:layout_below="@+id/homePhoneid"
+                android:ems="10"
+                android:hint="grade"
+                android:inputType="textPersonName"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/textView19"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView18"
+                android:text="teacherName"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/teacherNameid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignStart="@+id/gradeid"
+                android:layout_below="@+id/gradeid"
+                android:ems="10"
+                android:hint="teacherName"
+                android:inputType="textPersonName"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView19"
+                android:text="emergencyContactInfo"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/emergencyid"
+                android:layout_width="350dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView20"
+                android:ems="10"
+                android:hint="emergencyContactInfo"
+                android:inputType="textPersonName"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
+    </ScrollView>
+
 </android.support.constraint.ConstraintLayout>

@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String REGISTER_EMAIL = "registerEmail";
     public static final String LOGIN_NAME = "loginName";
     public static final String LOGIN_PASSWORD = "loginPassword";
-    public static final String FIELD_NOT_EMPTY_MESSAGE = "none of the field can be empty";
+    public static final String EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE = "email and password are required";
+    public static final String USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE = "name email and password are required";
     public static final String ACCOUNT_HAS_BEEN_REGISTERED_MESSAGE = "this account has been registered";
     public static final String REGISTER_SUCCESSFULLY_MESSAGE = "register succesfully";
     public static final String ACCOUNT_DOES_NOT_EXIST_MESSAGE = "that account does not exist";
@@ -89,13 +90,14 @@ public class MainActivity extends AppCompatActivity {
                 loginPassword = passwordET.getText().toString();
 
                 if(registerEmail.isEmpty()|| loginPassword.isEmpty()){
-                    Toast.makeText(getApplicationContext(),FIELD_NOT_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
+                } else {
+                    User.setLoginUser(new User());
+                    User.getLoginUser().setEmail(registerEmail);
+                    User.getLoginUser().setPassword(loginPassword);
+                    login();
                 }
-                User.setLoginUser(new User());
-                User.getLoginUser().setEmail(registerEmail);
-                User.getLoginUser().setPassword(loginPassword);
-                login();
 
             }
         });
