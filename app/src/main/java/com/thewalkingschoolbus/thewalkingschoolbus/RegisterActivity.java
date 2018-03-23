@@ -77,6 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
                     user.setBirthMonth(birthMonth);
                     user.setAddress(address);
                     user.setCellPhone(cellPhone);
+                    user.setHomePhone(homePhone);
                     user.setGrade(grade);
                     user.setTeacherName(teacherName);
                     user.setEmergencyContactInfo(emergencyContactInfo);
