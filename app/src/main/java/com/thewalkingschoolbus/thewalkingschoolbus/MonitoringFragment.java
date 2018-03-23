@@ -16,7 +16,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
 import java.util.ArrayList;

@@ -19,8 +19,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.MapFragmentState;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.MapFragmentState;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
@@ -182,7 +182,12 @@ public class MainMenuActivity extends AppCompatActivity
         int id = item.getItemId();
         FragmentManager fragmentManager = getFragmentManager();
 
-        if (id == R.id.nav_fragment_profile) {
+        if (id == R.id.nav_fragment_walking) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, new WalkingFragment())
+                    .commit();
+            toolbar.setTitle("Walk");
+        } else if (id == R.id.nav_fragment_profile) {
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, new ProfileFragment())
                     .commit();

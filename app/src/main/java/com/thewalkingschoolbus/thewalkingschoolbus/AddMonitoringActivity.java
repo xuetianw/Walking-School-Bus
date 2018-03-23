@@ -4,15 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.R;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.CREATE_MONITORING;

@@ -1,7 +1,6 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -31,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -58,15 +56,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.common.api.ResultCallback;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.EnterGroupNameDialogFragment;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.MapFragmentState;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.EnterGroupNameDialogFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.MapFragmentState;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinder;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.DirectionFinderListener;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.Route;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.PlaceInfo;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.PlaceInfo;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

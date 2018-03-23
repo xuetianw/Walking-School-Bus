@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.Models;
+package com.thewalkingschoolbus.thewalkingschoolbus.models;
 
 /**
  * Created by wu on 3/11/2018.
