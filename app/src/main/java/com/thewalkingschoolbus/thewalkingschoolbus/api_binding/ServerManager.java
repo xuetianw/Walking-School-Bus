@@ -98,6 +98,7 @@ public class ServerManager {
         connection.setRequestMethod(GET);
         connection.setRequestProperty("Content-Type","application/json");
         connection.setRequestProperty("apiKey",API_KEY);
+        connection.setRequestProperty("JSON-DEPTH","2");
 
         if(User.getToken()!= null){
             connection.setRequestProperty("Authorization", User.getToken());
