@@ -46,13 +46,15 @@ public class MonitoringDetailActivity extends AppCompatActivity {
             public void onSuccess(Object result) {
                 monitoredUser = (User) result;
                 displayName = (TextView)findViewById(R.id.textView7);
-                displayEmail = (TextView)findViewById(R.id.textView9);
+                displayEmail = (TextView)findViewById(R.id.textView21);
                 displayPhonenumber = (TextView)findViewById(R.id.textView22) ;
                 displayName.setText(""+ monitoredUser.getName());
                 monitoredUser.getName();
                 displayEmail.setText(""+ monitoredUser.getEmail());
                 if(monitoredUser.getCellPhone() != null){
                     displayPhonenumber.setText(""+ monitoredUser.getCellPhone());
+                } else {
+                    displayPhonenumber.setText("");
                 }
                 groupArrayList = (ArrayList<Group>) monitoredUser.getMemberOfGroups();
                 arrayList = new ArrayList();
