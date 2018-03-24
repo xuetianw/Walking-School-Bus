@@ -31,6 +31,7 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 
 public class UserProfileActivity extends AppCompatActivity {
 
+    public static final String EDIT_SUCCESSFULLY_MESSAGE = "edit successfully";
     private EditText nameET, emailET,
             birthYearET, birthMonthET, addressET,
             cellPhoneET, homePhoneET, gradeET,
@@ -92,7 +93,7 @@ public class UserProfileActivity extends AppCompatActivity {
                     new GetUserAsyncTask(EDIT_USER, user,null, null,null ,new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
-                            Toast.makeText(getApplicationContext(),"edit successfully", Toast.LENGTH_SHORT)
+                            Toast.makeText(getApplicationContext(), EDIT_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
                             User.setLoginUser((User)user );
                             storeUserInfoToSharePreferences();
