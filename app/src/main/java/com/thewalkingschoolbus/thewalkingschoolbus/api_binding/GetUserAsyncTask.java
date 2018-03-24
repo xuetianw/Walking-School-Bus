@@ -99,6 +99,12 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
                 case EDIT_USER:
                     returnObject = server.editUser(mParentUser);
                     break;
+                case GET_GPS_LOCATION:
+                    returnObject = server.getGpsLocation(mParentUser);
+                    break;
+                case POST_GPS_LOCATION:
+                    returnObject = server.postGpsLocation(mParentUser);
+                    break;
                 case GET_ALL_MESSAGES:
                     returnObject = server.getAllMessages();
                     break;
@@ -162,7 +168,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
     }
     public enum functionType {
         LOGIN_REQUEST, CREATE_USER, LIST_USERS, GET_USER_BY_ID,GET_USER_BY_EMAIL,
-        DELETE_USER,EDIT_USER,
+        DELETE_USER,EDIT_USER,GET_GPS_LOCATION,POST_GPS_LOCATION,
 
         USR_MONITORING_LIST,USER_MONITORING_BY_LIST, CREATE_MONITORING, DELETE_MONITORING,
 
