@@ -95,11 +95,7 @@ public class ProfileFragment extends android.app.Fragment {
             @Override
             public void onSuccess(Object result) {
                 if(result == null){
-                    Toast.makeText(getActivity(), LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
-                            .show();
                 } else {
-                    Toast.makeText(getActivity(), SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
-                            .show();
                     User.setLoginUser((User)result);
                     if(User.getLoginUser().getName() !=  null){
                         profileNametv.setText("" +  User.getLoginUser().getName());
