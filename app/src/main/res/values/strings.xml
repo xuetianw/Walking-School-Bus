@@ -16,4 +16,13 @@
     <string name="leader_name_label">LEADER NAME:</string>
     <string name="member_of_group">MEMBERS OF THE GROUP</string>
     <string name="email">EMAIL:</string>
+    <string name="user_id">USER ID:</string>
+    <string name="user_name">USER NAME:</string>
+    <string name="remove_user_from_group">REMOVE USER FROM GROUP</string>
+    <string name="address">ADDRESS:</string>
+    <string name="emergency_info">EMERGENCY INFO:</string>
+    <string name="cell_phone">CELL PHONE:</string>
+    <string name="home_phone">HOME PHONE:</string>
+    <string name="teacher_name">TEACHER NAME:</string>
+    <string name="monitored_by">MONITORED BY</string>
 </resources>

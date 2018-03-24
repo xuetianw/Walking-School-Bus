@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.activities.UserDetailActivity;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
 import java.util.ArrayList;
@@ -165,16 +166,19 @@ public class GroupDetailActivity extends AppCompatActivity {
 
     private void registerClickCallback() {
         ListView list = findViewById(R.id.memberListView);
+        final Context self = GroupDetailActivity.this;
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 positionOfUser = position;
                 List<User> listMonitoring = User.getLoginUser().getMonitorsUsers();
 
+                Intent intent = UserDetailActivity.makeIntent(self,listMonitoring.get(positionOfUser).getId(),mSelectedGroup.getId());
+                startActivity(intent);
+                /*
                 for(int j = 0; j < listMonitoring.size();j++){
                     if(mMembers[position].getId().equals(listMonitoring.get(j).getId())){
-                        alertDialog();
-                        break;
+                        alertDialog(); // TODO: make intent for UserDetailActivity
                     }else{
                         Toast.makeText(GroupDetailActivity.this, "you can not remove " +
                                 "user you are not monitoring from group",Toast.LENGTH_LONG).show();
@@ -184,6 +188,7 @@ public class GroupDetailActivity extends AppCompatActivity {
                     Toast.makeText(GroupDetailActivity.this, "you can not remove " +
                             "user you are not monitoring from group",Toast.LENGTH_LONG).show();
                 }
+                */
             }
         });
     }
