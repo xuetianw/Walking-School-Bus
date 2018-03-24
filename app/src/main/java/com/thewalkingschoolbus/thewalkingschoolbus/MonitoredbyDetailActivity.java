@@ -59,6 +59,7 @@ public class MonitoredbyDetailActivity extends AppCompatActivity {
         }).execute();
     }
 
+
     private void setupStopBeingMonitoredBtn() {
         Button btn = (Button) findViewById(R.id.steopBeingMoniID);
         btn.setOnClickListener(new View.OnClickListener() {
