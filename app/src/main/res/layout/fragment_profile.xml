@@ -12,11 +12,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="315dp">
+        android:layout_height="150dp">
 
         <LinearLayout
+            android:id="@+id/LinearLayourid"
             android:layout_width="match_parent"
-            android:layout_height="280dp"
+            android:layout_height="230dp"
             android:background="@drawable/gradientbackground"
             android:orientation="vertical">
 
@@ -24,8 +25,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="35dp"
-                android:src="@drawable/logo"/>
+                android:layout_marginTop="0dp"
+                android:src="@drawable/logo" />
 
             <TextView
                 android:id="@+id/profileNameid"
@@ -42,94 +43,198 @@
     </RelativeLayout>
 
 
-    <LinearLayout
-        android:layout_width="360dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cardView2"
-        android:layout_gravity="center"
-        android:layout_marginTop="19dp"
-        android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
+            android:layout_marginLeft="10dip"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="25dp">
-
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:contentDescription="@string/proffrag_email_icon"
-                app:srcCompat="@drawable/ic_email" />
+            android:layout_height="700dp">
 
             <TextView
-                android:id="@+id/profile_activity_user_email"
+                android:id="@+id/textView30"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:text="@string/proffrag_email"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/profileEmailid"
+                android:text="BirthdayMonth"
+                android:textSize="18dp"
                 android:textStyle="bold" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:orientation="horizontal"
-            android:paddingLeft="25dp">
-
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:contentDescription="@string/proffrag_phone_icon"
-                app:srcCompat="@drawable/ic_local_phone" />
 
             <TextView
-                android:id="@+id/profile_activity_user_cellid"
+                android:id="@+id/textView31"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:text="@string/proffrag_phoneNumber"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="Email"
+                android:textSize="18dp"
                 android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:orientation="horizontal"
-            android:paddingLeft="25dp">
-
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:contentDescription="@string/proffrag_location_icon"
-                app:srcCompat="@drawable/ic_location" />
 
             <TextView
-                android:id="@+id/profile_activity_user_address"
+                android:id="@+id/profileEmailid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView31"
+                android:text="TextView"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/profileBirthdayMonthid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView30"
+                android:text="TextView"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/textView34"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignBaseline="@+id/textView30"
+                android:layout_alignBottom="@+id/textView30"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="75dp"
+                android:text="birthday Year"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/profileBrithdayYearid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignStart="@+id/textView34"
+                android:layout_below="@+id/textView34"
+                android:text="TextView"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/textView36"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/profileBirthdayMonthid"
+                android:text="CellPhone Number"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView37"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignEnd="@+id/textView34"
+                android:layout_below="@+id/profileBrithdayYearid"
+                android:text="Current Grade"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/profileCellphoneNumberid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView36"
+                android:text="TextView"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/textView39"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/profileCellphoneNumberid"
+                android:text="Home Phone Number"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/profilehomPhonNumberid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView39"
+                android:text="TextView"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/textView41"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/profilehomPhonNumberid"
+                android:text="Address"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/profileaddressid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView41"
+                android:text="TextView"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/textView43"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/profileaddressid"
+                android:text="Teacher Name"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/profileteachernameid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView43"
+                android:text="TextView"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/textView45"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/profileteachernameid"
+                android:text="Emergencey Contact"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/profileemergenceyid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView45"
+                android:text="TextView"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/profileGradeid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignStart="@+id/textView37"
+                android:layout_below="@+id/textView37"
+                android:text="TextView"
+                android:textSize="18dp" />
+
+            <Button
+                android:id="@+id/editinfobtnid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:text="@string/profile_address"
+                android:layout_above="@+id/textView45"
+                android:layout_toEndOf="@+id/profileBrithdayYearid"
+                android:text="Edit"
+                android:textColor="@android:color/holo_blue_bright"
                 android:textStyle="bold" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/edit_profile_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/image_style"
-        android:text="@string/proffrag_editprofile_Btn"
-        android:textColor="#fff" />
+        </RelativeLayout>
+    </ScrollView>
 </LinearLayout>
 

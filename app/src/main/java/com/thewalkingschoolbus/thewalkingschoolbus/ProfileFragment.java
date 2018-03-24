@@ -22,8 +22,14 @@ public class ProfileFragment extends android.app.Fragment {
 
     private static final String TAG = "ProfileFragment";
     private View view;
-    TextView profileNametv, profileEmailtv, profileCellphonetv,
-            profileAddresstv;
+
+    private TextView profileNametv, profileEmailtv,
+            birthYeartv, birthMonthtv, profileAddresstv,
+            profileCellphonetv, homePhonetv, gradetv,
+            teacherNametv, emergencyContactInfotv;
+    private String loginName, registerEmail,
+            birthYear, birthMonth, address, cellPhone, homePhone,
+            grade, teacherName, emergencyContactInfo;
 
     @Nullable
     @Override
@@ -62,10 +68,15 @@ public class ProfileFragment extends android.app.Fragment {
 
     private void setupTextViews() {
         profileNametv = (TextView)view.findViewById(R.id.profileNameid);
-        profileEmailtv = (TextView)view.findViewById(R.id.profile_activity_user_email);
-        profileCellphonetv = (TextView)view.findViewById(R.id.profile_activity_user_cellid);
-        profileAddresstv = (TextView)view.findViewById(R.id.profile_activity_user_address);
-        getUserLastState();
+        profileEmailtv = (TextView)view.findViewById(R.id.profileEmailid);
+        birthYeartv = (TextView)view.findViewById(R.id.profileBrithdayYearid);
+        birthMonthtv = (TextView)view.findViewById(R.id.profileBirthdayMonthid);
+        profileAddresstv = (TextView)view.findViewById(R.id.profileaddressid);
+        profileCellphonetv = (TextView)view.findViewById(R.id.profileCellphoneNumberid);
+        homePhonetv = (TextView)view.findViewById(R.id.profilehomPhonNumberid);
+        gradetv = (TextView)view.findViewById(R.id.profileGradeid);
+        teacherNametv = (TextView)view.findViewById(R.id.profileteachernameid);
+        emergencyContactInfotv = (TextView)view.findViewById(R.id.profileemergenceyid);
 
 
         if(User.getLoginUser().getName() !=  null){
@@ -74,12 +85,34 @@ public class ProfileFragment extends android.app.Fragment {
         if(User.getLoginUser().getEmail() != null){
             profileEmailtv.setText("" +  User.getLoginUser().getEmail());
         }
+        if(User.getLoginUser().getBirthMonth() !=  null){
+            birthMonthtv.setText("" +  User.getLoginUser().getBirthMonth());
+        }
+        if(User.getLoginUser().getBirthYear() !=  null){
+            birthYeartv.setText("" +  User.getLoginUser().getBirthYear());
+        }
+
+        if(User.getLoginUser().getAddress() !=  null){
+            profileAddresstv.setText("" +  User.getLoginUser().getAddress());
+        }
+
         if(User.getLoginUser().getCellPhone() != null){
             profileCellphonetv.setText("" + User.getLoginUser().getCellPhone());
         }
-        if(User.getLoginUser().getAddress() != null){
-            profileAddresstv.setText("" +User.getLoginUser().getAddress());
+        if(User.getLoginUser().getHomePhone() != null){
+            homePhonetv.setText("" + User.getLoginUser().getHomePhone());
         }
+        if(User.getLoginUser().getGrade() != null){
+            gradetv.setText("" + User.getLoginUser().getGrade());
+        }
+        if(User.getLoginUser().getTeacherName() != null){
+            teacherNametv.setText("" + User.getLoginUser().getTeacherName());
+        }
+        if(User.getLoginUser().getEmergencyContactInfo() != null){
+            emergencyContactInfotv.setText("" + User.getLoginUser().getEmergencyContactInfo());
+        }
+
+
 
     }
 
@@ -88,7 +121,7 @@ public class ProfileFragment extends android.app.Fragment {
     }
 
     private void setUpEditProfileBtn(){
-        Button editBtn = view.findViewById(R.id.edit_profile_btn);
+        Button editBtn = view.findViewById(R.id.editinfobtnid);
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
