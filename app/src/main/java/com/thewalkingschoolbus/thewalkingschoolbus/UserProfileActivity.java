@@ -3,6 +3,7 @@ package com.thewalkingschoolbus.thewalkingschoolbus;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,6 +16,9 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
+import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.AppStates;
+import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.LOGIN_PASSWORD;
+import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.REGISTER_EMAIL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.REGISTER_FAIL_MESSAGE;
 import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.REGISTER_SUCCESSFULLY_MESSAGE;
 import static com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH;
@@ -91,7 +95,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"edit successfully", Toast.LENGTH_SHORT)
                                     .show();
                             User.setLoginUser((User)user );
-                            //storeUserInfoToSharePreferences();
+                            storeUserInfoToSharePreferences();
                             finish();
                         }
                         @Override
@@ -105,6 +109,14 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void storeUserInfoToSharePreferences() {
+        SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString(REGISTER_EMAIL, User.getLoginUser().getEmail());
+        editor.commit();
     }
 
     private void setupTextviews() {

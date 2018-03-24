@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
                 } else if(!birthYear.isEmpty()
-                        && (Integer.parseInt(birthYear)>2018 || Integer.parseInt(birthYear)<1900)) {
+                        && (Integer.parseInt(birthYear) > 2018 || Integer.parseInt(birthYear) < 1900)) {
                     Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
                 } else {
@@ -123,7 +123,6 @@ public class RegisterActivity extends AppCompatActivity {
         passwordET = (EditText) findViewById(R.id.registerpasswordid);
         birthYearET = (EditText) findViewById(R.id.yearid);
         birthMonthET = (EditText) findViewById(R.id.monthid);
-        birthYearET = (EditText) findViewById(R.id.yearid);
         addressET = (EditText) findViewById(R.id.addressid);
         cellPhoneET = (EditText) findViewById(R.id.cellphoneid);
         homePhoneET = (EditText) findViewById(R.id.homePhoneid);
