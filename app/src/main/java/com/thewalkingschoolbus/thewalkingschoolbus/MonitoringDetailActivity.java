@@ -14,36 +14,31 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class MonitoringDetailActivity extends AppCompatActivity {
     public static String userEmail;
-    static User deleteUser = new User();
+    static User monitoredUser = new User();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monitoring_detail);
 
-        deleteUser.setEmail(userEmail);
+        monitoredUser.setEmail(userEmail);
         updateUI();
         setupStopMonitoringBtn();
     }
 
     private void updateUI() {
-        new GetUserAsyncTask(GET_USER_BY_EMAIL, deleteUser,null, null, null,new OnTaskComplete() {
+        new GetUserAsyncTask(GET_USER_BY_EMAIL, monitoredUser,null, null, null,new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                deleteUser = (User) result;
-                TextView name = (TextView)findViewById(R.id.textView);
+                monitoredUser = (User) result;
                 TextView displayName = (TextView)findViewById(R.id.textView7);
-                TextView email = (TextView)findViewById(R.id.textView8);
                 TextView displayEmail = (TextView)findViewById(R.id.textView9);
-                name.setText("Name: ");
-                displayName.setText(""+ deleteUser.getName());
-                deleteUser.getName();
-                email.setText("Email: ");
-                displayEmail.setText(""+ deleteUser.getEmail());
+                displayName.setText(""+ monitoredUser.getName());
+                monitoredUser.getName();
+                displayEmail.setText(""+ monitoredUser.getEmail());
             }
             @Override
             public void onFailure(Exception e) {

@@ -25,7 +25,9 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="30dp"
-            android:textSize="24sp" />
+            android:text="name"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView7"
@@ -44,7 +46,9 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textView7"
             android:layout_marginTop="19dp"
-            android:textSize="24sp" />
+            android:text="email"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView9"
