@@ -9,8 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
+
+import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 /*
 * SOURCES - Based on following tutorials:
@@ -66,6 +72,12 @@ public class ProfileFragment extends android.app.Fragment {
         */
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupTextViews();
+    }
+
     private void setupTextViews() {
         profileNametv = (TextView)view.findViewById(R.id.profileNameid);
         profileEmailtv = (TextView)view.findViewById(R.id.profileEmailid);
@@ -79,38 +91,57 @@ public class ProfileFragment extends android.app.Fragment {
         emergencyContactInfotv = (TextView)view.findViewById(R.id.profileemergenceyid);
 
 
-        if(User.getLoginUser().getName() !=  null){
-            profileNametv.setText("" +  User.getLoginUser().getName());
-        }
-        if(User.getLoginUser().getEmail() != null){
-            profileEmailtv.setText("" +  User.getLoginUser().getEmail());
-        }
-        if(User.getLoginUser().getBirthMonth() !=  null){
-            birthMonthtv.setText("" +  User.getLoginUser().getBirthMonth());
-        }
-        if(User.getLoginUser().getBirthYear() !=  null){
-            birthYeartv.setText("" +  User.getLoginUser().getBirthYear());
-        }
+        new GetUserAsyncTask(GET_USER_BY_EMAIL, User.getLoginUser(),null, null, null,new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                if(result == null){
+                    Toast.makeText(getActivity(), LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    Toast.makeText(getActivity(), SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                            .show();
+                    User.setLoginUser((User)result);
+                    if(User.getLoginUser().getName() !=  null){
+                        profileNametv.setText("" +  User.getLoginUser().getName());
+                    }
+                    if(User.getLoginUser().getEmail() != null){
+                        profileEmailtv.setText("" +  User.getLoginUser().getEmail());
+                    }
+                    if(User.getLoginUser().getBirthMonth() !=  null){
+                        birthMonthtv.setText("" +  User.getLoginUser().getBirthMonth());
+                    }
+                    if(User.getLoginUser().getBirthYear() !=  null){
+                        birthYeartv.setText("" +  User.getLoginUser().getBirthYear());
+                    }
 
-        if(User.getLoginUser().getAddress() !=  null){
-            profileAddresstv.setText("" +  User.getLoginUser().getAddress());
-        }
+                    if(User.getLoginUser().getAddress() !=  null){
+                        profileAddresstv.setText("" +  User.getLoginUser().getAddress());
+                    }
 
-        if(User.getLoginUser().getCellPhone() != null){
-            profileCellphonetv.setText("" + User.getLoginUser().getCellPhone());
-        }
-        if(User.getLoginUser().getHomePhone() != null){
-            homePhonetv.setText("" + User.getLoginUser().getHomePhone());
-        }
-        if(User.getLoginUser().getGrade() != null){
-            gradetv.setText("" + User.getLoginUser().getGrade());
-        }
-        if(User.getLoginUser().getTeacherName() != null){
-            teacherNametv.setText("" + User.getLoginUser().getTeacherName());
-        }
-        if(User.getLoginUser().getEmergencyContactInfo() != null){
-            emergencyContactInfotv.setText("" + User.getLoginUser().getEmergencyContactInfo());
-        }
+                    if(User.getLoginUser().getCellPhone() != null){
+                        profileCellphonetv.setText("" + User.getLoginUser().getCellPhone());
+                    }
+                    if(User.getLoginUser().getHomePhone() != null){
+                        homePhonetv.setText("" + User.getLoginUser().getHomePhone());
+                    }
+                    if(User.getLoginUser().getGrade() != null){
+                        gradetv.setText("" + User.getLoginUser().getGrade());
+                    }
+                    if(User.getLoginUser().getTeacherName() != null){
+                        teacherNametv.setText("" + User.getLoginUser().getTeacherName());
+                    }
+                    if(User.getLoginUser().getEmergencyContactInfo() != null){
+                        emergencyContactInfotv.setText("" + User.getLoginUser().getEmergencyContactInfo());
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getActivity(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }).execute();
+
+
 
 
 
