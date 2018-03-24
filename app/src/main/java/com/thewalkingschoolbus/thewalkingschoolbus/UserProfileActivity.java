@@ -27,7 +27,7 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 
 public class UserProfileActivity extends AppCompatActivity {
 
-    private EditText nameET, emailET, passwordET,
+    private EditText nameET, emailET,
             birthYearET, birthMonthET, addressET,
             cellPhoneET, homePhoneET, gradeET,
             teacherNameDT, emergencyContactInfoET;
@@ -50,7 +50,6 @@ public class UserProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 loginName = nameET.getText().toString();
                 registerEmail = emailET.getText().toString();
-                registerPassword = passwordET.getText().toString();
                 birthYear = birthYearET.getText().toString();
                 birthMonth = birthMonthET.getText().toString();
                 address = addressET.getText().toString();
@@ -60,7 +59,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 teacherName = teacherNameDT.getText().toString();
                 emergencyContactInfo = emergencyContactInfoET.getText().toString();
 
-                if(loginName.isEmpty() || registerEmail.isEmpty()|| registerPassword.isEmpty()){
+                if(loginName.isEmpty() || registerEmail.isEmpty()){
                     Toast.makeText(getApplicationContext(),MainActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
                 } else if(!birthMonth.isEmpty()
@@ -73,6 +72,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             .show();
                 } else {
                     final User user = new User();
+                    user.setId(User.getLoginUser().getId());
                     user.setEmail(registerEmail);
                     user.setName(loginName);
                     user.setPassword(registerPassword);
@@ -92,8 +92,6 @@ public class UserProfileActivity extends AppCompatActivity {
                                     .show();
                             User.setLoginUser((User)user );
                             //storeUserInfoToSharePreferences();
-                            Intent intent = MainMenuActivity.makeIntent(getApplicationContext());
-                            startActivity(intent);
                             finish();
                         }
                         @Override
@@ -112,7 +110,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private void setupTextviews() {
         nameET = (EditText)findViewById(R.id.enter_fullnameid);
         emailET = (EditText)findViewById(R.id.enter_emailid);
-        passwordET = (EditText) findViewById(R.id.passwordETid);
         birthYearET = (EditText) findViewById(R.id.birthdayYearid);
         birthMonthET = (EditText) findViewById(R.id.enter_birth_month);
         addressET = (EditText) findViewById(R.id.enter_address);
@@ -124,7 +121,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
         nameET.setText(User.getLoginUser().getName());
         emailET.setText(User.getLoginUser().getEmail());
-        passwordET.setText((User.getLoginUser().getPassword()));
         birthYearET.setText(User.getLoginUser().getBirthYear());
         birthMonthET.setText(User.getLoginUser().getBirthMonth());
         addressET.setText(User.getLoginUser().getAddress());
