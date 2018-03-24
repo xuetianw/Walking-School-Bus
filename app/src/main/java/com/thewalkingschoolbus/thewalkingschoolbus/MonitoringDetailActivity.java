@@ -6,19 +6,29 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
+
+import java.util.ArrayList;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class MonitoringDetailActivity extends AppCompatActivity {
+    TextView displayName, displayEmail, displayPhonenumber;
     public static String userEmail;
     static User monitoredUser = new User();
+    ArrayList <Group> groupArrayList =  new ArrayList<>();
+    public static ArrayList<String> arrayList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +37,7 @@ public class MonitoringDetailActivity extends AppCompatActivity {
         monitoredUser.setEmail(userEmail);
         updateUI();
         setupStopMonitoringBtn();
+        registerClickCallBack();
     }
 
     private void updateUI() {
@@ -34,11 +45,22 @@ public class MonitoringDetailActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Object result) {
                 monitoredUser = (User) result;
-                TextView displayName = (TextView)findViewById(R.id.textView7);
-                TextView displayEmail = (TextView)findViewById(R.id.textView9);
+                displayName = (TextView)findViewById(R.id.textView7);
+                displayEmail = (TextView)findViewById(R.id.textView9);
+                displayPhonenumber = (TextView)findViewById(R.id.textView22) ;
                 displayName.setText(""+ monitoredUser.getName());
                 monitoredUser.getName();
                 displayEmail.setText(""+ monitoredUser.getEmail());
+                if(monitoredUser.getCellPhone() != null){
+                    displayPhonenumber.setText(""+ monitoredUser.getCellPhone());
+                }
+                groupArrayList = (ArrayList<Group>) monitoredUser.getMemberOfGroups();
+                arrayList = new ArrayList();
+                for(Group group: groupArrayList) {
+                    arrayList.add("id: " + group.getId() + " "
+                            + "Group Name: " + group.getGroupDescription());
+                }
+                populateListView();
             }
             @Override
             public void onFailure(Exception e) {
@@ -47,6 +69,13 @@ public class MonitoringDetailActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }).execute();
+    }
+
+    private void populateListView() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, R.layout.group_entry, arrayList);
+        ListView list = (ListView) findViewById(R.id.listview5);
+        list.setAdapter(adapter);
     }
 
 
@@ -64,5 +93,17 @@ public class MonitoringDetailActivity extends AppCompatActivity {
 
     public static Intent makeIntent(Context context) {
         return new Intent(context, MonitoringDetailActivity.class);
+    }
+
+    private void registerClickCallBack() {
+        ListView list = (ListView) findViewById(R.id.listview5);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> paret, View viewClicked, int position, long id) {
+                Intent intent = GroupDetailActivity.makeIntent(getApplicationContext()
+                        , groupArrayList.get(position), monitoredUser);
+                startActivity(intent);
+            }
+        });
     }
 }
