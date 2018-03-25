@@ -136,7 +136,6 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-                TextView textView = (TextView) viewClicked;
                 Group selectedGroup = mGroup[position];
                 Intent intent =  GroupDetailActivity.makeIntent(getActivity(),selectedGroup,User.getLoginUser());
                 startActivity(intent);

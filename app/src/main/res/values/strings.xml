@@ -25,4 +25,5 @@
     <string name="home_phone">HOME PHONE:</string>
     <string name="teacher_name">TEACHER NAME:</string>
     <string name="monitored_by">MONITORED BY</string>
+    <string name="edit_user">EDIT USER</string>
 </resources>

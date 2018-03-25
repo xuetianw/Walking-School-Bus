@@ -99,6 +99,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         TextView groupDesTextView = findViewById(R.id.groupDesField);
         TextView leaderIdTextView = findViewById(R.id.leaderIdField);
         TextView leaderNameTextView = findViewById(R.id.leaderNameField);
+
         groupIdTextView.setText(mSelectedGroup.getId());
         groupDesTextView.setText(mSelectedGroup.getGroupDescription());
         leaderIdTextView.setText(mSelectedGroup.getLeader().getId());
@@ -171,9 +172,8 @@ public class GroupDetailActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 positionOfUser = position;
-                List<User> listMonitoring = User.getLoginUser().getMonitorsUsers();
 
-                Intent intent = UserDetailActivity.makeIntent(self,listMonitoring.get(positionOfUser).getId(),mSelectedGroup.getId());
+                Intent intent = UserDetailActivity.makeIntent(self,mMembers[positionOfUser].getId(),mSelectedGroup.getId());
                 startActivity(intent);
                 /*
                 for(int j = 0; j < listMonitoring.size();j++){
@@ -234,6 +234,7 @@ public class GroupDetailActivity extends AppCompatActivity {
             }
         });
     }
+
     private void leaveGroup(){
         new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, User.getLoginUser(), null, mSelectedGroup, null,new OnTaskComplete() {
             @Override
@@ -249,6 +250,7 @@ public class GroupDetailActivity extends AppCompatActivity {
             }
         }).execute();
     }
+
     private void setUpInviteToGroupBut(){
         Button but = findViewById(R.id.addMemberBut);
         but.setOnClickListener(new View.OnClickListener() {
