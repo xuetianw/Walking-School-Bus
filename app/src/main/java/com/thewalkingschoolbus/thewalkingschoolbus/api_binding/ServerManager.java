@@ -3,6 +3,7 @@ package com.thewalkingschoolbus.thewalkingschoolbus.api_binding;
 import android.util.Log;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.ApiException;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.GpsLocation;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Message;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
@@ -34,6 +35,8 @@ public class ServerManager {
     private String GET_USER_BY_EMAIL = "/users/byEmail?email=%s";
     private String DELETE_USER = "/users/%s";
     private String EDIT_USER = "/users/%s";
+    private String GET_GPS_LOCATION = "/users/%s/lastGpsLocation";
+    private String POST_GET_LOCATION = "/users/%s/lastGpsLocation";
 
     private String USER_MONITORING_LIST = "/users/%s/monitorsUsers";
     private String USER_MONITORING_BY_LIST = "/users/%s/monitoredByUsers";
@@ -59,7 +62,7 @@ public class ServerManager {
     private String GET_UNREAD_EMERGENCY_MESSAGES_FOR_USER = "/messages?foruser=%s&status=unread&is-emergency=true";
 
     private String POST_MESSAGE_TO_GROUP = "/messages/togroup/%s";
-    private String POST_MESSAGE_TO_PARENTS = "/messages/toparents/%s";
+    private String POST_MESSAGE_TO_PARENTS = "/messages/toparentsof/%s";
     private String GET_ONE_MESSAGE = "/messages/%s";
     private String SET_MESSAGE_AS_READ_OR_UNREAD =  "/messages/%s/readby/%s";
 
@@ -306,6 +309,39 @@ public class ServerManager {
         return SUCCESSFUL;
     }
 
+
+    public GpsLocation getGpsLocation(User user)throws Exception{
+        String url = BASE_URL + String.format(GET_GPS_LOCATION,user.getId());
+        HttpURLConnection connection = httpRequestGet(url,null);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+
+        StringBuffer response = readJsonIntoString(connection);
+        return new Gson().fromJson(response.toString(), GpsLocation.class);
+    }
+
+    // The time format is sensitive to capitalization of the values. If the values are not correctly
+    //capitalized, it returns an HTTP 400 status with no error
+    public GpsLocation postGpsLocation(User user)throws Exception{
+        String url = BASE_URL + String.format(POST_GET_LOCATION,user.getId());
+        String jsonFile = new Gson().toJson(user.getLastGpsLocation());
+        JSONObject jsonObject = new JSONObject(jsonFile);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject);
+
+        if (connection.getResponseCode() >= 400) {
+            // failed
+            BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+            throw new Gson().fromJson(error, ApiException.class);
+        }
+
+        StringBuffer response = readJsonIntoString(connection);
+        return new Gson().fromJson(response.toString(), GpsLocation.class);
+
+    }
 
 
     // take parentUser as the one that want to return list
