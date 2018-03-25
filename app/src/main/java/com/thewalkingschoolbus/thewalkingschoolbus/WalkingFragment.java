@@ -20,6 +20,11 @@ import com.thewalkingschoolbus.thewalkingschoolbus.models.GpsLocation;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.UploadLocationService;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
 
 public class WalkingFragment extends android.app.Fragment {
@@ -109,28 +114,51 @@ public class WalkingFragment extends android.app.Fragment {
         text.setText(statusText);
     }
 
+    // DATE
+
+    private static Date stringToDate(String dateInString) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        try {
+            return format.parse(dateInString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static String dateToString(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        return dateFormat.format(date);
+    }
+
+    // STATIC
+
     public static void uploadCurrentCoordinate() {
         Location currentLocation = MapUtil.getDeviceLocation();
 
         if (currentLocation == null) {
-            Log.d(TAG, "%%%% current location == null!");
+            Log.d(TAG, "#### current location == null! (note: first upload is always null)");
             return;
         }
 
         Double lat = currentLocation.getLatitude();
         Double lng = currentLocation.getLongitude();
-        Long timestamp = System.currentTimeMillis();
+        String timestamp = dateToString(new Date());
 
-        Log.d(TAG, "$$$$ " + lat + lng + timestamp);
+        Log.d(TAG, "#### LAT / LNG: " + lat + " / " + lng);
+        Log.d(TAG, "#### TIMESTAMP: " + dateToString(new Date()));
 
         User user = User.getLoginUser();
-        user.setLastGpsLocation(new GpsLocation(lat.toString(), lng.toString(), timestamp.toString()));
+        user.setLastGpsLocation(new GpsLocation(lat.toString(), lng.toString(), timestamp));
+
+        user.setCellPhone("1234567890");
+        Log.d(TAG, "#### CELLPHONE: " + user.getCellPhone());
 
         new GetUserAsyncTask(EDIT_USER, user, null, null,null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                User user = (User) result;
-                Log.d(TAG, "#### Successfully updated current location. " + ((User) result).getLastGpsLocation().getLat());
+                //User user = (User) result;
+                Log.d(TAG, "#### Successfully updated current location. " + result);
             }
             @Override
             public void onFailure(Exception e) {

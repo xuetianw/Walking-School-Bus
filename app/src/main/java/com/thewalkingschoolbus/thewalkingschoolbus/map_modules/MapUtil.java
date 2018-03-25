@@ -144,7 +144,7 @@ public class MapUtil {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
         FusedLocationProviderClient mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainMenuActivity.getContextOfApplication());
         try {
-            if (locationPermissionGranted) {
+            //if (locationPermissionGranted) {
                 Task locationResult = mFusedLocationProviderClient.getLastLocation();
                 locationResult.addOnCompleteListener(new OnCompleteListener() {
                     @Override
@@ -157,7 +157,7 @@ public class MapUtil {
                         }
                     }
                 });
-            }
+            //}
         } catch(SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }

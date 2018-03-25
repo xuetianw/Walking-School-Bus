@@ -55,14 +55,22 @@ public class MapMonitoringActivity extends AppCompatActivity implements AdapterV
 
     private void updateMap() {
         map.clear();
-        List<User> monitoringUsers = User.getLoginUser().getMonitorsUsers();
-        Log.d(TAG, "updateMap: @@ monitoringUsers.size " + monitoringUsers.size());
+        List<User> monitoringUsers = User.getLoginUser().getMonitorsUsers(); // TODO: the login user does not update itself
+        Log.d("@@@@", "monitoringUsers.size " + monitoringUsers.size());
         activeMonitoringUsers = new ArrayList<>();
         for (User user : monitoringUsers) {
+            Log.d("@@@@", "user ID " + user.getId());
+            Log.d("@@@@", "user NAME " + user.getName());
             new GetUserAsyncTask(GET_USER_BY_ID, user, null, null,null, new OnTaskComplete() {
                 @Override
                 public void onSuccess(Object result) {
                     User userDetailed = (User) result;
+                    Log.d("@@@@", "userDetailed ID " + userDetailed.getId());
+                    Log.d("@@@@", "userDetailed NAME " + userDetailed.getName());
+                    Log.d("@@@@", "userDetailed CELL PHONE " + userDetailed.getCellPhone());
+                    Log.d("@@@@", "userDetailed GPS LAT " + userDetailed.getLastGpsLocation().getLat());
+                    Log.d("@@@@", "userDetailed GPS LNG " + userDetailed.getLastGpsLocation().getLng());
+                    Log.d("@@@@", "userDetailed GPS DATE " + userDetailed.getLastGpsLocation().getTimestamp());
                     if (userDetailed.getLastGpsLocation().getTimestamp() != null) {
                         activeMonitoringUsers.add(userDetailed);
                         LatLng userLatLng = new LatLng(Double.parseDouble(userDetailed.getLastGpsLocation().getLat()), Double.parseDouble(userDetailed.getLastGpsLocation().getLng()));
@@ -76,9 +84,11 @@ public class MapMonitoringActivity extends AppCompatActivity implements AdapterV
                 }
             }).execute();
         }
-        if (monitoringUsers.isEmpty() || activeMonitoringUsers.isEmpty()) {
-            Toast.makeText(this, "No one is walking", Toast.LENGTH_SHORT).show();
-        }
+//        if (monitoringUsers.isEmpty()) {
+//            Toast.makeText(this, "Not monitoring anyone", Toast.LENGTH_SHORT).show();
+//        } else if (activeMonitoringUsers.isEmpty()) {
+//            Toast.makeText(this, "No one is walking", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     private void updateDropdown() {
@@ -99,7 +109,6 @@ public class MapMonitoringActivity extends AppCompatActivity implements AdapterV
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
         User userSelected = activeMonitoringUsers.get(position);
         LatLng userLatLng = new LatLng(Double.parseDouble(userSelected.getLastGpsLocation().getLat()), Double.parseDouble((userSelected.getLastGpsLocation().getLng())));
-
         MapUtil.moveCamera(map, userLatLng, MapUtil.getDefaultZoom());
     }
 
