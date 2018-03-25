@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="800dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/enter_current_grade"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_alignEnd="@+id/enter_fullnameid"
+                android:layout_below="@+id/current_grade"
+                android:hint="@string/profact_enter_grade"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="480dp" />
+
+            <EditText
+                android:id="@+id/enter_homephone_number"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/homephone_number"
+                android:hint="@string/profact_enter_homephone_number"
+                android:inputType="phone"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="354dp" />
+
+            <TextView
+                android:id="@+id/homephone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/enter_phoneid"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/profact_home_phone"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="335dp" />
+
+            <EditText
+                android:id="@+id/emergency_contact_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/enter_current_grade"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/emergency_contact"
+                android:ems="10"
+                android:hint="@string/profact_enter_emrgency_info"
+                android:inputType="textMultiLine"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="615dp" />
+
+            <EditText
+                android:id="@+id/enter_address"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/address"
+                android:hint="@string/profact_enter_address"
+                android:inputType="textPostalAddress"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="413dp" />
+
+            <EditText
+                android:id="@+id/enter_phoneid"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/phone_number"
+                android:hint="@string/profact_enter_phone_number"
+                android:inputType="phone"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="288dp" />
+
+            <EditText
+                android:id="@+id/enter_fullnameid"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_alignBottom="@+id/imageView"
+                android:layout_alignStart="@+id/fullname"
+                android:hint="@string/profact_enter_name"
+                android:inputType="textPersonName"
+                tools:layout_editor_absoluteX="118dp"
+                tools:layout_editor_absoluteY="81dp" />
+
+            <EditText
+                android:id="@+id/enter_teacher_name"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/teacher_name"
+                android:hint="@string/profact_enter_teacher_name"
+                android:inputType="textPersonName"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="537dp" />
+
+            <TextView
+                android:id="@+id/useremail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/imageView"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/profact_email"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="77dp" />
+
+            <EditText
+                android:id="@+id/enter_emailid"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/useremail"
+                android:hint="@string/profact_enter_email"
+                android:inputType="textEmailAddress"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="96dp" />
+
+            <TextView
+                android:id="@+id/teacher_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/enter_address"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/profact_teacher_name"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="518dp" />
+
+            <TextView
+                android:id="@+id/phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/enter_birth_month"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/profact_phone_number"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="269dp" />
+
+            <TextView
+                android:id="@+id/current_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/enter_current_grade"
+                android:layout_below="@+id/enter_birth_month"
+                android:text="@string/profact_current_grade"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="463dp" />
+
+            <TextView
+                android:id="@+id/emergency_contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/enter_teacher_name"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/profact_emergency_contact"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="597dp" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/enter_homephone_number"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/profact_address"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="394dp" />
+
+            <EditText
+                android:id="@+id/enter_birth_month"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_alignEnd="@+id/button4"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/birth_month"
+                android:hint="@string/profact_enter_birth_month"
+                android:inputType="date"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="221dp" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                app:srcCompat="@drawable/logo"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <TextView
+                android:id="@+id/fullname"
+                android:layout_width="75dp"
+                android:layout_height="30dp"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/imageView"
+                android:text="@string/profact_name"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="76dp"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <TextView
+                android:id="@+id/birth_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/enter_emailid"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="Birthday Month"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="202dp" />
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/button4"
+                android:layout_alignBottom="@+id/button4"
+                android:layout_alignStart="@+id/enter_current_grade"
+                android:text="Cancel"
+                tools:layout_editor_absoluteX="195dp"
+                tools:layout_editor_absoluteY="556dp" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/fullname"
+                android:layout_below="@+id/emergency_contact_info"
+                android:layout_marginTop="42dp"
+                android:text="Save"
+                tools:layout_editor_absoluteX="42dp"
+                tools:layout_editor_absoluteY="556dp" />
+
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/birth_month"
+                android:layout_alignStart="@+id/button5"
+                android:text="Birthday Year"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/birthdayYearid"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:layout_above="@+id/current_grade"
+                android:layout_alignParentEnd="true"
+                android:ems="10"
+                android:hint="year"
+                android:inputType="textPersonName" />
+        </RelativeLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>
