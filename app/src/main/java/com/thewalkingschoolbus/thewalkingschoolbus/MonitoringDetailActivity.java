@@ -38,6 +38,25 @@ public class MonitoringDetailActivity extends AppCompatActivity {
         updateUI();
         setupStopMonitoringBtn();
         registerClickCallBack();
+        setupEditChildBtn();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        monitoredUser.setEmail(userEmail);
+        updateUI();
+    }
+
+    private void setupEditChildBtn() {
+        Button button = (Button)findViewById(R.id.editChildbtnid);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = EditChildDetailActivity.makeIntent(getApplicationContext());
+                startActivity(intent);
+            }
+        });
     }
 
     private void updateUI() {
@@ -46,8 +65,8 @@ public class MonitoringDetailActivity extends AppCompatActivity {
             public void onSuccess(Object result) {
                 monitoredUser = (User) result;
                 displayName = (TextView)findViewById(R.id.textView7);
-                displayEmail = (TextView)findViewById(R.id.textView21);
-                displayPhonenumber = (TextView)findViewById(R.id.textView22) ;
+                displayEmail = (TextView)findViewById(R.id.textView24);
+                displayPhonenumber = (TextView)findViewById(R.id.textView21) ;
                 displayName.setText(""+ monitoredUser.getName());
                 monitoredUser.getName();
                 displayEmail.setText(""+ monitoredUser.getEmail());

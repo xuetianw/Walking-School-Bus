@@ -78,6 +78,7 @@
             android:name=".MonitoredbyDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".EditChildDetailActivity"></activity>
     </application>
 
 </manifest>
