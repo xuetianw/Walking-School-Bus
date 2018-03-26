@@ -27,20 +27,21 @@ public class MessagesFragment extends android.app.Fragment {
 
     private static final String TAG = "MessagesFragment";
     private View view;
-    List<String> messageList;
-    Message[] messages;
+    private List<String> messageList;
+    private Message[] messages;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        if (container != null) {
-//            container.removeAllViews();
-//        }
+        if (container != null) {
+            container.removeAllViews();
+        }
         view = inflater.inflate(R.layout.fragment_messages, container, false);
 
-        //updateListView();
-        setupAddMonitoringBtn();
+        updateListView();
+        setupNewMessageBtn();
         setUpRefresh();
+
         return view;
     }
 
@@ -77,14 +78,12 @@ public class MessagesFragment extends android.app.Fragment {
             }
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(getActivity(),"Unable to update the list", Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(getActivity(),"Unable to update the list", Toast.LENGTH_SHORT).show();
                 Toast.makeText(getActivity(), "ERROR: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
 
-    // Read message
     private void registerClickCallback() {
         ListView list = view.findViewById(R.id.listViewMessages);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -97,8 +96,7 @@ public class MessagesFragment extends android.app.Fragment {
         });
     }
 
-    // Write message
-    private void setupAddMonitoringBtn() {
+    private void setupNewMessageBtn() {
         FloatingActionButton btn = view.findViewById(R.id.btnNewMessage);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
