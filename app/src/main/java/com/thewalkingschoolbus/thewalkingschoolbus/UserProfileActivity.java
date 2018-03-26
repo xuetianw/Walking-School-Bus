@@ -46,6 +46,17 @@ public class UserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
         setupTextviews();
         setupSavebutton();
+        setupCancelbutton();
+    }
+
+    private void setupCancelbutton() {
+        Button cancelButton = (Button)findViewById(R.id.button5);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void setupSavebutton() {
@@ -72,7 +83,7 @@ public class UserProfileActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
                 } else if(!birthYear.isEmpty()
-                        && (Integer.parseInt(birthYear)>2018 || Integer.parseInt(birthYear)<1900)) {
+                        && (Integer.parseInt(birthYear) > 2018 || Integer.parseInt(birthYear) < 1900)) {
                     Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
                 } else {
