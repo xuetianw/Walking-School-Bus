@@ -35,7 +35,6 @@ public class MainMenuActivity extends AppCompatActivity
     private Toolbar toolbar;
     private NavigationView navigationView;
 
-
     public static Intent makeIntent(Context context) {
         return new Intent(context, MainMenuActivity.class);
     }
@@ -69,8 +68,7 @@ public class MainMenuActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // OPEN DEFAULT FRAGMENT //
-        openDefaultFragment();
-
+        // openDefaultFragment();
 
         // SET UP TEST //
         //setupTest();
@@ -83,7 +81,6 @@ public class MainMenuActivity extends AppCompatActivity
         if( email == null || password == null) {
             Intent intent = MainActivity.makeIntent(getApplicationContext());
             startActivity(intent);
-            finish();
         } else {
             User.setLoginUser(new User());
             User.getLoginUser().setEmail(email);
@@ -111,9 +108,9 @@ public class MainMenuActivity extends AppCompatActivity
         new GetUserAsyncTask(GET_USER_BY_EMAIL, user, null, null,null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                if(result != null){
-                    User.setLoginUser((User)result);
-                }
+                User.setLoginUser((User)result);
+                openDefaultFragment();
+
             }
             @Override
             public void onFailure(Exception e) {

@@ -114,7 +114,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
                     storeUserInfoToSharePreferences();
-                    setLoginUser(User.getLoginUser());
+                    //setLoginUser(User.getLoginUser());
+                    finish();
                 }
             }
             @Override
@@ -130,8 +131,6 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(Object result) {
                 if(result != null){
                     User.setLoginUser((User)result);
-                    Intent intent = MainMenuActivity.makeIntent(MainActivity.this);
-                    startActivity(intent);
                     finish();
 
                     SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
