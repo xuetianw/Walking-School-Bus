@@ -22,10 +22,9 @@ import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.POST_GPS_LOCATION;
 
 public class WalkingFragment extends android.app.Fragment {
 
@@ -116,8 +115,8 @@ public class WalkingFragment extends android.app.Fragment {
 
     // DATE
 
-    private static Date stringToDate(String dateInString) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    public static Date stringToDate(String dateInString) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000Z'");
         try {
             return format.parse(dateInString);
         } catch (ParseException e) {
@@ -126,8 +125,13 @@ public class WalkingFragment extends android.app.Fragment {
         }
     }
 
-    private static String dateToString(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    public static String dateToStringSimple(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("'LAST UPDATED - DATE: 'yyyy-MM-dd', TIME:'HH:mm:ss");
+        return dateFormat.format(date);
+    }
+
+    public static String dateToString(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000Z'");
         return dateFormat.format(date);
     }
 
@@ -151,10 +155,7 @@ public class WalkingFragment extends android.app.Fragment {
         User user = User.getLoginUser();
         user.setLastGpsLocation(new GpsLocation(lat.toString(), lng.toString(), timestamp));
 
-        user.setCellPhone("1234567890");
-        Log.d(TAG, "#### CELLPHONE: " + user.getCellPhone());
-
-        new GetUserAsyncTask(EDIT_USER, user, null, null,null, new OnTaskComplete() {
+        new GetUserAsyncTask(POST_GPS_LOCATION, user, null, null,null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 //User user = (User) result;

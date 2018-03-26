@@ -20,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -51,9 +52,10 @@ public class MapUtil {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
-    public static Marker setMarker(GoogleMap map, LatLng position, String title, String snippet) {
+    public static Marker setMarker(GoogleMap map, LatLng position, String title, String snippet,int hue) {
         Marker marker = map.addMarker(new MarkerOptions()
                 //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
+                .icon(BitmapDescriptorFactory.defaultMarker(hue))
                 .title(title)
                 .snippet(snippet)
                 .position(position));

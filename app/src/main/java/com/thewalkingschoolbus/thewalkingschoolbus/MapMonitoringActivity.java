@@ -2,6 +2,7 @@ package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,12 +21,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.MapUtil;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.GpsLocation;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.UploadLocationService;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_GPS_LOCATION;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 
 public class MapMonitoringActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -56,26 +60,46 @@ public class MapMonitoringActivity extends AppCompatActivity implements AdapterV
     private void updateMap() {
         map.clear();
         List<User> monitoringUsers = User.getLoginUser().getMonitorsUsers(); // TODO: the login user does not update itself
-        Log.d("@@@@", "monitoringUsers.size " + monitoringUsers.size());
+        //Log.d("@@@@", "monitoringUsers.size " + monitoringUsers.size());
         activeMonitoringUsers = new ArrayList<>();
-        for (User user : monitoringUsers) {
+        for (final User user : monitoringUsers) {
             Log.d("@@@@", "user ID " + user.getId());
             Log.d("@@@@", "user NAME " + user.getName());
-            new GetUserAsyncTask(GET_USER_BY_ID, user, null, null,null, new OnTaskComplete() {
+
+            new GetUserAsyncTask(GET_GPS_LOCATION, user, null, null,null, new OnTaskComplete() {
                 @Override
                 public void onSuccess(Object result) {
-                    User userDetailed = (User) result;
-                    Log.d("@@@@", "userDetailed ID " + userDetailed.getId());
-                    Log.d("@@@@", "userDetailed NAME " + userDetailed.getName());
-                    Log.d("@@@@", "userDetailed CELL PHONE " + userDetailed.getCellPhone());
-                    Log.d("@@@@", "userDetailed GPS LAT " + userDetailed.getLastGpsLocation().getLat());
-                    Log.d("@@@@", "userDetailed GPS LNG " + userDetailed.getLastGpsLocation().getLng());
-                    Log.d("@@@@", "userDetailed GPS DATE " + userDetailed.getLastGpsLocation().getTimestamp());
-                    if (userDetailed.getLastGpsLocation().getTimestamp() != null) {
-                        activeMonitoringUsers.add(userDetailed);
-                        LatLng userLatLng = new LatLng(Double.parseDouble(userDetailed.getLastGpsLocation().getLat()), Double.parseDouble(userDetailed.getLastGpsLocation().getLng()));
-                        MapUtil.setMarker(map, userLatLng, userDetailed.getName(), userDetailed.getLastGpsLocation().getTimestamp());
-                        updateDropdown();
+                    final GpsLocation gpsLocation = (GpsLocation) result;
+                    Log.d("@@@@", "GET_GPS_LOCATION LAT " + gpsLocation.getLat());
+                    Log.d("@@@@", "GET_GPS_LOCATION LNG " + gpsLocation.getLng());
+                    Log.d("@@@@", "GET_GPS_LOCATION DATE " + gpsLocation.getTimestamp());
+
+                    if (gpsLocation.getTimestamp() != null) {
+
+                        new GetUserAsyncTask(GET_USER_BY_ID, user, null, null,null, new OnTaskComplete() {
+                            @Override
+                            public void onSuccess(Object result) {
+                                User userDetailed = (User) result;
+
+                                userDetailed.setLastGpsLocation(gpsLocation);
+                                activeMonitoringUsers.add(userDetailed);
+
+                                Log.d("@@@@", "userDetailed ID " + userDetailed.getId());
+                                Log.d("@@@@", "userDetailed NAME " + userDetailed.getName());
+                                Log.d("@@@@", "userDetailed GPS LAT " + userDetailed.getLastGpsLocation().getLat());
+                                Log.d("@@@@", "userDetailed GPS LNG " + userDetailed.getLastGpsLocation().getLng());
+                                Log.d("@@@@", "userDetailed GPS DATE " + userDetailed.getLastGpsLocation().getTimestamp());
+
+                                LatLng userLatLng = new LatLng(Double.parseDouble(gpsLocation.getLat()), Double.parseDouble(gpsLocation.getLng()));
+                                String simpleDate = WalkingFragment.dateToStringSimple(WalkingFragment.stringToDate(gpsLocation.getTimestamp()));
+                                MapUtil.setMarker(map, userLatLng, user.getName(), simpleDate, 125);
+                                updateDropdown();
+                            }
+                            @Override
+                            public void onFailure(Exception e) {
+                                Log.d(TAG, "Error: "+e.getMessage());
+                            }
+                        }).execute();
                     }
                 }
                 @Override
