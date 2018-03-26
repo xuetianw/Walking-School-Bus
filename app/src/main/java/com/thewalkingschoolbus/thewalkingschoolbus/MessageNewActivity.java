@@ -36,10 +36,8 @@ public class MessageNewActivity extends AppCompatActivity {
     }
 
     private void createRadioButtons() {
-
         RadioGroup radioGroup = findViewById(R.id.radioGroupSendAs);
 
-        // Add radio button To
         RadioButton buttonEmergency = new RadioButton(this);
         buttonEmergency.setText("EMERGENCY");
         radioGroup.addView(buttonEmergency);
@@ -56,7 +54,7 @@ public class MessageNewActivity extends AppCompatActivity {
         buttonMessageAsMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                messageTo = GetUserAsyncTask.functionType.POST_MESSAGE_TO_PARENTS; // TODO: double check correctness
+                messageTo = GetUserAsyncTask.functionType.POST_MESSAGE_TO_PARENTS;
             }
         });
 
@@ -66,7 +64,7 @@ public class MessageNewActivity extends AppCompatActivity {
         buttonMessageAsLeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                messageTo = GetUserAsyncTask.functionType.POST_MESSAGE_TO_GROUP; // TODO: double check correctness
+                messageTo = GetUserAsyncTask.functionType.POST_MESSAGE_TO_GROUP;
             }
         });
     }
@@ -84,6 +82,15 @@ public class MessageNewActivity extends AppCompatActivity {
     private void sendMessage() {
         EditText messageBoxEditText = findViewById(R.id.messageBoxEditText);
 
+        // Send message emergency
+        if (messageTo == null) {
+            String text = messageBoxEditText.getText().toString().trim();
+            Message message = new Message(text, true);
+            pushMessage(GetUserAsyncTask.functionType.POST_MESSAGE_TO_PARENTS, message);
+            pushMessage(GetUserAsyncTask.functionType.POST_MESSAGE_TO_GROUP, message);
+            return;
+        }
+
         // Check for send conditions
         if (radioGroup.getCheckedRadioButtonId() == -1) { // No radio button checked
             Toast.makeText(this, "Select send as", Toast.LENGTH_SHORT).show();
@@ -91,15 +98,6 @@ public class MessageNewActivity extends AppCompatActivity {
         }
         if (messageBoxEditText.getText().toString().isEmpty()) { // No message entered
             Toast.makeText(this, "Enter message", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Send message emergency
-        if (messageTo == null) {
-            String text = messageBoxEditText.getText().toString().trim();
-            Message message = new Message(text, true);
-            pushMessage(GetUserAsyncTask.functionType.POST_MESSAGE_TO_PARENTS, message);
-            pushMessage(GetUserAsyncTask.functionType.POST_MESSAGE_TO_GROUP, message);
             return;
         }
 
@@ -114,7 +112,6 @@ public class MessageNewActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Object result) {
                 Toast.makeText(MessageNewActivity.this, "Message sent!", Toast.LENGTH_SHORT).show();
-                finish();
             }
             @Override
             public void onFailure(Exception e) {

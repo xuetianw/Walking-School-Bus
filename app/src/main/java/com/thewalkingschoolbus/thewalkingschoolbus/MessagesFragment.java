@@ -62,14 +62,9 @@ public class MessagesFragment extends android.app.Fragment {
                     messageList.add(message.getText());
                 }
 
-                // build adapter
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.message_entry, messageList);
-
-                // configure the list view
                 ListView list = view.findViewById(R.id.listViewMessages);
                 list.setAdapter(adapter);
-
-                // update clicks
                 registerClickCallback();
 
                 if(messages.length == 0){
