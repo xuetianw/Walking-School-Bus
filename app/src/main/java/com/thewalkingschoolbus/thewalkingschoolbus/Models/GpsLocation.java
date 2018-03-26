@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.models;
+package com.thewalkingschoolbus.thewalkingschoolbus.Models;
 
 
 public class GpsLocation {

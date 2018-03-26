@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.models;
+package com.thewalkingschoolbus.thewalkingschoolbus.Models;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -7,10 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Debug;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.util.Log;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.WalkingFragment;
 

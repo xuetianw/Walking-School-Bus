@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.models;
+package com.thewalkingschoolbus.thewalkingschoolbus.Models;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

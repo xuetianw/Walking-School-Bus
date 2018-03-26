@@ -16,9 +16,9 @@ import android.widget.Toast;
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.MapUtil;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.GpsLocation;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.UploadLocationService;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.GpsLocation;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.UploadLocationService;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

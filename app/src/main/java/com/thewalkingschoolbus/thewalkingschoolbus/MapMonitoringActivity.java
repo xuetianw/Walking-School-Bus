@@ -2,8 +2,6 @@ package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Debug;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,22 +9,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.MapUtil;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.GpsLocation;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.UploadLocationService;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.GpsLocation;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_GPS_LOCATION;

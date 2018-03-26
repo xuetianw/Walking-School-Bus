@@ -3,9 +3,9 @@ package com.thewalkingschoolbus.thewalkingschoolbus.api_binding;
 import android.os.AsyncTask;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.Message;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Message;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
 public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
 
