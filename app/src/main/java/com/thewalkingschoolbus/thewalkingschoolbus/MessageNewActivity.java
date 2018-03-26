@@ -36,7 +36,7 @@ public class MessageNewActivity extends AppCompatActivity {
     }
 
     private void createRadioButtons() {
-        RadioGroup radioGroup = findViewById(R.id.radioGroupSendAs);
+        radioGroup = findViewById(R.id.radioGroupSendAs);
 
         RadioButton buttonEmergency = new RadioButton(this);
         buttonEmergency.setText("EMERGENCY");
