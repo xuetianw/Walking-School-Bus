@@ -23,7 +23,11 @@ import java.util.ArrayList;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class MonitoringDetailActivity extends AppCompatActivity {
-    TextView displayName, displayEmail, displayPhonenumber;
+    private TextView profileNametv, profileEmailtv,
+            birthYeartv, birthMonthtv, profileAddresstv,
+            profileCellphonetv, homePhonetv, gradetv,
+            teacherNametv, emergencyContactInfotv;
+
     public static String userEmail;
     static User monitoredUser = new User();
     ArrayList <Group> groupArrayList =  new ArrayList<>();
@@ -64,16 +68,50 @@ public class MonitoringDetailActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Object result) {
                 monitoredUser = (User) result;
-                displayName = (TextView)findViewById(R.id.textView7);
-                displayEmail = (TextView)findViewById(R.id.textView24);
-                displayPhonenumber = (TextView)findViewById(R.id.textView21) ;
-                displayName.setText(""+ monitoredUser.getName());
-                monitoredUser.getName();
-                displayEmail.setText(""+ monitoredUser.getEmail());
+
+
+                profileNametv = (TextView)findViewById(R.id.profileNameid);
+                profileEmailtv = (TextView)findViewById(R.id.profileEmailid);
+                birthYeartv = (TextView)findViewById(R.id.profileBrithdayYearid);
+                birthMonthtv = (TextView)findViewById(R.id.profileBirthdayMonthid);
+                profileAddresstv = (TextView)findViewById(R.id.profileaddressid);
+                profileCellphonetv = (TextView)findViewById(R.id.profileCellphoneNumberid);
+                homePhonetv = (TextView)findViewById(R.id.profilehomPhonNumberid);
+                gradetv = (TextView)findViewById(R.id.profileGradeid);
+                teacherNametv = (TextView)findViewById(R.id.profileteachernameid);
+                emergencyContactInfotv = (TextView)findViewById(R.id.profileemergenceyid);
+
+                if(monitoredUser.getName() !=  null){
+                    profileNametv.setText("" +  monitoredUser.getName());
+                }
+                if(monitoredUser.getEmail() != null){
+                    profileEmailtv.setText("" +  monitoredUser.getEmail());
+                }
+                if(monitoredUser.getBirthMonth() !=  null){
+                    birthMonthtv.setText("" +  monitoredUser.getBirthMonth());
+                }
+                if(monitoredUser.getBirthYear() !=  null){
+                    birthYeartv.setText("" +  monitoredUser.getBirthYear());
+                }
+
+                if(monitoredUser.getAddress() !=  null){
+                    profileAddresstv.setText("" +  monitoredUser.getAddress());
+                }
+
                 if(monitoredUser.getCellPhone() != null){
-                    displayPhonenumber.setText(""+ monitoredUser.getCellPhone());
-                } else {
-                    displayPhonenumber.setText("");
+                    profileCellphonetv.setText("" + monitoredUser.getCellPhone());
+                }
+                if(monitoredUser.getHomePhone() != null){
+                    homePhonetv.setText("" + monitoredUser.getHomePhone());
+                }
+                if(monitoredUser.getGrade() != null){
+                    gradetv.setText("" + monitoredUser.getGrade());
+                }
+                if(monitoredUser.getTeacherName() != null){
+                    teacherNametv.setText("" + monitoredUser.getTeacherName());
+                }
+                if(monitoredUser.getEmergencyContactInfo() != null){
+                    emergencyContactInfotv.setText("" + monitoredUser.getEmergencyContactInfo());
                 }
                 groupArrayList = (ArrayList<Group>) monitoredUser.getMemberOfGroups();
                 arrayList = new ArrayList();
