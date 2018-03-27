@@ -202,7 +202,6 @@ public class MainMenuActivity extends AppCompatActivity
             storeLogoutInfoToSharePreferences();
             Intent intent = MainActivity.makeIntent(getApplicationContext());
             startActivity(intent);
-            finish();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
