@@ -23,6 +23,9 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Models.MapFragmentState;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
+import static com.thewalkingschoolbus.thewalkingschoolbus.InitialActivity.LOGIN_PASSWORD;
+import static com.thewalkingschoolbus.thewalkingschoolbus.InitialActivity.LOGIN_STATES;
+import static com.thewalkingschoolbus.thewalkingschoolbus.InitialActivity.REGISTER_EMAIL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_EMAIL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
@@ -31,7 +34,6 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 public class MainMenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String USER_LOGSTATUS = "USER_LOGSTATUS";
     private Toolbar toolbar;
     private NavigationView navigationView;
 
@@ -44,7 +46,7 @@ public class MainMenuActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        getUserLastState();
+        //getUserLastState();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -68,12 +70,13 @@ public class MainMenuActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // OPEN DEFAULT FRAGMENT //
-        // openDefaultFragment();
+         openDefaultFragment();
 
         // SET UP TEST //
         //setupTest();
     }
 
+    /*
     private void getUserLastState() {
         SharedPreferences preferences = getApplication().getSharedPreferences(AppStates, MODE_PRIVATE);
         String email = preferences.getString(REGISTER_EMAIL, null);
@@ -118,6 +121,7 @@ public class MainMenuActivity extends AppCompatActivity
             }
         }).execute();
     }
+    */
 
     private void openDefaultFragment() {
         navigationView.setCheckedItem(R.id.nav_fragment_profile);
@@ -200,8 +204,9 @@ public class MainMenuActivity extends AppCompatActivity
             toolbar.setTitle("Messages");
         } else if (id == R.id.nav_lougout) {
             storeLogoutInfoToSharePreferences();
-            Intent intent = MainActivity.makeIntent(getApplicationContext());
+            Intent intent = MainActivity.makeIntent(MainMenuActivity.this);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -243,51 +248,10 @@ public class MainMenuActivity extends AppCompatActivity
     }
 
     private void storeLogoutInfoToSharePreferences() {
-        SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(LOGIN_STATES, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-
-        editor.putString(REGISTER_EMAIL, null);
-        editor.putString(LOGIN_PASSWORD, null );
-        editor.commit();
+        editor.clear();
+        editor.apply();
     }
 
-//
-//    // TEST - MOCK DATABASE - DELETE AFTER DATABASE MANAGER IS WRITTEN
-//    public static List<User> registeredUsers;
-//    public static List<User> monitoringUsers;
-//    public static List<User> monitoredByUsers;
-//    public static List<Group> existingGroups;
-//    private void setupTest() {
-//        registeredUsers = new ArrayList<>();
-//        registeredUsers.add(new User("0", "John", "john@email.com"));
-//        registeredUsers.add(new User("1", "Jane", "jane@email.com"));
-//
-//        monitoringUsers = new ArrayList<>();
-//        monitoringUsers.add(new User("2", "Josh", "josh@email.com"));
-//        monitoringUsers.add(new User("3", "Fred", "fred@email.com"));
-//
-//        monitoredByUsers = new ArrayList<>();
-//        monitoredByUsers.add(new User("4", "Jacky", "jacky@email.com"));
-//        monitoredByUsers.add(new User("5", "Benny", "benny@email.com"));
-//
-//        existingGroups = new ArrayList<>();
-//        Group group1 = new Group();
-//        group1.setId("SFU to JOYCE STATION");
-//        group1.setRouteLatArray(new double[]{49.2781,49.2384,0});
-//        group1.setRouteLngArray(new double[]{-122.9199,-123.0318,0});
-//
-//        Group group2 = new Group();
-//        group2.setId("UBC to GASTON PARK");
-//        group2.setRouteLatArray(new double[]{49.2606,49.2359,0});
-//        group2.setRouteLngArray(new double[]{-123.2459,-123.0309,0});
-//
-//        Group group3 = new Group();
-//        group3.setId("JOYCE STATION to CENTRAL PARK");
-//        group3.setRouteLatArray(new double[]{49.2384,49.2276,0});
-//        group3.setRouteLngArray(new double[]{-123.0318,-123.0179,0});
-//
-//        existingGroups.add(group1);
-//        existingGroups.add(group2);
-//        existingGroups.add(group3);
-//    }
 }

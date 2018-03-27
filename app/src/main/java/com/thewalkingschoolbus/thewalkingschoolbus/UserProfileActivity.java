@@ -16,11 +16,9 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.AppStates;
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.LOGIN_PASSWORD;
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.REGISTER_EMAIL;
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.REGISTER_FAIL_MESSAGE;
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.REGISTER_SUCCESSFULLY_MESSAGE;
+import static com.thewalkingschoolbus.thewalkingschoolbus.InitialActivity.LOGIN_STATES;
+import static com.thewalkingschoolbus.thewalkingschoolbus.InitialActivity.REGISTER_EMAIL;
+
 import static com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.CREATE_USER;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
@@ -113,7 +111,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void storeUserInfoToSharePreferences() {
-        SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(LOGIN_STATES, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         editor.putString(REGISTER_EMAIL, User.getLoginUser().getEmail());
