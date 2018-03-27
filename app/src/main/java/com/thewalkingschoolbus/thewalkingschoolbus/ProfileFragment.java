@@ -42,10 +42,9 @@ public class ProfileFragment extends android.app.Fragment {
             container.removeAllViews();
         }
         view = inflater.inflate(R.layout.fragment_profile, container, false);
-        setUpEditProfileBtn();
+
         setupTextViews();
-
-
+        setUpEditProfileBtn();
 
         return view;
 
