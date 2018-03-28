@@ -79,7 +79,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MessageNewActivity" />
-        <activity android:name=".MessageViewActivity"></activity>
+        <activity android:name=".MessageViewActivity"/>
+        <activity android:name=".EditChildDetailActivity">
+
+        </activity>
     </application>
 
 </manifest>
