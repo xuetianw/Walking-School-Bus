@@ -43,7 +43,7 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
 //        }
         view = inflater.inflate(R.layout.fragment_group_leader, container, false);
 
-        //getGroupListAndPopulateList();
+        getGroupListAndPopulateList();
         setUpRefresh();
         setUpAddButton();
         return view;
@@ -73,8 +73,39 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
                 }
 
                 // Begin get group detail recursion
-                //getGroupWithDetail();
-                stringsPrep();
+                getGroupWithDetail();
+                //stringsPrep();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getActivity(),"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
+            }
+        }).execute();
+    }
+
+    private void getGroupWithDetail() {
+        // Set up recursion
+        populateListReady = false;
+        loopCount = 0;
+        getGroupWithDetailLoop();
+    }
+
+    private void getGroupWithDetailLoop() {
+        if (loopCount >= mGroup.length - 1) {
+            populateListReady = true;
+        }
+        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mGroup[loopCount],null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                mGroup[loopCount] = (Group) result;
+
+                if (populateListReady) {
+                    stringsPrep();
+                } else {
+                    loopCount++;
+                    getGroupWithDetailLoop();
+                }
             }
 
             @Override
@@ -172,35 +203,4 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
     }
 }
 
-/*
-    private void getGroupWithDetail() {
-        // Set up recursion
-        populateListReady = false;
-        loopCount = 0;
-        getGroupWithDetailLoop();
-    }
 
-    private void getGroupWithDetailLoop() {
-        if (loopCount >= mGroup.length - 1) {
-            populateListReady = true;
-        }
-        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mGroup[loopCount],null, new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                mGroup[loopCount] = (Group) result;
-
-                if (populateListReady) {
-                    stringsPrep();
-                } else {
-                    loopCount++;
-                    getGroupWithDetailLoop();
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(getActivity(),"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
-            }
-        }).execute();
-    }
-*/

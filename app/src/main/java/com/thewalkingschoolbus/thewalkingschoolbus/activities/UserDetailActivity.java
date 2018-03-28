@@ -2,16 +2,19 @@ package com.thewalkingschoolbus.thewalkingschoolbus.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
@@ -19,6 +22,7 @@ import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.REMOVE_MEMBER_OF_GROUP;
 
 public class UserDetailActivity extends AppCompatActivity {
 
@@ -27,7 +31,11 @@ public class UserDetailActivity extends AppCompatActivity {
     private String userId;
     private String groupId;
     private User user;
-    private List<User> monitoredByArr;
+    private User[] monitoredByArr;
+
+    private static int loopCount = 0;
+    private static boolean populateListReady = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +43,18 @@ public class UserDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_detail);
 
         extractData();
-        setUpRemoveFromGroupBut();
         getUserInfoAndUpdateUI();
-
+        //setUpRemoveFromGroupBut();
+        setUpRefresh();
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getUserInfoAndUpdateUI();
+    }
+
     private void extractData(){
         Intent intent = getIntent();
         userId = intent.getStringExtra(USER_ID);
@@ -47,7 +62,45 @@ public class UserDetailActivity extends AppCompatActivity {
     }
 
     private void setUpRemoveFromGroupBut(){
+        if(groupId == null){
+            Toast.makeText(UserDetailActivity.this,"unknown group",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Button but = findViewById(R.id.removeUserFromGroupBut);
+        but.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<User> monitorsUsers = User.getLoginUser().getMonitorsUsers();
+                User[] monitorsUsersArr = monitorsUsers.toArray(new User[0]);
+                boolean isMonitoring = false;
+                for (int i = 0; i < monitorsUsersArr.length; i++) {
+                    if (user.getId().equals(monitorsUsersArr[i].getId())) {
+                        isMonitoring = true;
+                        break;
+                    }
+                }
+                if (isMonitoring) {
+                    removeUserFromGroup();
+                } else {
+                    Toast.makeText(UserDetailActivity.this, "not monitoring this user", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+    private void removeUserFromGroup(){
+        Group group = new Group();
+        group.setId(groupId);
+        new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, user, null, group, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                finish();
+            }
 
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(UserDetailActivity.this,"error :"+e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        }).execute();
     }
 
     private void getUserInfoAndUpdateUI(){
@@ -58,7 +111,10 @@ public class UserDetailActivity extends AppCompatActivity {
             public void onSuccess(Object result) {
                 user = (User) result;
                 setUserInfo();
-                populateMonitoredByList();
+                setUpRemoveFromGroupBut();
+                List<User> monitoredByList = user.getMonitoredByUsers();
+                monitoredByArr = monitoredByList.toArray(new User[0]);
+                getUserWithDetail();
             }
 
             @Override
@@ -84,51 +140,88 @@ public class UserDetailActivity extends AppCompatActivity {
         emergencyTV.setText(user.getEmergencyContactInfo());
     }
 
-    private void populateMonitoredByList(){
-
-        String[] myListMonitoredByStrArr = stringsPrep();
+    private void populateMonitoredByList(String[] myListMonitoredByStrArr){
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(UserDetailActivity.this, R.layout.user_entry,myListMonitoredByStrArr);
         // configure the list view
-        ListView listView = findViewById(R.id.monitoredByListView);
+        ListView listView = findViewById(R.id.userDetailListView);
         listView.setAdapter(adapter);
 
         //registerClickCallback
         registerClickCallback();
     }
 
-    private String[] stringsPrep(){
-        String[] arr;
-        int size;
-        monitoredByArr = user.getMonitoredByUsers();
-
-        if(monitoredByArr == null || monitoredByArr.size() <= 0){
-            arr = new String[0];
-            size = 0;
+    private void stringsPrep(){
+        String[] arrStr;
+        if(monitoredByArr == null || monitoredByArr.length == 0){
+            arrStr = new String[0];
         }else{
-            arr = new String[monitoredByArr.size()];
-            size = monitoredByArr.size();
+            arrStr = new String[monitoredByArr.length];
+        }
+        for(int i = 0; i < monitoredByArr.length; i++){
+            arrStr[i] = "ID: "+ monitoredByArr[i].getId() +" "+"Name: "+ monitoredByArr[i].getName();
         }
 
-        for(int i = 0; i < size; i++){
-            arr[i] = "Name: "+monitoredByArr.get(i).getName() +" "+"Email: "+monitoredByArr.get(i).getEmail();
-        }
+        populateMonitoredByList(arrStr);
+    }
 
-     return arr;
+    private void getUserWithDetail() {
+        // Set up recursion
+        populateListReady = false;
+        loopCount = 0;
+        getUserWithDetailLoop();
+    }
+
+    private void getUserWithDetailLoop() {
+        if (loopCount >= monitoredByArr.length-1) {
+            populateListReady = true;
+        }
+        new GetUserAsyncTask(GET_USER_BY_ID, monitoredByArr[loopCount], null, null,null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                monitoredByArr[loopCount]=(User)result;
+
+                if (populateListReady) {
+                    stringsPrep();
+                } else {
+                    loopCount++;
+                    getUserWithDetailLoop();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(UserDetailActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
+            }
+        }).execute();
     }
 
     private void registerClickCallback(){
-        ListView listView = findViewById(R.id.monitoredByListView);
+        ListView listView = findViewById(R.id.userDetailListView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = UserDetailActivity.makeIntent(UserDetailActivity.this,monitoredByArr.get(i).getId(),groupId);
+                Intent intent = UserDetailActivity.makeIntent(UserDetailActivity.this,monitoredByArr[i].getId(),groupId);
                 startActivity(intent);
             }
         });
     }
 
+    private void setUpRefresh(){
+        final SwipeRefreshLayout mySwipeRefreshLayout = findViewById(R.id.swiperefreshUserDetail);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        getUserInfoAndUpdateUI();
+                        // This method performs the actual data-refresh operation.
+                        // The method calls setRefreshing(false) when it's finished.
+                        mySwipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
 
+    }
 
     public static Intent makeIntent(Context context,String userId,String groupId) {
         Intent intent = new Intent(context, UserDetailActivity.class);

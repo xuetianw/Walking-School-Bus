@@ -61,6 +61,13 @@ public class GroupDetailActivity extends AppCompatActivity {
         return intent;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateLoginUser();
+        extractDataAndShowDetail();
+    }
+
     private void updateLoginUser(){
         new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, null,new OnTaskComplete() {
             @Override
@@ -192,20 +199,8 @@ public class GroupDetailActivity extends AppCompatActivity {
             }
         });
     }
-    private void alertDialog(){
-        AlertDialog alertDialog = new AlertDialog.Builder(GroupDetailActivity.this).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage("Do u want to remove this user from the group");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        removeUserFromGroup();
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
-    }
 
+/*
     private void removeUserFromGroup(){
         new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, mMembers[positionOfUser], null, mSelectedGroup,null, new OnTaskComplete() {
             @Override
@@ -220,7 +215,7 @@ public class GroupDetailActivity extends AppCompatActivity {
             }
         }).execute();
     }
-
+*/
     private void setUpLeaveGroupBut(){
         Button but = findViewById(R.id.leaveGroupBut);
         but.setOnClickListener(new View.OnClickListener() {
