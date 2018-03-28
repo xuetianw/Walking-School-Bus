@@ -79,4 +79,10 @@
     <string name="regact_enter_teacher_name">Enter Teacher Name</string>
     <string name="regact_emergency_contact_info">Emergency Contact Info</string>
     <string name="regact_enter_contact_info">Enter Info</string>
+    <string name="mainact_enter_email">Enter Email</string>
+    <string name="mainact_enter_password">Enter Password</string>
+    <string name="mainact_password">Password</string>
+    <string name="mainact_email">Email</string>
+    <string name="mainact_registerBtn">register</string>
+    <string name="mainact_loginBtn">Log in</string>
 </resources>

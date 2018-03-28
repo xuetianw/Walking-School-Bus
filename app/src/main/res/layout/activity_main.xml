@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thewalkingschoolbus.thewalkingschoolbus.com.thewalkingschoolbus.MainActivity"
+    tools:context="com.thewalkingschoolbus.thewalkingschoolbus.MainActivity"
     tools:layout_editor_absoluteY="81dp">
 
     <RelativeLayout
@@ -24,10 +24,9 @@
             android:id="@+id/registerid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/loginid"
             android:layout_below="@+id/loginid"
-            android:layout_marginEnd="55dp"
-            android:text="register"
+            android:text="@string/mainact_registerBtn"
             tools:layout_editor_absoluteX="209dp"
             tools:layout_editor_absoluteY="401dp" />
 
@@ -37,8 +36,11 @@
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="email"
-            android:textSize="18dp" />
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mainact_email"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textView3"
@@ -47,37 +49,43 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/emailid"
             android:layout_marginTop="28dp"
-            android:text="password"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:text="@string/mainact_password"
+            android:textColor="@color/black"
             android:textSize="18sp" />
 
         <EditText
             android:id="@+id/emailid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView2"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:ems="10"
-            android:hint="email"
+            android:hint="@string/mainact_enter_email"
             android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/passwordid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView3"
             android:layout_alignEnd="@+id/emailid"
             android:layout_alignTop="@+id/textView3"
             android:ems="10"
-            android:hint="password"
+            android:hint="@string/mainact_enter_password"
             android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/loginid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/registerid"
+            android:layout_alignParentEnd="true"
             android:layout_below="@+id/passwordid"
-            android:layout_marginTop="76dp"
-            android:text="Log in" />
+            android:layout_marginEnd="18dp"
+            android:layout_marginTop="77dp"
+            android:text="@string/mainact_loginBtn" />
 
     </RelativeLayout>
 
