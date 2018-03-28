@@ -23,17 +23,14 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Models.MapFragmentState;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.InitialActivity.LOGIN_PASSWORD;
-import static com.thewalkingschoolbus.thewalkingschoolbus.InitialActivity.LOGIN_STATES;
-import static com.thewalkingschoolbus.thewalkingschoolbus.InitialActivity.REGISTER_EMAIL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_EMAIL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
 
-
 public class MainMenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String USER_LOGSTATUS = "USER_LOGSTATUS";
     private static Context contextOfApplication;
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -52,7 +49,7 @@ public class MainMenuActivity extends AppCompatActivity
         setContentView(R.layout.activity_main_menu);
 
         contextOfApplication = this;
-        //getUserLastState();
+        getUserLastState();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -78,11 +75,11 @@ public class MainMenuActivity extends AppCompatActivity
         // OPEN DEFAULT FRAGMENT //
         openDefaultFragment();
 
+
         // SET UP TEST //
         //setupTest();
     }
 
-    /*
     private void getUserLastState() {
         SharedPreferences preferences = getApplication().getSharedPreferences(AppStates, MODE_PRIVATE);
         String email = preferences.getString(REGISTER_EMAIL, null);
@@ -90,6 +87,7 @@ public class MainMenuActivity extends AppCompatActivity
         if( email == null || password == null) {
             Intent intent = MainActivity.makeIntent(getApplicationContext());
             startActivity(intent);
+            finish();
         } else {
             User.setLoginUser(new User());
             User.getLoginUser().setEmail(email);
@@ -112,14 +110,13 @@ public class MainMenuActivity extends AppCompatActivity
         }
     }
 
-
     public void setLoginUser(User user){
         new GetUserAsyncTask(GET_USER_BY_EMAIL, user, null, null,null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                User.setLoginUser((User)result);
-                openDefaultFragment();
-
+                if(result != null){
+                    User.setLoginUser((User)result);
+                }
             }
             @Override
             public void onFailure(Exception e) {
@@ -127,7 +124,6 @@ public class MainMenuActivity extends AppCompatActivity
             }
         }).execute();
     }
-    */
 
     private void openDefaultFragment() {
         navigationView.setCheckedItem(R.id.nav_fragment_profile);
@@ -259,9 +255,11 @@ public class MainMenuActivity extends AppCompatActivity
     }
 
     private void storeLogoutInfoToSharePreferences() {
-        SharedPreferences preferences = getSharedPreferences(LOGIN_STATES, MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.apply();
+
+        editor.putString(REGISTER_EMAIL, null);
+        editor.putString(LOGIN_PASSWORD, null );
+        editor.commit();
     }
 }

@@ -13,9 +13,6 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.InitialActivity.LOGIN_PASSWORD;
-import static com.thewalkingschoolbus.thewalkingschoolbus.InitialActivity.LOGIN_STATES;
-import static com.thewalkingschoolbus.thewalkingschoolbus.InitialActivity.REGISTER_EMAIL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
@@ -86,13 +83,12 @@ public class RegisterActivity extends AppCompatActivity {
                     user.setEmergencyContactInfo(emergencyContactInfo);
 
 
-                new GetUserAsyncTask(CREATE_USER, user,null, null,null ,new OnTaskComplete() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        Toast.makeText(getApplicationContext(),REGISTER_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
+                    new GetUserAsyncTask(CREATE_USER, user,null, null,null ,new OnTaskComplete() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            Toast.makeText(getApplicationContext(),REGISTER_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
                             storeUserInfoToSharePreferences();
-                            User.setLoginUser((User)result);
                             Intent intent = MainMenuActivity.makeIntent(getApplicationContext());
                             startActivity(intent);
                             finish();
@@ -112,12 +108,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void storeUserInfoToSharePreferences() {
-        SharedPreferences preferences = getSharedPreferences(LOGIN_STATES, MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         editor.putString(REGISTER_EMAIL, registerEmail );
         editor.putString(LOGIN_PASSWORD, registerPassword );
-        editor.apply();
+        editor.commit();
+
     }
 
     private void setupTextviews() {
