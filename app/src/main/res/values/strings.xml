@@ -16,6 +16,7 @@
     <string name="leader_name_label">LEADER NAME:</string>
     <string name="member_of_group">MEMBERS OF THE GROUP</string>
     <string name="email">EMAIL:</string>
+
     <string name="user_id">USER ID:</string>
     <string name="user_name">USER NAME:</string>
     <string name="remove_user_from_group">REMOVE USER FROM GROUP</string>
@@ -26,4 +27,35 @@
     <string name="teacher_name">TEACHER NAME:</string>
     <string name="monitored_by">MONITORED BY</string>
     <string name="edit_user">EDIT USER</string>
+    <string name="user_name">Vaanyi Igiri</string>
+    <string name="profile_address">4444 WalkingGroup Ave.</string>
+    <string name="profile_group_name_hint">Group Name</string>
+    <string name="profile_group_id_hint">Group ID</string>
+    <!--
+    profile activity begins here
+    -->
+    <string name="profact_name">Name</string>
+    <string name="profact_enter_name">Enter Name</string>
+    <string name="profact_email">Email</string>
+    <string name="profact_enter_email">Enter Email</string>
+    <string name="profact_phone_number">Cell Phone Number</string>
+    <string name="profact_enter_phone_number">Enter Cell Phone Number</string>
+    <string name="profact_home_phone">Home Phone Number</string>
+    <string name="profact_enter_homephone_number">Enter Home Phone Number</string>
+    <string name="profact_address">Address</string>
+    <string name="profact_enter_address">Enter Address</string>
+    <string name="profact_birth_month_year_mm_yyyy">Birth Month/Year (MM/YYYY)</string>
+    <string name="profact_enter_birth_month">Enter Birth Month/Year</string>
+    <string name="profact_teacher_name">Teacher Name</string>
+    <string name="profact_enter_teacher_name">Enter Name</string>
+    <string name="profact_current_grade">Current Grade</string>
+    <string name="profact_enter_grade">Grade</string>
+    <string name="profact_emergency_contact">Emergency Contact</string>
+    <string name="profact_enter_emrgency_info">Enter info</string>
+    <string name="proffrag_email_icon">email_icon</string>
+    <string name="proffrag_phone_icon">phone_icon</string>
+    <string name="proffrag_location_icon">location_icon</string>
+    <string name="proffrag_phoneNumber">604 444 4444</string>
+    <string name="proffrag_email">vigiri@sfu.ca</string>
+    <string name="proffrag_editprofile_Btn">Edit Profile</string>
 </resources>
