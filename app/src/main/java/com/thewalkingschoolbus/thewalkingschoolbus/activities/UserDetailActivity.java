@@ -33,8 +33,8 @@ public class UserDetailActivity extends AppCompatActivity {
     private User user;
     private User[] monitoredByArr;
 
-    private static int loopCount = 0;
-    private static boolean populateListReady = false;
+    private int loopCount = 0;
+    private boolean populateListReady = false;
 
 
     @Override
@@ -114,7 +114,9 @@ public class UserDetailActivity extends AppCompatActivity {
                 setUpRemoveFromGroupBut();
                 List<User> monitoredByList = user.getMonitoredByUsers();
                 monitoredByArr = monitoredByList.toArray(new User[0]);
-                getUserWithDetail();
+                if(monitoredByArr.length!= 0){
+                    getUserWithDetail();
+                }
             }
 
             @Override

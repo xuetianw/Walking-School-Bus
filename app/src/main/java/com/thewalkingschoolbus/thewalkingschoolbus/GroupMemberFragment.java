@@ -33,8 +33,8 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
     private Group[] mGroup;
 
     // Used for recursive loop in getGroupWithDetailLoop()
-    private static boolean populateListReady = false;
-    private static int loopCount = 0;
+    private boolean populateListReady = false;
+    private int loopCount = 0;
 
     @Nullable
     @Override
