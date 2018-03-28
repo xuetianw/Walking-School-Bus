@@ -58,8 +58,11 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/profileEmailid"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
                 android:text="@string/proffrag_birthday_month"
                 android:textSize="18sp"
+                android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
@@ -68,8 +71,11 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
                 android:text="@string/proffrag_email"
                 android:textSize="18sp"
+                android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
@@ -77,7 +83,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
                 android:layout_below="@+id/textView31"
+                android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <TextView
@@ -85,7 +94,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
                 android:layout_below="@+id/textView30"
+                android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <TextView
@@ -98,6 +110,7 @@
                 android:layout_marginEnd="75dp"
                 android:text="@string/proffrag_birthday_year"
                 android:textSize="18sp"
+                android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
@@ -106,7 +119,10 @@
                 android:layout_height="40dp"
                 android:layout_alignStart="@+id/textView34"
                 android:layout_below="@+id/textView34"
-                android:textSize="18sp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/textView36"
@@ -114,9 +130,12 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/profileBirthdayMonthid"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
                 android:text="@string/proffrag_cell_phone_number"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/textView37"
@@ -126,7 +145,8 @@
                 android:layout_below="@+id/profileBrithdayYearid"
                 android:text="@string/proffrag_current_grade"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/profileCellphoneNumberid"
@@ -134,7 +154,10 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView36"
-                android:textSize="18sp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/textView39"
@@ -142,9 +165,12 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/profileCellphoneNumberid"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
                 android:text="@string/proffrag_home_phone_number"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/profilehomPhonNumberid"
@@ -152,7 +178,10 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView39"
-                android:textSize="18sp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/textView41"
@@ -160,9 +189,12 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/profilehomPhonNumberid"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
                 android:text="@string/proffrag_address"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/profileaddressid"
@@ -170,7 +202,10 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView41"
-                android:textSize="18sp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/textView43"
@@ -178,9 +213,12 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/profileaddressid"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
                 android:text="@string/proffrag_teacher_name"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/profileteachernameid"
@@ -188,7 +226,10 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView43"
-                android:textSize="18sp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/textView45"
@@ -196,9 +237,12 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/profileteachernameid"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
                 android:text="@string/proffrag_emergency_contact"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/profileemergenceyid"
@@ -206,7 +250,10 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView45"
-                android:textSize="18sp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/profileGradeid"
@@ -214,7 +261,10 @@
                 android:layout_height="40dp"
                 android:layout_alignStart="@+id/textView37"
                 android:layout_below="@+id/textView37"
-                android:textSize="18sp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
 
             <Button
                 android:id="@+id/editinfobtnid"
@@ -227,6 +277,7 @@
                 android:text="@string/proffrag_edit_info"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
+
         </RelativeLayout>
     </ScrollView>
 </LinearLayout>
