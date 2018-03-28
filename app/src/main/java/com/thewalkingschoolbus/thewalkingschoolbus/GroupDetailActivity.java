@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.activities.UserDetailActivity;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
 import java.util.ArrayList;
@@ -58,6 +59,13 @@ public class GroupDetailActivity extends AppCompatActivity {
         Intent intent = new Intent(context, GroupDetailActivity.class);
         intent.putExtra(GROUP_ID,mGroup.getId());
         return intent;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateLoginUser();
+        extractDataAndShowDetail();
     }
 
     private void updateLoginUser(){
@@ -98,6 +106,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         TextView groupDesTextView = findViewById(R.id.groupDesField);
         TextView leaderIdTextView = findViewById(R.id.leaderIdField);
         TextView leaderNameTextView = findViewById(R.id.leaderNameField);
+
         groupIdTextView.setText(mSelectedGroup.getId());
         groupDesTextView.setText(mSelectedGroup.getGroupDescription());
         leaderIdTextView.setText(mSelectedGroup.getLeader().getId());
@@ -165,16 +174,18 @@ public class GroupDetailActivity extends AppCompatActivity {
 
     private void registerClickCallback() {
         ListView list = findViewById(R.id.memberListView);
+        final Context self = GroupDetailActivity.this;
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 positionOfUser = position;
-                List<User> listMonitoring = User.getLoginUser().getMonitorsUsers();
 
+                Intent intent = UserDetailActivity.makeIntent(self,mMembers[positionOfUser].getId(),mSelectedGroup.getId());
+                startActivity(intent);
+                /*
                 for(int j = 0; j < listMonitoring.size();j++){
                     if(mMembers[position].getId().equals(listMonitoring.get(j).getId())){
-                        alertDialog();
-                        break;
+                        alertDialog(); // TODO: make intent for UserDetailActivity
                     }else{
                         Toast.makeText(GroupDetailActivity.this, "you can not remove " +
                                 "user you are not monitoring from group",Toast.LENGTH_LONG).show();
@@ -184,23 +195,12 @@ public class GroupDetailActivity extends AppCompatActivity {
                     Toast.makeText(GroupDetailActivity.this, "you can not remove " +
                             "user you are not monitoring from group",Toast.LENGTH_LONG).show();
                 }
+                */
             }
         });
     }
-    private void alertDialog(){
-        AlertDialog alertDialog = new AlertDialog.Builder(GroupDetailActivity.this).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage("Do u want to remove this user from the group");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        removeUserFromGroup();
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
-    }
 
+/*
     private void removeUserFromGroup(){
         new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, mMembers[positionOfUser], null, mSelectedGroup,null, new OnTaskComplete() {
             @Override
@@ -215,7 +215,7 @@ public class GroupDetailActivity extends AppCompatActivity {
             }
         }).execute();
     }
-
+*/
     private void setUpLeaveGroupBut(){
         Button but = findViewById(R.id.leaveGroupBut);
         but.setOnClickListener(new View.OnClickListener() {
@@ -229,6 +229,7 @@ public class GroupDetailActivity extends AppCompatActivity {
             }
         });
     }
+
     private void leaveGroup(){
         new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, User.getLoginUser(), null, mSelectedGroup, null,new OnTaskComplete() {
             @Override
@@ -244,6 +245,7 @@ public class GroupDetailActivity extends AppCompatActivity {
             }
         }).execute();
     }
+
     private void setUpInviteToGroupBut(){
         Button but = findViewById(R.id.addMemberBut);
         but.setOnClickListener(new View.OnClickListener() {

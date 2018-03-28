@@ -153,11 +153,6 @@ public class UserProfileActivity extends AppCompatActivity {
         gradeET.setText(User.getLoginUser().getGrade());
         teacherNameDT.setText(User.getLoginUser().getTeacherName());;
         emergencyContactInfoET.setText(User.getLoginUser().getEmergencyContactInfo());;
-
-
-
-
-
     }
 
 
