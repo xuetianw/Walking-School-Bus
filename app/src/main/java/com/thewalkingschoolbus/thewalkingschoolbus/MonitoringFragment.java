@@ -64,7 +64,7 @@ public class MonitoringFragment extends Fragment {
                 Toast.makeText(getActivity(),"Monitoring list updated", Toast.LENGTH_SHORT)
                         .show();
                 for(User user: users){
-                    monitoringList.add("Name: "+user.getName() + " "+"Email: "+ user.getEmail() );
+                    monitoringList.add("Name: "+ user.getName() + " "+"Email: "+ user.getEmail() );
                 }
                 // build adapter
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.monitoring_entry, monitoringList);
@@ -129,7 +129,7 @@ public class MonitoringFragment extends Fragment {
         switch (requestCode) {
             case DELETE_MONITORING_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
-                    new GetUserAsyncTask(DELETE_MONITORING, User.getLoginUser(), MonitoringDetailActivity.deleteUser, null,null, new OnTaskComplete() {
+                    new GetUserAsyncTask(DELETE_MONITORING, User.getLoginUser(), MonitoringDetailActivity.monitoredUser, null,null, new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
                             Toast.makeText(getActivity().getApplicationContext(),"Removed user", Toast.LENGTH_SHORT)
