@@ -34,21 +34,14 @@
     <string name="profact_address">Address</string>
     <string name="profact_enter_address">Enter Address</string>
     <string name="profact_birth_month_year_mm_yyyy">Birth Month/Year (MM/YYYY)</string>
-    <string name="profact_enter_birth_month">Enter Birth Month/Year</string>
+    <string name="profact_enter_birth_year">Enter Birth Year</string>
+    <string name="profact_enter_birth_month">Enter Birth Month</string>
     <string name="profact_teacher_name">Teacher Name</string>
     <string name="profact_enter_teacher_name">Enter Name</string>
     <string name="profact_current_grade">Current Grade</string>
     <string name="profact_enter_grade">Grade</string>
     <string name="profact_emergency_contact">Emergency Contact</string>
-    <string name="profact_enter_emrgency_info">Enter info</string>
-    <!--
-    <string name="proffrag_email_icon">email_icon</string>
-    <string name="proffrag_phone_icon">phone_icon</string>
-    <string name="proffrag_location_icon">location_icon</string>
-    <string name="proffrag_phoneNumber">604 444 4444</string>
-    <string name="proffrag_email">vigiri@sfu.ca</string>
-    <string name="proffrag_editprofile_Btn">Edit Profile</string>
-    -->
+    <string name="profact_enter_emergency_info">Enter info</string>
     <string name="proffrag_edit_info">Edit Info</string>
     <string name="proffrag_emergency_contact">Emergency Contact</string>
     <string name="proffrag_teacher_name">Teacher Name</string>
@@ -60,4 +53,8 @@
     <string name="proffrag_email">Email</string>
     <string name="proffrag_birthday_month">Birthday Month</string>
     <string name="proffrag_profile_name">Profile Name</string>
+    <string name="profact_saveBtn">Save</string>
+    <string name="profact_cancelBtn">Cancel</string>
+    <string name="profact_birthday_month">Birthday Month</string>
+    <string name="profact_birthday_year">Birthday Year</string>
 </resources>
