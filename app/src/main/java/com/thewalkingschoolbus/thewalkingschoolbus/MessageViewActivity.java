@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Message;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 
+import java.util.Calendar;
+
 public class MessageViewActivity extends AppCompatActivity {
 
     private static final String GIVEN_MESSAGE_ID = "ca.sfu.servingsizecalculator.CalculateActivity - messageId";
@@ -38,7 +40,14 @@ public class MessageViewActivity extends AppCompatActivity {
 
     private void setTimestamp() {
         TextView textViewFrom = findViewById(R.id.messageViewTimestamp);
-        textViewFrom.setText(message.getTimestamp()); // TODO: check correctness
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(Long.parseLong(message.getTimestamp()));
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDate = calendar.get(Calendar.DAY_OF_MONTH);
+        int mHour = calendar.get(Calendar.HOUR);
+        int mMin = calendar.get(Calendar.MINUTE);
+        textViewFrom.setText(mYear+", "+mMonth+" "+mDate+", "+mHour+":"+mMin); // TODO: check correctness
     }
 
     private void setText() {
