@@ -85,4 +85,5 @@
     <string name="mainact_email">Email</string>
     <string name="mainact_registerBtn">register</string>
     <string name="mainact_loginBtn">Log in</string>
+    <string name="mainact_wsb_header">The Walking School Bus</string>
 </resources>

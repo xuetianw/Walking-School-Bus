@@ -34,7 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="22sp"
-                    android:text="The Walking School Bus"
+                    android:text="@string/mainact_wsb_header"
                     android:textStyle="bold"
                     android:textColor="#fff"
                     android:layout_gravity="center"/>
@@ -44,20 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-                <!--
-                <Button
-                    android:id="@+id/registerid"
-                    android:layout_width="310dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mainact_registerBtn" />
 
-                <Button
-                    android:id="@+id/loginid"
-                    android:layout_width="100dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="30dp"
-                    android:text="@string/mainact_loginBtn" />
--->
                 <EditText
                     android:id="@+id/emailid"
                     android:layout_width="300dp"
@@ -100,8 +87,6 @@
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:text="@string/mainact_loginBtn" />
-
-
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
