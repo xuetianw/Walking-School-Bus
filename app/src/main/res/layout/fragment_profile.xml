@@ -35,7 +35,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="0dp"
                 android:text="@string/proffrag_profile_name"
-                android:textColor="#fff"
+                android:textColor="@color/black"
                 android:textSize="21sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -60,9 +60,9 @@
                 android:layout_below="@+id/profileEmailid"
                 android:paddingEnd="10dp"
                 android:paddingStart="10dp"
+                android:textColor="@color/black"
                 android:text="@string/proffrag_birthday_month"
                 android:textSize="18sp"
-                android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView

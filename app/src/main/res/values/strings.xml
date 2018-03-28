@@ -57,4 +57,26 @@
     <string name="profact_cancelBtn">Cancel</string>
     <string name="profact_birthday_month">Birthday Month</string>
     <string name="profact_birthday_year">Birthday Year</string>
+    <string name="regact_name">*Name</string>
+    <string name="regact_email">*Email</string>
+    <string name="regact_password">*Password</string>
+    <string name="regact_enter_name">Enter Name</string>
+    <string name="regact_enter_email">Enter Email</string>
+    <string name="regact_enter_password">Enter Password</string>
+    <string name="regact_registerBtn">register</string>
+    <string name="regact_date_of_birth">Date of Birth</string>
+    <string name="regact_enter_year">Year</string>
+    <string name="regact_enter_month">Month</string>
+    <string name="regact_address">Address</string>
+    <string name="regact_enter_address">Enter Address</string>
+    <string name="regact_cell_phone">Cell Phone</string>
+    <string name="regact_enter_cell_phone_no">Enter Cell Phone No.</string>
+    <string name="regact_home_phone">Home Phone</string>
+    <string name="regact_enter_home_phone_no">Enter Home Phone No.</string>
+    <string name="regact_grade">Grade</string>
+    <string name="regact_enter_grade">Enter Grade</string>
+    <string name="regact_teacher_name">Teacher Name</string>
+    <string name="regact_enter_teacher_name">Enter Teacher Name</string>
+    <string name="regact_emergency_contact_info">Emergency Contact Info</string>
+    <string name="regact_enter_contact_info">Enter Info</string>
 </resources>

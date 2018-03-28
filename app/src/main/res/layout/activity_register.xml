@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thewalkingschoolbus.thewalkingschoolbus.com.thewalkingschoolbus.RegisterActivity">
+    tools:context="com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -23,8 +23,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
-                android:text="*name"
-                android:textSize="18dp"
+                android:text="@string/regact_name"
+                android:textSize="18sp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -36,8 +39,11 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/registernameid"
-                android:text="*email"
-                android:textSize="18dp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/black"
+                android:text="@string/regact_email"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -45,8 +51,11 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView5"
-                android:text="*password"
-                android:textSize="18dp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/black"
+                android:text="@string/regact_password"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/registernameid"
@@ -56,9 +65,9 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginEnd="32dp"
                 android:ems="10"
-                android:hint="Name"
+                android:hint="@string/regact_enter_name"
                 android:inputType="textPersonName"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/registeremailid"
@@ -67,9 +76,9 @@
                 android:layout_alignBottom="@+id/textView5"
                 android:layout_alignStart="@+id/registernameid"
                 android:ems="10"
-                android:hint="email"
+                android:hint="@string/regact_enter_email"
                 android:inputType="textPersonName"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/registerpasswordid"
@@ -78,9 +87,9 @@
                 android:layout_alignBottom="@+id/textView6"
                 android:layout_alignStart="@+id/registeremailid"
                 android:ems="10"
-                android:hint="passowrd"
+                android:hint="@string/regact_enter_password"
                 android:inputType="textPersonName"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/register2id"
@@ -88,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                android:text="register" />
+                android:text="@string/regact_registerBtn" />
 
             <TextView
                 android:id="@+id/textView14"
@@ -96,8 +105,11 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView6"
-                android:text="Date of birth"
-                android:textSize="18dp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/black"
+                android:text="@string/regact_date_of_birth"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/yearid"
@@ -106,20 +118,21 @@
                 android:layout_alignStart="@+id/registerpasswordid"
                 android:layout_below="@+id/registerpasswordid"
                 android:ems="10"
-                android:hint="year"
+                android:hint="@string/regact_enter_year"
                 android:inputType="number"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/monthid"
                 android:layout_width="70dp"
                 android:layout_height="40dp"
+                android:layout_alignEnd="@+id/registerpasswordid"
                 android:layout_below="@+id/registerpasswordid"
-                android:layout_toEndOf="@+id/yearid"
+                android:layout_marginEnd="14dp"
                 android:ems="10"
-                android:hint="month"
+                android:hint="@string/regact_enter_month"
                 android:inputType="number"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textView15"
@@ -127,19 +140,22 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView14"
-                android:text="address"
-                android:textSize="18dp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/black"
+                android:text="@string/regact_address"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/addressid"
                 android:layout_width="280dp"
                 android:layout_height="40dp"
+                android:layout_alignStart="@+id/yearid"
                 android:layout_below="@+id/yearid"
-                android:layout_toEndOf="@+id/textView14"
                 android:ems="10"
-                android:hint="address"
+                android:hint="@string/regact_enter_address"
                 android:inputType="textPersonName"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textView16"
@@ -147,8 +163,11 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView15"
-                android:text="cellPhone"
-                android:textSize="18dp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/black"
+                android:text="@string/regact_cell_phone"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/cellphoneid"
@@ -157,9 +176,9 @@
                 android:layout_alignStart="@+id/yearid"
                 android:layout_below="@+id/addressid"
                 android:ems="10"
-                android:hint="cellphone"
+                android:hint="@string/regact_enter_cell_phone_no"
                 android:inputType="number"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textView17"
@@ -167,8 +186,11 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView16"
-                android:text="homePhone"
-                android:textSize="18dp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/black"
+                android:text="@string/regact_home_phone"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/homePhoneid"
@@ -177,9 +199,9 @@
                 android:layout_alignEnd="@+id/cellphoneid"
                 android:layout_below="@+id/cellphoneid"
                 android:ems="10"
-                android:hint="homePhone"
+                android:hint="@string/regact_enter_home_phone_no"
                 android:inputType="phone"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textView18"
@@ -187,8 +209,11 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView17"
-                android:text="grade"
-                android:textSize="18dp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/black"
+                android:text="@string/regact_grade"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/gradeid"
@@ -197,9 +222,9 @@
                 android:layout_alignEnd="@+id/homePhoneid"
                 android:layout_below="@+id/homePhoneid"
                 android:ems="10"
-                android:hint="grade"
+                android:hint="@string/regact_enter_grade"
                 android:inputType="textPersonName"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textView19"
@@ -207,19 +232,22 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView18"
-                android:text="teacherName"
-                android:textSize="18dp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/black"
+                android:text="@string/regact_teacher_name"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/teacherNameid"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:layout_alignStart="@+id/gradeid"
+                android:layout_alignEnd="@+id/emergencyid"
                 android:layout_below="@+id/gradeid"
                 android:ems="10"
-                android:hint="teacherName"
+                android:hint="@string/regact_enter_teacher_name"
                 android:inputType="textPersonName"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textView20"
@@ -227,8 +255,11 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView19"
-                android:text="emergencyContactInfo"
-                android:textSize="18dp" />
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/black"
+                android:text="@string/regact_emergency_contact_info"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/emergencyid"
@@ -236,10 +267,13 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView20"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/black"
                 android:ems="10"
-                android:hint="emergencyContactInfo"
-                android:inputType="textPersonName"
-                android:textSize="18dp" />
+                android:hint="@string/regact_enter_contact_info"
+                android:inputType="textMultiLine|textPersonName"
+                android:textSize="18sp" />
 
         </RelativeLayout>
     </ScrollView>
