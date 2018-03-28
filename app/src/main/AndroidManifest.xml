@@ -89,5 +89,6 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <service android:name=".Models.UploadLocationService" />
+        <service android:name=".Models.UploadLocationStopService" />
     </application>
 </manifest>

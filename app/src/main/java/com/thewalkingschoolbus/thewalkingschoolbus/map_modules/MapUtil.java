@@ -1,5 +1,6 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.map_modules;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -48,11 +49,11 @@ public class MapUtil {
     }
 
     public static void moveCamera(GoogleMap map, LatLng latLng, float zoom) {
-        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
-    public static Marker setMarker(GoogleMap map, LatLng position, String title, String snippet,int hue) {
+    public static Marker setMarker(GoogleMap map, LatLng position, String title, String snippet, int hue) {
         Marker marker = map.addMarker(new MarkerOptions()
                 //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green)) // TODO: SET CUSTOM MARKER
                 .icon(BitmapDescriptorFactory.defaultMarker(hue))
@@ -145,9 +146,18 @@ public class MapUtil {
      */
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
         FusedLocationProviderClient mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainMenuActivity.getContextOfApplication());
-        try {
-            //if (locationPermissionGranted) {
-                Task locationResult = mFusedLocationProviderClient.getLastLocation();
+
+        if (ActivityCompat.checkSelfPermission(MainMenuActivity.getContextOfApplication(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainMenuActivity.getContextOfApplication(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return null;
+        }
+        Task locationResult = mFusedLocationProviderClient.getLastLocation();
                 locationResult.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
@@ -159,10 +169,7 @@ public class MapUtil {
                         }
                     }
                 });
-            //}
-        } catch(SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
-        }
+
         return currentLocation;
     }
 
