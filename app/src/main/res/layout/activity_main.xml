@@ -1,92 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.thewalkingschoolbus.thewalkingschoolbus.MainActivity"
-    tools:layout_editor_absoluteY="81dp">
+    android:id="@+id/relativeLayout2"
+    android:layout_marginBottom="2dp"
+    android:layout_marginEnd="2dp"
+    android:layout_marginStart="2dp"
+    android:layout_marginTop="2dp">
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/registerid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/loginid"
-            android:layout_below="@+id/loginid"
-            android:text="@string/mainact_registerBtn"
-            tools:layout_editor_absoluteX="209dp"
-            tools:layout_editor_absoluteY="401dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:text="@string/mainact_email"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="225dp"
+                android:background="@drawable/gradientbackground"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/emailid"
-            android:layout_marginTop="28dp"
-            android:paddingEnd="10dp"
-            android:paddingStart="10dp"
-            android:text="@string/mainact_password"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/logo" />
 
-        <EditText
-            android:id="@+id/emailid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/textView2"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:ems="10"
-            android:hint="@string/mainact_enter_email"
-            android:inputType="textPersonName" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp"
+                    android:text="The Walking School Bus"
+                    android:textStyle="bold"
+                    android:textColor="#fff"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
 
-        <EditText
-            android:id="@+id/passwordid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/textView3"
-            android:layout_alignEnd="@+id/emailid"
-            android:layout_alignTop="@+id/textView3"
-            android:ems="10"
-            android:hint="@string/mainact_enter_password"
-            android:inputType="textPersonName" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <!--
+                <Button
+                    android:id="@+id/registerid"
+                    android:layout_width="310dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mainact_registerBtn" />
 
-        <Button
-            android:id="@+id/loginid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/passwordid"
-            android:layout_marginEnd="18dp"
-            android:layout_marginTop="77dp"
-            android:text="@string/mainact_loginBtn" />
+                <Button
+                    android:id="@+id/loginid"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="30dp"
+                    android:text="@string/mainact_loginBtn" />
+-->
+                <EditText
+                    android:id="@+id/emailid"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/logoBlue"
+                    android:drawableStart="@drawable/ic_email_black_24dp"
+                    android:hint="@string/mainact_enter_email"
+                    android:inputType="textPersonName"
+                    android:padding="10dp"
+                    android:textColor="#fff"
+                    android:textColorHint="@color/graylight" />
 
+                <EditText
+                    android:id="@+id/passwordid"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/logoBlue"
+                    android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                    android:hint="@string/mainact_enter_password"
+                    android:inputType="textPersonName"
+                    android:padding="10dp"
+                    android:textColor="#fff"
+                    android:textColorHint="@color/graylight" />
+
+                <Button
+                    android:id="@+id/registerid"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/mainact_registerBtn" />
+
+                <Button
+                    android:id="@+id/loginid"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:text="@string/mainact_loginBtn" />
+
+
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
-
-</android.support.constraint.ConstraintLayout>
