@@ -53,23 +53,20 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void startMainMenu(){
-        Intent intent = MainMenuActivity.makeIntent(this);
-        startActivity(intent);
-        finish();
-//        attemptLoginUser = new User();
-//        attemptLoginUser.setPassword(password);
-//        attemptLoginUser.setEmail(email);
-//        new GetUserAsyncTask(LOGIN_REQUEST, attemptLoginUser, null, null, null, new OnTaskComplete() {
-//            @Override
-//            public void onSuccess(Object result) {
-//                setAsLoginUser();
-//            }
-//
-//            @Override
-//            public void onFailure(Exception e) {
-//                Toast.makeText(InitialActivity.this, "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        }).execute();
+        attemptLoginUser = new User();
+        attemptLoginUser.setPassword(password);
+        attemptLoginUser.setEmail(email);
+        new GetUserAsyncTask(LOGIN_REQUEST, attemptLoginUser, null, null, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                setAsLoginUser();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(InitialActivity.this, "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }).execute();
     }
 
     private void setAsLoginUser(){

@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.Models;
+package com.thewalkingschoolbus.thewalkingschoolbus.service;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -19,12 +19,11 @@ import com.thewalkingschoolbus.thewalkingschoolbus.WalkingFragment;
 
 public class UploadLocationService extends Service {
 
-    Location currentLocation;
+    private Location currentLocation;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        updateLocation();
     }
 
     @Override
@@ -42,7 +41,7 @@ public class UploadLocationService extends Service {
         updateLocation();
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent _) {
+            public void onReceive(Context context, Intent intent) {
                 WalkingFragment.uploadCurrentCoordinate(currentLocation);
                 context.unregisterReceiver(this); // this == BroadcastReceiver, not Activity
                 setAlarm();
@@ -51,11 +50,11 @@ public class UploadLocationService extends Service {
 
         this.registerReceiver(receiver, new IntentFilter("com.blah.blah.somemessage"));
 
-        PendingIntent pintent = PendingIntent.getBroadcast(this, 0, new Intent("com.blah.blah.somemessage"), 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, new Intent("com.blah.blah.somemessage"), 0);
         AlarmManager manager = (AlarmManager) (this.getSystemService(Context.ALARM_SERVICE));
 
-        // set alarm to fire 30 sec (1000*30) from now (SystemClock.elapsedRealtime())
-        manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 1000 * 30, pintent);
+        // set alarm to fire 10 sec (1000*10) from now (SystemClock.elapsedRealtime())
+        manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 1000 * 10, pendingIntent);
     }
 
     private void updateLocation() {

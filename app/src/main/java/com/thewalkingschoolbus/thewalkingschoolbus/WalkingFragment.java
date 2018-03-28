@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
@@ -18,18 +17,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.UploadLocationStopService;
-import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
-import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.MapUtil;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.GpsLocation;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.UploadLocationService;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
+import com.thewalkingschoolbus.thewalkingschoolbus.service.UploadLocationStopService;
+import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.MapUtil;
+import com.thewalkingschoolbus.thewalkingschoolbus.service.UploadLocationService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static android.content.Context.LOCATION_SERVICE;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.POST_GPS_LOCATION;
 
 public class WalkingFragment extends android.app.Fragment {
@@ -89,6 +87,7 @@ public class WalkingFragment extends android.app.Fragment {
             isWalking = true;
             Toast.makeText(getActivity(), "Start", Toast.LENGTH_SHORT).show();
             updateStatusText("Now walking...");
+            updateLocationFirstTime();
             startUploadLocationService();
         }
     }
@@ -132,6 +131,7 @@ public class WalkingFragment extends android.app.Fragment {
         getActivity().stopService(intent);
 
         intent = new Intent(getActivity(), UploadLocationStopService.class);
+        getActivity().stopService(intent);
         getActivity().startService(intent);
     }
 
@@ -153,7 +153,7 @@ public class WalkingFragment extends android.app.Fragment {
     }
 
     public static String dateToStringSimple(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("'LAST UPDATED - DATE: 'yyyy-MM-dd', TIME:'HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("'DATE: 'yyyy-MM-dd', TIME:'HH:mm:ss");
         return dateFormat.format(date);
     }
 
@@ -165,34 +165,66 @@ public class WalkingFragment extends android.app.Fragment {
     // STATIC
 
     public static void uploadCurrentCoordinate(Location currentLocation) {
-        //Location currentLocation = MapUtil.getDeviceLocation();
+        User user = User.getLoginUser();
 
         if (currentLocation == null) {
-            Log.d(TAG, "#### current location == null! (note: first upload is always null)");
-            return;
+            Log.d(TAG, "#### current location == null! (note: first upload may be null)");
+            user.setLastGpsLocation(new GpsLocation(null, null, null));
+        } else {
+            Double lat = currentLocation.getLatitude();
+            Double lng = currentLocation.getLongitude();
+            String timestamp = dateToString(new Date());
+
+            Log.d(TAG, "#### LAT / LNG: " + lat + " / " + lng);
+            Log.d(TAG, "#### TIMESTAMP: " + timestamp);
+
+            user.setLastGpsLocation(new GpsLocation(lat.toString(), lng.toString(), timestamp));
         }
 
-        Double lat = currentLocation.getLatitude();
-        Double lng = currentLocation.getLongitude();
-        String timestamp = dateToString(new Date());
+        new GetUserAsyncTask(POST_GPS_LOCATION, user, null, null,null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                //User user = (User) result;
+                Log.d(TAG, "#### Successfully updated current location. " + result);
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Log.d(TAG, "#### Error: "+e.getMessage());
+            }
+        }).execute();
+    }
 
-        Log.d(TAG, "#### LAT / LNG: " + lat + " / " + lng);
-        Log.d(TAG, "#### TIMESTAMP: " + timestamp);
+    private void updateLocationFirstTime() {
+        final LocationManager locationManager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
 
-//        User user = User.getLoginUser();
-//        user.setLastGpsLocation(new GpsLocation(lat.toString(), lng.toString(), timestamp));
-//
-//        new GetUserAsyncTask(POST_GPS_LOCATION, user, null, null,null, new OnTaskComplete() {
-//            @Override
-//            public void onSuccess(Object result) {
-//                //User user = (User) result;
-//                Log.d(TAG, "#### Successfully updated current location. " + result);
-//            }
-//            @Override
-//            public void onFailure(Exception e) {
-//                Log.d(TAG, "#### Error: "+e.getMessage());
-//            }
-//        }).execute();
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+                new android.location.LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        uploadCurrentCoordinate(location);
+                        Log.d(TAG, "####: First Update");
+                        locationManager.removeUpdates(this);
+                    }
+
+                    @Override
+                    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String s) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String s) {
+
+                    }
+                });
     }
 
     public static Intent makeIntent(Context context) {
