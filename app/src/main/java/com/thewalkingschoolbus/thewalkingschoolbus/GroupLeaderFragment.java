@@ -43,7 +43,7 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
 //        }
         view = inflater.inflate(R.layout.fragment_group_leader, container, false);
 
-        //getGroupListAndPopulateList();
+        getGroupListAndPopulateList();
         setUpRefresh();
         setUpAddButton();
         return view;
@@ -61,7 +61,7 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
             @Override
             public void onSuccess(Object result) {
                 User returnUser = (User) result;
-                List<Group> mGroupList = returnUser.getMemberOfGroups(); // TODO: change this to getLeaderOfGroups() when it is implemented
+                List<Group> mGroupList = returnUser.getLeadsGroups();
 
                 mGroup = new Group[mGroupList.size()];
                 mGroupList.toArray(mGroup);
@@ -74,6 +74,7 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
 
                 // Begin get group detail recursion
                 getGroupWithDetail();
+                //stringsPrep();
             }
 
             @Override
@@ -201,3 +202,5 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
         );
     }
 }
+
+

@@ -33,8 +33,8 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
     private Group[] mGroup;
 
     // Used for recursive loop in getGroupWithDetailLoop()
-    private static boolean populateListReady = false;
-    private static int loopCount = 0;
+    private boolean populateListReady = false;
+    private int loopCount = 0;
 
     @Nullable
     @Override
@@ -44,7 +44,7 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
 //        }
         view = inflater.inflate(R.layout.fragment_group_member, container, false);
 
-        //getGroupListAndPopulateList();
+        getGroupListAndPopulateList();
         setUpRefresh();
         setUpAddButton();
         return view;
@@ -74,6 +74,7 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
 
                 // Begin get group detail recursion
                 getGroupWithDetail();
+                //stringsPrep();
             }
 
             @Override
@@ -166,7 +167,6 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-                TextView textView = (TextView) viewClicked;
                 Group selectedGroup = mGroup[position];
                 Intent intent =  GroupDetailActivity.makeIntent(getActivity(),selectedGroup,User.getLoginUser());
                 startActivity(intent);
@@ -200,4 +200,6 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
                 }
         );
     }
+
+
 }
