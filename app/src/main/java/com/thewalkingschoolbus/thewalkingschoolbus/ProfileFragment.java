@@ -1,7 +1,6 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 /*
@@ -44,10 +42,9 @@ public class ProfileFragment extends android.app.Fragment {
             container.removeAllViews();
         }
         view = inflater.inflate(R.layout.fragment_profile, container, false);
-        setUpEditProfileBtn();
+
         setupTextViews();
-
-
+        setUpEditProfileBtn();
 
         return view;
 
