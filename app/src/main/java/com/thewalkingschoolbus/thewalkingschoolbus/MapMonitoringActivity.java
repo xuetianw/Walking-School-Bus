@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Message;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.MapUtil;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.GpsLocation;
@@ -27,11 +29,13 @@ import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_GPS_LOCATION;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_ONE_GROUP;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_UNREAD_MESSAGES_FOR_USER;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 
 public class MapMonitoringActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private static final String TAG = "MapUtil";
+    private static Thread thread;
     private GoogleMap map;
     private List<User> activeMonitoringUsers;
 
@@ -41,6 +45,7 @@ public class MapMonitoringActivity extends AppCompatActivity implements AdapterV
         setContentView(R.layout.activity_map_monitoring);
 
         initializeMap();
+        updateNewMessageContinuously(10);
     }
 
     private void initializeMap() {
@@ -153,6 +158,7 @@ public class MapMonitoringActivity extends AppCompatActivity implements AdapterV
 
     private void updateDropdown() {
         Spinner dropdown = findViewById(R.id.spinnerSelectMonitoring);
+        dropdown.setVisibility(View.VISIBLE);
 
         List<String> items = new ArrayList<>();
         for (User user : activeMonitoringUsers) {
@@ -175,6 +181,52 @@ public class MapMonitoringActivity extends AppCompatActivity implements AdapterV
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    private void updateNewMessageContinuously(final int seconds) {
+        // Initial update
+        updateNewMessageCount();
+
+        // Avoid creating multiple threads
+        if (thread != null) {
+            return;
+        }
+
+        thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1000 * seconds);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateNewMessageCount();
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+        thread.start();
+    }
+
+    private void updateNewMessageCount() {
+        new GetUserAsyncTask(GET_UNREAD_MESSAGES_FOR_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                Message[] messages = (Message[]) result;
+                TextView textView = findViewById(R.id.newMessageCount);
+                textView.setText(messages.length + " NEW");
+
+                Log.d(TAG, "#### Successfully updated message count. " + messages.length);
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Log.d(TAG, "#### Error: "+e.getMessage());
+            }
+        }).execute();
     }
 
     public static Intent makeIntent(Context context) {
