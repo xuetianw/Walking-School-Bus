@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
     android:padding="16dp"
+
     tools:context="com.thewalkingschoolbus.thewalkingschoolbus.GroupDetailActivity">
 
     <LinearLayout
@@ -14,52 +14,52 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/nametextViewid"
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="16dp"
-            android:text="@string/group_id"
+            android:text="@string/user_id"
             android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title" />
 
         <TextView
-            android:id="@+id/groupIdField"
+            android:id="@+id/userIdField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="8dp"
-            android:text="TextView"
             android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title" />
 
     </LinearLayout>
 
 
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="8dp"
-            android:text="@string/group_description"
+            android:text="@string/user_name"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle" />
 
         <TextView
-            android:id="@+id/groupDesField"
+            android:id="@+id/userNameField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="TextView"
             android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
     </LinearLayout>
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="#c0c0c0" />
+        android:background="#c0c0c0"/>
 
 
     <LinearLayout
@@ -67,34 +67,27 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+    <Button
+        android:id="@+id/removeUserFromGroupBut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="@string/remove_user_from_group" />
+
         <Button
-            android:id="@+id/leaveGroupBut"
+            android:id="@+id/editUserBut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="LEAVE GROUP" />
-
-        <Button
-            android:id="@+id/editGroupBut"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="EDIT" />
-
-        <Button
-            android:id="@+id/addMemberBut"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-
-            android:text="ADD MEMBER" />
+            android:text="@string/edit_user" />
 
     </LinearLayout>
+
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="#c0c0c0" />
+        android:background="#c0c0c0"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -105,15 +98,58 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="@string/leader_id_label"
+            android:text="@string/cell_phone"
             android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
 
         <TextView
-            android:id="@+id/leaderIdField"
+            android:id="@+id/cellPhoneField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="TextView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/home_phone"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
+
+        <TextView
+            android:id="@+id/homePhoneField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
+    </LinearLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#c0c0c0"/>
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/emergency_info"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
+
+        <TextView
+            android:id="@+id/emergencyField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
     </LinearLayout>
 
@@ -125,41 +161,42 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/teacher_name"
             android:padding="8dp"
-            android:text="@string/leader_name_label"
             android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
 
         <TextView
-            android:id="@+id/leaderNameField"
+            android:id="@+id/teacherField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="TextView"
             android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
     </LinearLayout>
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="#c0c0c0" />
+        android:background="#c0c0c0"/>
 
     <TextView
+        android:id="@+id/textView9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="2dp"
-        android:text="@string/member_of_group"
+        android:text="@string/monitored_by"
         android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swiperefreshGroupDetail"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swiperefreshUserDetail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <ListView
-            android:id="@+id/memberListView"
+            android:id="@+id/userDetailListView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
 

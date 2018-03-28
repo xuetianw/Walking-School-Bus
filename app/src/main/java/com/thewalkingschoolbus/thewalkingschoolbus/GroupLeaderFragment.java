@@ -42,7 +42,7 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
 //        }
         view = inflater.inflate(R.layout.fragment_group_leader, container, false);
 
-        //getGroupListAndPopulateList();
+        getGroupListAndPopulateList();
         setUpRefresh();
         setUpAddButton();
         return view;
@@ -73,6 +73,7 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
 
                 // Begin get group detail recursion
                 getGroupWithDetail();
+                //stringsPrep();
             }
 
             @Override
@@ -200,3 +201,5 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
         );
     }
 }
+
+
