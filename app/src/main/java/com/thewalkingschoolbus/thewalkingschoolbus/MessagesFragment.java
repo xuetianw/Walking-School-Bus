@@ -42,7 +42,7 @@ public class MessagesFragment extends android.app.Fragment {
         }
         view = inflater.inflate(R.layout.fragment_messages, container, false);
 
-        updateListView();
+        //updateListView();
         setupNewMessageBtn();
         setUpRefresh();
 
@@ -64,7 +64,13 @@ public class MessagesFragment extends android.app.Fragment {
                 fullMessageList = new ArrayList<>();
 
                 for (numMessages = 0; numMessages < messages.length;numMessages++) {
-                    messageList.add(numMessages,"ID: "+messages[numMessages].getId()+" From User: "+ messages[numMessages].getFromUser().getName()+" (unread)");
+                    if(messages[numMessages].isEmergency()) {
+                        messageList.add(numMessages, "ID: " + messages[numMessages].getId() +
+                                " From User: " + messages[numMessages].getFromUser().getName() + " (unread urgent)");
+                    }else{
+                        messageList.add(numMessages, "ID: " + messages[numMessages].getId() +
+                                " From User: " + messages[numMessages].getFromUser().getName() + " (unread)");
+                    }
                     fullMessageList.add(numMessages,messages[numMessages]);
                 }
 

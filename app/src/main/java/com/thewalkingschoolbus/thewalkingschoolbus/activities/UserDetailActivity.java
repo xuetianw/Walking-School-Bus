@@ -43,8 +43,8 @@ public class UserDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_detail);
 
         extractData();
-        getUserInfoAndUpdateUI();
-        //setUpRemoveFromGroupBut();
+        //getUserInfoAndUpdateUI();
+        setUpRemoveFromGroupBut();
         setUpRefresh();
 
     }
