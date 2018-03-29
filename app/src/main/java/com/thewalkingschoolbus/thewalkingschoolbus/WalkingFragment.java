@@ -1,6 +1,7 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -8,6 +9,8 @@ import android.location.LocationManager;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.GpsLocation;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Message;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.service.UploadLocationStopService;
@@ -38,6 +43,7 @@ import java.util.List;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_ONE_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.POST_GPS_LOCATION;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.POST_MESSAGE_TO_PARENTS;
 
 public class WalkingFragment extends android.app.Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -49,6 +55,7 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
     private static List<Group> totalGroupList;
     private static int i;
     private static LatLng currentDestination;
+    private Message message;
 
     @Nullable
     @Override
@@ -80,11 +87,12 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
                 stopWalk();
             }
         });
-        Button panicBtn = view.findViewById(R.id.panicBtn);
+        final Button panicBtn = view.findViewById(R.id.panicBtn);
         panicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 panicWalk();
+                alterDialog();
             }
         });
     }
@@ -341,6 +349,44 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
                     }
                 });
     }
+
+    private void alterDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Enter Message:");
+
+        // Set up the input
+        final EditText input = new EditText(getActivity());
+        input.setText("Help!!!!");
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                message = new Message();
+                message.setText(input.getText().toString());
+                message.setEmergency(true);
+                sendMessage();
+            }
+        });
+        builder.show();
+    }
+    private void sendMessage(){
+        new GetUserAsyncTask(POST_MESSAGE_TO_PARENTS, User.getLoginUser(), null, null, message, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                Toast.makeText(getActivity(),"Message sent",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getActivity(),"Error: "+e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        }).execute();
+    }
+
 
     public static Intent makeIntent(Context context) {
         return new Intent(context, WalkingFragment.class);
