@@ -18,7 +18,6 @@
             android:id="@+id/LinearLayourid"
             android:layout_width="match_parent"
             android:layout_height="230dp"
-            android:background="@drawable/gradientbackground"
             android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
