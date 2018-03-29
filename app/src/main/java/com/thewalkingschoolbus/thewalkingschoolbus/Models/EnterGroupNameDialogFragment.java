@@ -9,12 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.MapFragment;
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
-
-import java.util.Objects;
 
 public class EnterGroupNameDialogFragment extends AppCompatDialogFragment {
 

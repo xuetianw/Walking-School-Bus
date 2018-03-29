@@ -1,7 +1,7 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,39 +13,54 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
-import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
+import static com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
 
-public class RegisterActivity extends AppCompatActivity {
+public class EditChildDetailActivity extends AppCompatActivity {
 
-    public static final String PLEASE_CORRECT_YOUR_DATE_OF_BIRTH = "Please correct your date of birth";
-    private EditText nameET, emailET, passwordET,
+
+    public static final String EDIT_SUCCESSFULLY_MESSAGE = "edit successfully";
+    private EditText nameET, emailET,
             birthYearET, birthMonthET, addressET,
             cellPhoneET, homePhoneET, gradeET,
             teacherNameDT, emergencyContactInfoET;
-
     private String loginName, registerEmail, registerPassword,
             birthYear, birthMonth, address, cellPhone, homePhone,
             grade, teacherName, emergencyContactInfo;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-
+        setContentView(R.layout.activity_edit_child_detail);
         setupTextviews();
-        setupRegisterButton();
+
+        setupSavebutton();
+        setupCancelButton();
     }
 
-    private void setupRegisterButton() {
-        Button registerBtn = (Button)findViewById(R.id.register2id);
-        registerBtn.setOnClickListener(new View.OnClickListener() {
+    private void setupCancelButton() {
+        Button saveButton = (Button)findViewById(R.id.childinfocancelbtnid);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
+
+    public static Intent makeIntent(Context context) {
+        Intent intent = new Intent(context, EditChildDetailActivity.class);
+        return intent;
+    }
+
+
+    private void setupSavebutton() {
+        Button saveButton = (Button)findViewById(R.id.childinfosaveBtn);
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loginName = nameET.getText().toString();
                 registerEmail = emailET.getText().toString();
-                registerPassword = passwordET.getText().toString();
                 birthYear = birthYearET.getText().toString();
                 birthMonth = birthMonthET.getText().toString();
                 address = addressET.getText().toString();
@@ -55,9 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
                 teacherName = teacherNameDT.getText().toString();
                 emergencyContactInfo = emergencyContactInfoET.getText().toString();
 
-
-
-                if(loginName.isEmpty() || registerEmail.isEmpty()|| registerPassword.isEmpty()){
+                if(loginName.isEmpty() || registerEmail.isEmpty()){
                     Toast.makeText(getApplicationContext(),MainActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
                 } else if(!birthMonth.isEmpty()
@@ -69,7 +82,8 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
                 } else {
-                    User user = new User();
+                    final User user = new User();
+                    user.setId(MonitoringDetailActivity.monitoredUser.getId());
                     user.setEmail(registerEmail);
                     user.setName(loginName);
                     user.setPassword(registerPassword);
@@ -82,57 +96,58 @@ public class RegisterActivity extends AppCompatActivity {
                     user.setTeacherName(teacherName);
                     user.setEmergencyContactInfo(emergencyContactInfo);
 
-
-                    new GetUserAsyncTask(CREATE_USER, user,null, null,null ,new OnTaskComplete() {
+                    new GetUserAsyncTask(EDIT_USER, user,null, null,null ,new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
-                            Toast.makeText(getApplicationContext(),REGISTER_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
+                            Toast.makeText(getApplicationContext(), EDIT_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
-                            storeUserInfoToSharePreferences();
-                            Intent intent = MainMenuActivity.makeIntent(getApplicationContext());
-                            startActivity(intent);
+                            System.out.println(result);
+                            if(result.toString().equals("SUCCESSFUL")){
+                                MonitoringDetailActivity.userEmail = registerEmail;
+                            }
                             finish();
                         }
                         @Override
                         public void onFailure(Exception e) {
-                            Toast.makeText(getApplicationContext(),REGISTER_FAIL_MESSAGE, Toast.LENGTH_SHORT)
-                                    .show();
+                            /*
+                            Toast.makeText(getApplicationContext(),"edit failed", Toast.LENGTH_SHORT)
+                                    .show();*/
                             Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }).execute();
                 }
-
-
             }
         });
     }
 
-    private void storeUserInfoToSharePreferences() {
-        SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
 
-        editor.putString(REGISTER_EMAIL, registerEmail );
-        editor.putString(LOGIN_PASSWORD, registerPassword );
-        editor.commit();
-
-    }
 
     private void setupTextviews() {
-        nameET = (EditText)findViewById(R.id.registernameid);
-        emailET = (EditText)findViewById(R.id.registeremailid);
-        passwordET = (EditText) findViewById(R.id.registerpasswordid);
-        birthYearET = (EditText) findViewById(R.id.yearid);
-        birthMonthET = (EditText) findViewById(R.id.monthid);
-        addressET = (EditText) findViewById(R.id.addressid);
-        cellPhoneET = (EditText) findViewById(R.id.cellphoneid);
-        homePhoneET = (EditText) findViewById(R.id.homePhoneid);
-        gradeET = (EditText) findViewById(R.id.gradeid);
-        teacherNameDT = (EditText) findViewById(R.id.teacherNameid);
-        emergencyContactInfoET = (EditText) findViewById(R.id.emergencyid);
+        nameET = (EditText)findViewById(R.id.enter_fullnameid);
+        emailET = (EditText)findViewById(R.id.enter_emailid);
+        birthYearET = (EditText) findViewById(R.id.birthdayYearid);
+        birthMonthET = (EditText) findViewById(R.id.enter_birth_month);
+        addressET = (EditText) findViewById(R.id.enter_address);
+        cellPhoneET = (EditText) findViewById(R.id.enter_phoneid);
+        homePhoneET = (EditText) findViewById(R.id.enter_homephone_number);
+        gradeET = (EditText) findViewById(R.id.enter_current_grade);
+        teacherNameDT = (EditText) findViewById(R.id.enter_teacher_name);
+        emergencyContactInfoET = (EditText) findViewById(R.id.emergency_contact_info);
 
-    }
+        nameET.setText(MonitoringDetailActivity.monitoredUser.getName());
+        emailET.setText(MonitoringDetailActivity.monitoredUser.getEmail());
+        birthYearET.setText(MonitoringDetailActivity.monitoredUser.getBirthYear());
+        birthMonthET.setText(MonitoringDetailActivity.monitoredUser.getBirthMonth());
+        addressET.setText(MonitoringDetailActivity.monitoredUser.getAddress());
+        cellPhoneET.setText(MonitoringDetailActivity.monitoredUser.getCellPhone());
+        homePhoneET.setText(MonitoringDetailActivity.monitoredUser.getHomePhone());
+        gradeET.setText(MonitoringDetailActivity.monitoredUser.getGrade());
+        teacherNameDT.setText(MonitoringDetailActivity.monitoredUser.getTeacherName());;
+        emergencyContactInfoET.setText(MonitoringDetailActivity.monitoredUser.getEmergencyContactInfo());;
 
-    public static Intent makeIntent(MainActivity mainActivity) {
-        return new Intent(mainActivity, RegisterActivity.class);
+
+
+
+
     }
 }

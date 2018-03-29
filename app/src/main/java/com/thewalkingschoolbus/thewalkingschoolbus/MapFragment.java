@@ -1,7 +1,6 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -31,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.location.FusedLocationProviderClient;

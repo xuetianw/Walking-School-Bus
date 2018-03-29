@@ -101,7 +101,6 @@ public class ServerManager {
         connection.setRequestMethod(GET);
         connection.setRequestProperty("Content-Type","application/json");
         connection.setRequestProperty("apiKey",API_KEY);
-        connection.setRequestProperty("JSON-DEPTH","2");
 
         if(User.getToken()!= null){
             connection.setRequestProperty("Authorization", User.getToken());
@@ -113,6 +112,7 @@ public class ServerManager {
             printStream.println(jsonObject .toString());
             printStream.close();
         }
+
         return connection;
     }
 
@@ -177,6 +177,7 @@ public class ServerManager {
         String token = connection.getHeaderField("authorization");
 
         User.setToken("Bearer "+token);
+        Log.i("TAG",User.getToken());
         return SUCCESSFUL;
     }
 
@@ -692,6 +693,7 @@ public class ServerManager {
     public Message[] getUnreadMessagesForUser(User user)throws Exception{
         String url = BASE_URL+ String.format(GET_UNREAD_MESSAGES_FOR_USER,user.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
+        connection.setRequestProperty("JSON-DEPTH","1");
 
         if (connection.getResponseCode() >= 400) {
             // failed
@@ -706,6 +708,7 @@ public class ServerManager {
     public Message[] getReadMessagesForUser(User user)throws Exception{
         String url = BASE_URL+ String.format(GET_READ_MESSAGES_FOR_USER,user.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
+        connection.setRequestProperty("JSON-DEPTH","1");
 
         if (connection.getResponseCode() >= 400) {
             // failed
@@ -768,6 +771,7 @@ public class ServerManager {
     public Message getOneMessage(Message message)throws Exception{
         String url = BASE_URL + String.format(GET_ONE_MESSAGE,message.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
+        //connection.setRequestProperty("JSON-DEPTH","1");
 
         if (connection.getResponseCode() >= 400) {
             // failed
@@ -782,8 +786,12 @@ public class ServerManager {
 
     public String setMessageAsReadOrUnread(User user, Message message)throws Exception{
         String url = BASE_URL + String.format(SET_MESSAGE_AS_READ_OR_UNREAD,message.getId(),user.getId());
-        JSONObject jsonObject = new JSONObject(String.valueOf(message.isEmergency()));
-        HttpURLConnection connection = httpRequestGet(url,jsonObject);
+        String str = String.valueOf(message.isMessageRead());
+        HttpURLConnection connection = httpRequestPost(url,null);
+
+        PrintStream outStream = new PrintStream(connection.getOutputStream());
+        outStream.println(str);
+        outStream.close();
 
         if (connection.getResponseCode() >= 400) {
             // failed
