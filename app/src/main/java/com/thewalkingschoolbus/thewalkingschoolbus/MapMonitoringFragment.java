@@ -41,7 +41,7 @@ public class MapMonitoringFragment extends android.support.v4.app.Fragment imple
     private static final String TAG = "MapMonitoringFragment";
     private View view;
 
-    private static Thread thread;
+    private Thread thread;
     private GoogleMap map;
     private List<User> activeMonitoringUsers;
 

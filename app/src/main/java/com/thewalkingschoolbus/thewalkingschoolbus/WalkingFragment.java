@@ -12,12 +12,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.GpsLocation;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.service.UploadLocationStopService;
@@ -26,15 +31,24 @@ import com.thewalkingschoolbus.thewalkingschoolbus.service.UploadLocationService
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_ONE_GROUP;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.POST_GPS_LOCATION;
 
-public class WalkingFragment extends android.app.Fragment {
+public class WalkingFragment extends android.app.Fragment implements AdapterView.OnItemSelectedListener {
+
+    private static int DEFAULT_ARRIVAL_RADIUS_METERS = 50;
 
     private static final String TAG = "WalkingFragment";
-    private View view;
-    private boolean isWalking = false;
+    private static View view;
+    private static boolean isWalking = false;
+    private static List<Group> totalGroupList;
+    private static int i;
+    private static LatLng currentDestination;
 
     @Nullable
     @Override
@@ -43,7 +57,9 @@ public class WalkingFragment extends android.app.Fragment {
             container.removeAllViews();
         }
         view = inflater.inflate(R.layout.fragment_walking, container, false);
+
         setupBtn();
+        setupDropdownGroupSelection();
         MapUtil.getLocationPermission();
 
         return view;
@@ -101,7 +117,10 @@ public class WalkingFragment extends android.app.Fragment {
     }
 
     private void startUploadLocationService() {
-        Intent intent = new Intent(getActivity(), UploadLocationService.class);
+        Intent intent = new Intent(getActivity(), UploadLocationStopService.class);
+        getActivity().stopService(intent);
+
+        intent = new Intent(getActivity(), UploadLocationService.class);
         getActivity().stopService(intent);
         getActivity().startService(intent);
     }
@@ -118,6 +137,77 @@ public class WalkingFragment extends android.app.Fragment {
     private void updateStatusText(String statusText) {
         TextView text = view.findViewById(R.id.walkStatusTxt);
         text.setText(statusText);
+    }
+
+    // DROPDOWN GROUP SELECTION
+
+    private void setupDropdownGroupSelection() {
+        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                User userDetailed = (User) result;
+
+                // Get all groups
+                totalGroupList = new ArrayList<>();
+                if (!userDetailed.getMemberOfGroups().isEmpty()) {
+                    totalGroupList = userDetailed.getMemberOfGroups();
+                }
+                if (!userDetailed.getLeadsGroups().isEmpty()) {
+                    totalGroupList.addAll(userDetailed.getLeadsGroups());
+                }
+
+                if (totalGroupList.isEmpty()) {
+                    Toast.makeText(getActivity(), "Not in any group", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                for (final Group group : totalGroupList) {
+                    new GetUserAsyncTask(GET_ONE_GROUP, null, null, group,null, new OnTaskComplete() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            totalGroupList.set(totalGroupList.indexOf(group), (Group) result);
+                            updateDropdown();
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            Log.d(TAG, "Error: "+e.getMessage());
+                        }
+                    }).execute();
+                }
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Log.d(TAG, "Error: "+e.getMessage());
+            }
+        }).execute();
+    }
+
+    private void updateDropdown() {
+        Spinner dropdown = view.findViewById(R.id.spinnerGroupList);
+        dropdown.setVisibility(View.VISIBLE);
+
+        List<String> items = new ArrayList<>();
+        for (Group group : totalGroupList) {
+            items.add("ID: " + group.getId() + " NAME: " + group.getGroupDescription());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, items);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        dropdown.setAdapter(adapter);
+        dropdown.setOnItemSelectedListener(this);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+        // Build current destination
+        Group groupSelected = totalGroupList.get(position);
+        Log.d(TAG, "#### ITEM SELECTED!" + groupSelected.getGroupDescription());
+        currentDestination = new LatLng(groupSelected.getRouteLatArray()[1], groupSelected.getRouteLngArray()[1]);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 
     // DATE
@@ -145,6 +235,9 @@ public class WalkingFragment extends android.app.Fragment {
     // STATIC
 
     public static void uploadCurrentCoordinate(Location currentLocation) {
+
+        checkArrival(currentLocation);
+
         User user = User.getLoginUser();
 
         if (currentLocation == null) {
@@ -172,6 +265,48 @@ public class WalkingFragment extends android.app.Fragment {
                 Log.d(TAG, "#### Error: "+e.getMessage());
             }
         }).execute();
+    }
+
+    private static void checkArrival(Location currentLocation) {
+
+        Log.d(TAG, "#### checkArrival");
+        Log.d(TAG, "#### currentDestination LatLng " + currentDestination.latitude + ", " + currentDestination.longitude);
+
+        if (currentLocation == null || currentDestination == null) {
+            Log.d(TAG, "#### currentLocation == null || currentDestination == null");
+            return;
+        }
+
+        float[] results = new float[1];
+
+        Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                currentDestination.latitude, currentDestination.longitude,
+                results);
+        if (results[0] < DEFAULT_ARRIVAL_RADIUS_METERS) {
+            arrived();
+        } else {
+            Log.d(TAG, "#### not arrived!");
+        }
+    }
+
+    private static void arrived() {
+        Log.d(TAG, "#### arrived");
+        Context context = MainMenuActivity.getContextOfApplication();
+        if (view != null) {
+            isWalking = false;
+            Toast.makeText(context, "Arrived", Toast.LENGTH_SHORT).show();
+            TextView text = view.findViewById(R.id.walkStatusTxt);
+            text.setText("Arrived!");
+
+            Intent intent = new Intent(context, UploadLocationService.class);
+            context.stopService(intent);
+
+            intent = new Intent(context, UploadLocationStopService.class);
+            context.stopService(intent);
+            context.startService(intent);
+        } else {
+            Log.d(TAG, "#### view != null");
+        }
     }
 
     private void updateLocationFirstTime() {
