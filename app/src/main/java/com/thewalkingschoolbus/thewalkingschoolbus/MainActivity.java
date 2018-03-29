@@ -17,6 +17,11 @@ import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
 import static com.thewalkingschoolbus.thewalkingschoolbus.MainMenuActivity.USER_LOGSTATUS;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
+/*
+* SOURCES - Based on following tutorials:
+* - Login UI Design in XML #2
+*    https://www.youtube.com/watch?v=oGmcFGlth0w
+* */
 
 /**
  * MainActivity
