@@ -5,11 +5,16 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Message;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
 import java.util.Calendar;
+
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.SET_MESSAGE_AS_READ_OR_UNREAD;
 
 public class MessageViewActivity extends AppCompatActivity {
 
@@ -31,6 +36,7 @@ public class MessageViewActivity extends AppCompatActivity {
         setFrom();
         setTimestamp();
         setText();
+        markAsRead();
     }
 
     private void setFrom() {
@@ -53,6 +59,21 @@ public class MessageViewActivity extends AppCompatActivity {
     private void setText() {
         TextView textViewFrom = findViewById(R.id.messageViewText);
         textViewFrom.setText(message.getText()); // TODO: check correctness
+    }
+
+    private void markAsRead(){
+        message.setMessageRead(true);
+        new GetUserAsyncTask(SET_MESSAGE_AS_READ_OR_UNREAD, User.getLoginUser(), null, null, message, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                Toast.makeText(MessageViewActivity.this,"messaged read",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(MessageViewActivity.this,"error: "+e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        }).execute();
     }
 
     public static Intent makeIntent(Context context, Message message) {

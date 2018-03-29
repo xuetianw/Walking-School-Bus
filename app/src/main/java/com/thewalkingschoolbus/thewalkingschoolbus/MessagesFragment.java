@@ -22,13 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_MESSAGES_FOR_USER;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_READ_MESSAGES_FOR_USER;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_UNREAD_MESSAGES_FOR_USER;
 
 public class MessagesFragment extends android.app.Fragment {
 
     private static final String TAG = "MessagesFragment";
     private View view;
     private List<String> messageList;
+    private List<Message> fullMessageList;
     private Message[] messages;
+    private int numMessages;
 
     @Nullable
     @Override
@@ -52,24 +56,21 @@ public class MessagesFragment extends android.app.Fragment {
     }
 
     private void updateListView() {
-        new GetUserAsyncTask(GET_MESSAGES_FOR_USER, User.getLoginUser(),null, null,null, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_UNREAD_MESSAGES_FOR_USER, User.getLoginUser(),null, null,null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                messageList = new ArrayList<>();
                 messages = (Message[]) result;
+                messageList = new ArrayList<>();
+                fullMessageList = new ArrayList<>();
 
-                for(Message message: messages){
-                    messageList.add(message.getText());
+                for (numMessages = 0; numMessages < messages.length;numMessages++) {
+                    messageList.add(numMessages,"ID: "+messages[numMessages].getId()+" From User: "+ messages[numMessages].getFromUser().getName()+" (unread)");
+                    fullMessageList.add(numMessages,messages[numMessages]);
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.message_entry, messageList);
-                ListView list = view.findViewById(R.id.listViewMessages);
-                list.setAdapter(adapter);
-                registerClickCallback();
 
-                if(messages.length == 0){
-                    Toast.makeText(getActivity(),"No message", Toast.LENGTH_SHORT).show();
-                }
+                getReadMessageForUser();
+
             }
             @Override
             public void onFailure(Exception e) {
@@ -79,12 +80,48 @@ public class MessagesFragment extends android.app.Fragment {
         }).execute();
     }
 
+    private void getReadMessageForUser(){
+        new GetUserAsyncTask(GET_READ_MESSAGES_FOR_USER, User.getLoginUser(), null, null, null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                messages = (Message[]) result;
+                if(messages.length != 0) {
+                    for (int i = 0; i < messages.length;i++) {
+                        messageList.add(numMessages,"ID: "+messages[i].getId()+" From User: "+ messages[i].getFromUser().getName());
+                        fullMessageList.add(numMessages,messages[i]);
+                        numMessages++;
+                    }
+                }
+
+
+                populateListView();
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getActivity(),"error: "+e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        }).execute();
+    }
+
+    private void populateListView(){
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.message_entry, messageList);
+        ListView list = view.findViewById(R.id.listViewMessages);
+        list.setAdapter(adapter);
+        registerClickCallback();
+
+        if(messages.length == 0){
+            Toast.makeText(getActivity(),"No message", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void registerClickCallback() {
         ListView list = view.findViewById(R.id.listViewMessages);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-                Message messageClicked = messages[position];
+                Message messageClicked = fullMessageList.get(position);
                 Intent intent = MessageViewActivity.makeIntent(getActivity(), messageClicked);
                 startActivity(intent);
             }
