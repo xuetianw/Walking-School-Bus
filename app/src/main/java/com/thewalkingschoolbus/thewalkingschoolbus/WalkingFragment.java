@@ -91,8 +91,7 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
         panicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                panicWalk();
-                alterDialog();
+                panicAlertDialog();
             }
         });
     }
@@ -118,10 +117,6 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
         } else {
             Toast.makeText(getActivity(), "Not walking", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void panicWalk() {
-
     }
 
     private void startUploadLocationService() {
@@ -350,13 +345,15 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
                 });
     }
 
-    private void alterDialog(){
+    // PANIC ALERT
+
+    private void panicAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Enter Message:");
 
         // Set up the input
         final EditText input = new EditText(getActivity());
-        input.setText("Help!!!!");
+        input.setText("Help!");
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         builder.setView(input);
@@ -373,7 +370,8 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
         });
         builder.show();
     }
-    private void sendMessage(){
+
+    private void sendMessage() {
         new GetUserAsyncTask(POST_MESSAGE_TO_PARENTS, User.getLoginUser(), null, null, message, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
