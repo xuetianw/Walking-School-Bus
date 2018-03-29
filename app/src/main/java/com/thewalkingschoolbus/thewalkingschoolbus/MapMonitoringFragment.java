@@ -51,11 +51,22 @@ public class MapMonitoringFragment extends android.support.v4.app.Fragment imple
             container.removeAllViews();
         }
         view = inflater.inflate(R.layout.fragment_map_monitoring, container, false);
-
         initializeMap();
-        updateNewMessageContinuously(10);
-
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (thread != null) {
+            thread.interrupt();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateNewMessageContinuously(10);
     }
 
     private void initializeMap() {
@@ -203,11 +214,6 @@ public class MapMonitoringFragment extends android.support.v4.app.Fragment imple
     private void updateNewMessageContinuously(final int seconds) {
         // Initial update
         updateNewMessageCount();
-
-        // Avoid creating multiple threads
-        if (thread != null) {
-            return;
-        }
 
         thread = new Thread() {
             @Override
