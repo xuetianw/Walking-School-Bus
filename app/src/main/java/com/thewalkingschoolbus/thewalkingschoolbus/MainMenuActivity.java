@@ -214,12 +214,11 @@ public class MainMenuActivity extends AppCompatActivity
             Intent intent = MainActivity.makeIntent(MainMenuActivity.this);
             startActivity(intent);
             finish();
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_fragment_dashboard) {
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, new MapMonitoringFragment());
+            fragmentTransaction.commit();
+            toolbar.setTitle("Dashboard");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

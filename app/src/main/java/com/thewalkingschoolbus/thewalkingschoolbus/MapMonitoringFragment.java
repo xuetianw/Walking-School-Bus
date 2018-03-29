@@ -2,21 +2,26 @@ package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.content.pm.PackageManager;
+import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.Models.Message;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.MapUtil;
 import com.thewalkingschoolbus.thewalkingschoolbus.Models.GpsLocation;
@@ -27,26 +32,54 @@ import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_GPS_LOCATION;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_ONE_GROUP;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_UNREAD_MESSAGES_FOR_USER;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 
-public class MapMonitoringActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MapMonitoringFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemSelectedListener {
 
-    private static final String TAG = "MapUtil";
+    private static final String TAG = "MapMonitoringFragment";
+    private View view;
+
+    private static Thread thread;
     private GoogleMap map;
     private List<User> activeMonitoringUsers;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map_monitoring);
-
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (container != null) {
+            container.removeAllViews();
+        }
+        view = inflater.inflate(R.layout.fragment_map_monitoring, container, false);
         initializeMap();
+        return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (thread != null) {
+            thread.interrupt();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateNewMessageContinuously(10);
     }
 
     private void initializeMap() {
-        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapMonitoring)).getMapAsync(new OnMapReadyCallback() {
+        Log.d(TAG, "initMap: initializing map");
+
+        SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager()
+                .findFragmentById(R.id.mapMonitoring);
+
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
+                Log.d(TAG, "onMapReady: map is ready");
+
                 map = googleMap;
                 updateMap();
             }
@@ -66,7 +99,7 @@ public class MapMonitoringActivity extends AppCompatActivity implements AdapterV
                 User userDetailed = (User) result;
                 List<User> monitoringUsers = userDetailed.getMonitorsUsers();
                 if (monitoringUsers.isEmpty()) {
-                    Toast.makeText(MapMonitoringActivity.this, "Not monitoring anyone", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Not monitoring anyone", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 for (final User user : monitoringUsers) {
@@ -152,14 +185,15 @@ public class MapMonitoringActivity extends AppCompatActivity implements AdapterV
     }
 
     private void updateDropdown() {
-        Spinner dropdown = findViewById(R.id.spinnerSelectMonitoring);
+        Spinner dropdown = view.findViewById(R.id.spinnerSelectMonitoring);
+        dropdown.setVisibility(View.VISIBLE);
 
         List<String> items = new ArrayList<>();
         for (User user : activeMonitoringUsers) {
             items.add(user.getName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, items);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         dropdown.setAdapter(adapter);
         dropdown.setOnItemSelectedListener(this);
@@ -177,7 +211,48 @@ public class MapMonitoringActivity extends AppCompatActivity implements AdapterV
 
     }
 
+    private void updateNewMessageContinuously(final int seconds) {
+        // Initial update
+        updateNewMessageCount();
+
+        thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1000 * seconds);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateNewMessageCount();
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+        thread.start();
+    }
+
+    private void updateNewMessageCount() {
+        new GetUserAsyncTask(GET_UNREAD_MESSAGES_FOR_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                Message[] messages = (Message[]) result;
+                TextView textView = view.findViewById(R.id.newMessageCount);
+                textView.setText(messages.length + " NEW");
+
+                Log.d(TAG, "#### Successfully updated message count. " + messages.length);
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Log.d(TAG, "#### Error: "+e.getMessage());
+            }
+        }).execute();
+    }
+
     public static Intent makeIntent(Context context) {
-        return new Intent(context, MapMonitoringActivity.class);
+        return new Intent(context, MapMonitoringFragment.class);
     }
 }

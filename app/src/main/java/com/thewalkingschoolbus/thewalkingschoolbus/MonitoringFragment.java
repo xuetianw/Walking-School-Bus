@@ -42,7 +42,7 @@ public class MonitoringFragment extends Fragment {
 
         //updateListView();
         setupAddMonitoringBtn();
-        setupOpenMapMonitoringBtn();
+        //setupOpenMapMonitoringBtn();
         setUpRefresh();
         return view;
     }
@@ -109,16 +109,16 @@ public class MonitoringFragment extends Fragment {
         });
     }
 
-    private void setupOpenMapMonitoringBtn() {
-        FloatingActionButton btn = view.findViewById(R.id.btnMapMonitoring);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = MapMonitoringActivity.makeIntent(getActivity());
-                startActivity(intent);
-            }
-        });
-    }
+//    private void setupOpenMapMonitoringBtn() {
+//        FloatingActionButton btn = view.findViewById(R.id.btnMapMonitoring);
+//        btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = MapMonitoringFragment.makeIntent(getActivity());
+//                startActivity(intent);
+//            }
+//        });
+//    }
 
     private void setUpRefresh(){
         final SwipeRefreshLayout mySwipeRefreshLayout = view.findViewById(R.id.swiperefreshForMonitoring);
