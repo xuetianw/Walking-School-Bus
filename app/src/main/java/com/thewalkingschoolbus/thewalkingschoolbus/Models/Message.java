@@ -12,6 +12,7 @@ public class Message {
     private Group toGroup;
     private boolean emergency;
     private String href;
+    private boolean messageRead;
 
     public Message(){
         id = null;
@@ -21,6 +22,7 @@ public class Message {
         toGroup = null;
         emergency = false;
         href = null;
+        messageRead = false;
     }
 
     public Message(String mText, boolean mEmergency){
@@ -32,6 +34,7 @@ public class Message {
         fromUser = null;
         toGroup = null;
         href = null;
+        messageRead = false;
     }
 
     public String getId() {
@@ -88,5 +91,13 @@ public class Message {
 
     public void setHref(String href) {
         this.href = href;
+    }
+
+    public boolean isMessageRead() {
+        return messageRead;
+    }
+
+    public void setMessageRead(boolean messageRead) {
+        this.messageRead = messageRead;
     }
 }
