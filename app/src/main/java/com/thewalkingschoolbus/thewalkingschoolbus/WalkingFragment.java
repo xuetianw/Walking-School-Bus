@@ -50,25 +50,18 @@ public class WalkingFragment extends android.app.Fragment {
     }
 
     private void setupBtn() {
-        Button startBtn = view.findViewById(R.id.startBtn);
+        Button startBtn = view.findViewById(R.id.startWalkingBtn);
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startWalk();
             }
         });
-        Button arrivedBtn = view.findViewById(R.id.arrivedBtn);
+        Button arrivedBtn = view.findViewById(R.id.stopWalkingBtn);
         arrivedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                arrivedWalk();
-            }
-        });
-        Button cancelBtn = view.findViewById(R.id.cancelBtn);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cancelWalk();
+                stopWalk();
             }
         });
         Button panicBtn = view.findViewById(R.id.panicBtn);
@@ -92,22 +85,11 @@ public class WalkingFragment extends android.app.Fragment {
         }
     }
 
-    private void arrivedWalk() {
+    private void stopWalk() {
         if (isWalking) {
             isWalking = false;
-            Toast.makeText(getActivity(), "Arrived", Toast.LENGTH_SHORT).show();
-            updateStatusText("Arrived");
-            cancelUploadLocationService();
-        } else {
-            Toast.makeText(getActivity(), "Not walking", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void cancelWalk() {
-        if (isWalking) {
-            isWalking = false;
-            Toast.makeText(getActivity(), "Cancel", Toast.LENGTH_SHORT).show();
-            updateStatusText("Walk canceled");
+            Toast.makeText(getActivity(), "Stop", Toast.LENGTH_SHORT).show();
+            updateStatusText("Walk stopped.");
             cancelUploadLocationService();
         } else {
             Toast.makeText(getActivity(), "Not walking", Toast.LENGTH_SHORT).show();
@@ -115,9 +97,7 @@ public class WalkingFragment extends android.app.Fragment {
     }
 
     private void panicWalk() {
-        // TODO: CONNECT TO MESSAGING
-        Toast.makeText(getActivity(), "You should call 911", Toast.LENGTH_SHORT).show();
-        updateStatusText("PANIC PANIC PANIC PANIC PANIC");
+
     }
 
     private void startUploadLocationService() {

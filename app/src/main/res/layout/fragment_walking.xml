@@ -31,7 +31,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Status"
+                android:text="STATUS"
                 android:textAlignment="center"
                 android:textSize="30sp"
                 android:textStyle="bold"
@@ -61,28 +61,25 @@
             app:layout_constraintVertical_bias="1.0">
 
             <Button
-                android:id="@+id/startBtn"
+                android:id="@+id/startWalkingBtn"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Start" />
+                android:text="Start Walking" />
 
             <Button
-                android:id="@+id/arrivedBtn"
+                android:id="@+id/stopWalkingBtn"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Arrived" />
-
-            <Button
-                android:id="@+id/cancelBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Cancel" />
+                android:text="Stop Walking" />
 
             <Button
                 android:id="@+id/panicBtn"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Panic" />
+                android:text="Emergency" />
         </LinearLayout>
     </LinearLayout>
 

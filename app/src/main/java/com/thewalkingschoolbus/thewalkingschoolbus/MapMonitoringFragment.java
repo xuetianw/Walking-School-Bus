@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,8 +52,17 @@ public class MapMonitoringFragment extends android.support.v4.app.Fragment imple
             container.removeAllViews();
         }
         view = inflater.inflate(R.layout.fragment_map_monitoring, container, false);
+
+        setupRefreshButton();
         initializeMap();
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateNewMessageContinuously(10);
     }
 
     @Override
@@ -63,10 +73,14 @@ public class MapMonitoringFragment extends android.support.v4.app.Fragment imple
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateNewMessageContinuously(10);
+    private void setupRefreshButton() {
+        Button button = view.findViewById(R.id.refreshMapMonitoring);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateMap();
+            }
+        });
     }
 
     private void initializeMap() {
@@ -87,6 +101,7 @@ public class MapMonitoringFragment extends android.support.v4.app.Fragment imple
     }
 
     private void updateMap() {
+        Toast.makeText(getActivity(), "Updating map", Toast.LENGTH_SHORT).show();
         map.clear();
         activeMonitoringUsers = new ArrayList<>();
         updateMapGetLoginUserDetail();
