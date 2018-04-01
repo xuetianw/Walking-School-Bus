@@ -2,11 +2,11 @@ package com.thewalkingschoolbus.thewalkingschoolbus.api_binding;
 
 import android.util.Log;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.ApiException;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.GpsLocation;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.Message;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.ApiException;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.GpsLocation;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.Message;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
 import com.google.gson.Gson;
 

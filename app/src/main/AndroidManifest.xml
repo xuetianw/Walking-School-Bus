@@ -88,7 +88,7 @@
             android:name=".MessageViewActivity"/>
         <activity
             android:name=".EditChildDetailActivity"/>
-        <service android:name=".service.UploadLocationService" />
-        <service android:name=".service.UploadLocationStopService" />
+        <service android:name=".services.UploadLocationService" />
+        <service android:name=".services.UploadLocationStopService" />
     </application>
 </manifest>
