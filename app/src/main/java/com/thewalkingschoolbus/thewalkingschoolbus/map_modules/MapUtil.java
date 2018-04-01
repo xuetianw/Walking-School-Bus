@@ -11,14 +11,11 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -27,9 +24,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.thewalkingschoolbus.thewalkingschoolbus.MainMenuActivity;
-import com.thewalkingschoolbus.thewalkingschoolbus.MapFragment;
-import com.thewalkingschoolbus.thewalkingschoolbus.R;
+import com.thewalkingschoolbus.thewalkingschoolbus.MainActivity;
 
 public class MapUtil {
 
@@ -81,13 +76,13 @@ public class MapUtil {
      */
         Log.d(TAG, "getLocationPermission: getting location permissions");
 
-        if (ContextCompat.checkSelfPermission(MainMenuActivity.getContextOfApplication(),
+        if (ContextCompat.checkSelfPermission(MainActivity.getContextOfApplication(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true;
             //initMap();
         } else {
-            ActivityCompat.requestPermissions((Activity) MainMenuActivity.getContextOfApplication(),
+            ActivityCompat.requestPermissions((Activity) MainActivity.getContextOfApplication(),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
                             android.Manifest.permission.ACCESS_COARSE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
@@ -123,9 +118,9 @@ public class MapUtil {
                 map = googleMap;
                 if (locationPermissionGranted) {
                     getDeviceLocation();
-                    if (ActivityCompat.checkSelfPermission(MainMenuActivity.getContextOfApplication(),
+                    if (ActivityCompat.checkSelfPermission(MainActivity.getContextOfApplication(),
                             android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(MainMenuActivity.getContextOfApplication(),
+                            && ActivityCompat.checkSelfPermission(MainActivity.getContextOfApplication(),
                             android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
@@ -145,9 +140,9 @@ public class MapUtil {
      * cases when a location is not available.
      */
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
-        FusedLocationProviderClient mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainMenuActivity.getContextOfApplication());
+        FusedLocationProviderClient mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.getContextOfApplication());
 
-        if (ActivityCompat.checkSelfPermission(MainMenuActivity.getContextOfApplication(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainMenuActivity.getContextOfApplication(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(MainActivity.getContextOfApplication(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.getContextOfApplication(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding

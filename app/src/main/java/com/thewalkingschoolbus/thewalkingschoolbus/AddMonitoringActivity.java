@@ -121,7 +121,7 @@ public class AddMonitoringActivity extends AppCompatActivity {
     public static User getUserFromIntent(Intent data) {
         // TODO: RETURN USER BASED ON CORRECT DATABASE
         String email = data.getStringExtra(RESULT_EMAIL).trim();
-//        for (User user:MainMenuActivity.registeredUsers) {
+//        for (User user:MainActivity.registeredUsers) {
 //            if (user.getEmail().trim().equalsIgnoreCase(email)) {
 //                return user;
 //            }
