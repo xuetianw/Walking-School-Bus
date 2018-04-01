@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus;
+package com.thewalkingschoolbus.thewalkingschoolbus.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
@@ -29,7 +30,7 @@ public class MonitoringDetailActivity extends AppCompatActivity {
             teacherNametv, emergencyContactInfotv;
 
     public static String userEmail;
-    static User monitoredUser = new User();
+    public static User monitoredUser = new User();
     ArrayList <Group> groupArrayList =  new ArrayList<>();
     public static ArrayList<String> arrayList;
 

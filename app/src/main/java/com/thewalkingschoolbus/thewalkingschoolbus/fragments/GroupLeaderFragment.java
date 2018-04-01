@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus;
+package com.thewalkingschoolbus.thewalkingschoolbus.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +11,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.R;
+import com.thewalkingschoolbus.thewalkingschoolbus.activities.GroupDetailActivity;
+import com.thewalkingschoolbus.thewalkingschoolbus.activities.JoinOrCreateGroupActivity;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
@@ -23,15 +27,15 @@ import java.util.List;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_ONE_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 
-public class GroupMemberFragment extends android.support.v4.app.Fragment {
+public class GroupLeaderFragment extends android.support.v4.app.Fragment {
 
-    private static final String TAG = "GroupMemberFragment";
+    private static final String TAG = "GroupLeaderFragment";
     private View view;
     private Group[] mGroup;
 
     // Used for recursive loop in getGroupWithDetailLoop()
-    private boolean populateListReady = false;
-    private int loopCount = 0;
+    private static boolean populateListReady = false;
+    private static int loopCount = 0;
 
     @Nullable
     @Override
@@ -39,7 +43,7 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
 //        if (container != null) {
 //            container.removeAllViews();
 //        }
-        view = inflater.inflate(R.layout.fragment_group_member, container, false);
+        view = inflater.inflate(R.layout.fragment_group_leader, container, false);
 
         getGroupListAndPopulateList();
         setUpRefresh();
@@ -59,13 +63,14 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
             @Override
             public void onSuccess(Object result) {
                 User returnUser = (User) result;
-                List<Group> mGroupList = returnUser.getMemberOfGroups();
+                List<Group> mGroupList = returnUser.getLeadsGroups();
+
                 mGroup = new Group[mGroupList.size()];
                 mGroupList.toArray(mGroup);
 
                 // Without this return statement app will from ArrayIndexOutOfBoundsException!
                 if (mGroupList.isEmpty()) {
-                    Toast.makeText(getActivity(), "Not a member of any group!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Not a leader of any group!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -92,7 +97,7 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
         if (loopCount >= mGroup.length - 1) {
             populateListReady = true;
         }
-        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mGroup[loopCount], null,new OnTaskComplete() {
+        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mGroup[loopCount],null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 mGroup[loopCount] = (Group) result;
@@ -136,13 +141,13 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
     }
 
     private void populateListView(String[] mGroupDisplay){
-        Toast.makeText(getActivity(),"Group member list updated", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),"Group leader list updated", Toast.LENGTH_SHORT).show();
         // create list of item
         String[] myItems = mGroupDisplay;
         // Build adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.group_entry,myItems);
         // configure the list view
-        ListView list = view.findViewById(R.id.groupListViewMember);
+        ListView list = view.findViewById(R.id.groupListViewLeader);
         list.setAdapter(adapter);
 
         //registerClickCallback
@@ -155,15 +160,16 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
         // Build adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.group_entry, myItems);
         // configure the list view
-        ListView list = view.findViewById(R.id.groupListViewMember);
+        ListView list = view.findViewById(R.id.groupListViewLeader);
         list.setAdapter(adapter);
     }
 
     private void registerClickCallback() {
-        ListView list = view.findViewById(R.id.groupListViewMember);
+        ListView list = view.findViewById(R.id.groupListViewLeader);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
+                TextView textView = (TextView) viewClicked;
                 Group selectedGroup = mGroup[position];
                 Intent intent =  GroupDetailActivity.makeIntent(getActivity(),selectedGroup,User.getLoginUser());
                 startActivity(intent);
@@ -172,7 +178,7 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
     }
 
     private void setUpAddButton(){
-        FloatingActionButton btn = view.findViewById(R.id.addGroupBtnMember);
+        FloatingActionButton btn = view.findViewById(R.id.addGroupBtnLeader);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -183,7 +189,7 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
     }
 
     private void setUpRefresh(){
-        final SwipeRefreshLayout mySwipeRefreshLayout = view.findViewById(R.id.swipeRefreshMember);
+        final SwipeRefreshLayout mySwipeRefreshLayout = view.findViewById(R.id.swipeRefreshLeader);
         mySwipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -197,6 +203,6 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
                 }
         );
     }
-
-
 }
+
+

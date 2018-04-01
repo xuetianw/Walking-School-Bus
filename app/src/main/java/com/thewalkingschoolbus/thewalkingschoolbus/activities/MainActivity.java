@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus;
+package com.thewalkingschoolbus.thewalkingschoolbus.activities;
 
 import android.app.FragmentManager;
 import android.content.Context;
@@ -18,12 +18,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.FriendsFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.GroupFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.MapFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.MapMonitoringFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.MessagesFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.ProfileFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.R;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.WalkingFragment;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.MapFragmentState;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.LoginActivity.*;
+import static com.thewalkingschoolbus.thewalkingschoolbus.activities.LoginActivity.*;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_EMAIL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
 

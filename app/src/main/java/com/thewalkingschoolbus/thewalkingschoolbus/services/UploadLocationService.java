@@ -15,7 +15,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.WalkingFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.WalkingFragment;
 
 public class UploadLocationService extends Service {
 

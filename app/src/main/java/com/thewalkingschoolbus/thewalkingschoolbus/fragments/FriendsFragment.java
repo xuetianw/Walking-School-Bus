@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus;
+package com.thewalkingschoolbus.thewalkingschoolbus.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,17 +7,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupFragment extends Fragment {
+public class FriendsFragment extends Fragment {
 
-    private static final String TAG = "GroupFragment";
+    private static final String TAG = "FriendsFragment";
     private View view;
 
     /**
@@ -61,13 +62,13 @@ public class GroupFragment extends Fragment {
         if (container != null) {
             container.removeAllViews();
         }
-        view = inflater.inflate(R.layout.fragment_group, container, false);
+        view = inflater.inflate(R.layout.fragment_friends, container, false);
 
         // Set up the viewPager with the sections adapter.
-        ViewPager viewPager = view.findViewById(R.id.containerGroup);
+        ViewPager viewPager = view.findViewById(R.id.containerFriends);
         setupViewPager(viewPager);
 
-        TabLayout tabs = view.findViewById(R.id.tabsGroup);
+        TabLayout tabs = view.findViewById(R.id.tabsFriends);
         tabs.setupWithViewPager(viewPager);
 
         return view;
@@ -75,8 +76,8 @@ public class GroupFragment extends Fragment {
 
     private void setupViewPager(ViewPager viewPager) {
         SectionsPageAdapter adapter = new SectionsPageAdapter(getChildFragmentManager());
-        adapter.addFragment(new GroupMemberFragment(), "Member");
-        adapter.addFragment(new GroupLeaderFragment(), "Leader");
+        adapter.addFragment(new MonitoringFragment(), "Monitoring");
+        adapter.addFragment(new MonitoredByFragment(), "Monitored By");
         viewPager.setAdapter(adapter);
     }
 }
