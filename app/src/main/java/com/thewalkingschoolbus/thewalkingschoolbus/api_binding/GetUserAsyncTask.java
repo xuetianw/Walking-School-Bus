@@ -37,109 +37,109 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
 
     protected Object doInBackground(Void... urls){
         try {
-            ServerManager server = new ServerManager();
+            //ServerManager server = new ServerManager();
             switch (functionChoice) {
                 case LOGIN_REQUEST:
-                    returnObject = server.loginRequest(mParentUser,passwordEntered);
+                    returnObject = UserApiBinding.loginRequest(mParentUser,passwordEntered);
                     break;
                 case CREATE_USER:
-                    returnObject = server.createUser(mParentUser);
+                    returnObject = UserApiBinding.createUser(mParentUser);
                     break;
                 case LIST_USERS:
-                    returnObject = server.listUsers();
+                    returnObject = UserApiBinding.listUsers();
                     break;
                 case GET_USER_BY_ID:
-                    returnObject = server.getUserById(mParentUser);
+                    returnObject = UserApiBinding.getUserById(mParentUser);
                     break;
                 case GET_USER_BY_EMAIL:
-                    returnObject = server.getUserByEmail(mParentUser);
+                    returnObject = UserApiBinding.getUserByEmail(mParentUser);
                     break;
                 case USR_MONITORING_LIST:
-                    returnObject = server.userMonitoringList(mParentUser);
+                    returnObject = MonitoringApiBinding.userMonitoringList(mParentUser);
                     break;
                 case USER_MONITORING_BY_LIST:
-                    returnObject = server.userMonitoringByList(mParentUser);
+                    returnObject = MonitoringApiBinding.userMonitoringByList(mParentUser);
                     break;
                 case CREATE_MONITORING:
-                    returnObject = server.createMonitoring(mParentUser, mChildUser);
+                    returnObject = MonitoringApiBinding.createMonitoring(mParentUser, mChildUser);
                     break;
                 case DELETE_MONITORING:
-                    returnObject = server.deleteMonitoring(mParentUser, mChildUser);
+                    returnObject = MonitoringApiBinding.deleteMonitoring(mParentUser, mChildUser);
                     break;
                 case LIST_GROUPS:
-                    returnObject = server.listGroups();
+                    returnObject = GroupApiBinding.listGroups();
                     break;
                 case CREATE_GROUP:
-                    returnObject = server.createGroup(mGroup);
+                    returnObject = GroupApiBinding.createGroup(mGroup);
                     break;
                 case CREATE_GROUP_WITH_DETAIL:
-                    returnObject = server.createGroupWithDetail(mGroup);
+                    returnObject = GroupApiBinding.createGroupWithDetail(mGroup);
                     break;
                 case GET_ONE_GROUP:
-                    returnObject = server.getOneGroup(mGroup);
+                    returnObject = GroupApiBinding.getOneGroup(mGroup);
                     break;
                 case UPDATE_EXISTING_GROUP:
-                    returnObject = server.updateExistingGroup(mGroup);
+                    returnObject = GroupApiBinding.updateExistingGroup(mGroup);
                     break;
                 case DELETE_GROUP:
-                    returnObject = server.deleteGroup(mGroup);
+                    returnObject = GroupApiBinding.deleteGroup(mGroup);
                     break;
                 case GET_MEMBERS_OF_GROUP:
-                    returnObject = server.getMembersOfGroup(mGroup);
+                    returnObject = GroupApiBinding.getMembersOfGroup(mGroup);
                     break;
                 case ADD_MEMBER_TO_GROUP:
-                    returnObject = server.addMemberToGroup(mParentUser,mGroup);
+                    returnObject = GroupApiBinding.addMemberToGroup(mParentUser,mGroup);
                     break;
                 case REMOVE_MEMBER_OF_GROUP:
-                    returnObject = server.removeMemberOfGroup(mParentUser,mGroup);
+                    returnObject = GroupApiBinding.removeMemberOfGroup(mParentUser,mGroup);
                     break;
                 case DELETE_USER:
-                    returnObject = server.deleteUser(mParentUser);
+                    returnObject = UserApiBinding.deleteUser(mParentUser);
                     break;
                 case EDIT_USER:
-                    returnObject = server.editUser(mParentUser);
+                    returnObject = UserApiBinding.editUser(mParentUser);
                     break;
                 case GET_GPS_LOCATION:
-                    returnObject = server.getGpsLocation(mParentUser);
+                    returnObject = UserApiBinding.getGpsLocation(mParentUser);
                     break;
                 case POST_GPS_LOCATION:
-                    returnObject = server.postGpsLocation(mParentUser);
+                    returnObject = UserApiBinding.postGpsLocation(mParentUser);
                     break;
                 case GET_ALL_MESSAGES:
-                    returnObject = server.getAllMessages();
+                    returnObject = MessageApiBinding.getAllMessages();
                     break;
                 case GET_ALL_EMERGENCY_MESSAGES:
-                    returnObject = server.getAllEmergencyMessages();
+                    returnObject = MessageApiBinding.getAllEmergencyMessages();
                     break;
                 case GET_MESSAGES_FOR_GROUP:
-                    returnObject = server.getMessagesForGroup(mGroup);
+                    returnObject = MessageApiBinding.getMessagesForGroup(mGroup);
                     break;
                 case GET_EMERGENCY_MESSAGES_FOR_GROUP:
-                    returnObject = server.getEmergencyMessagesForGroup(mGroup);
+                    returnObject = MessageApiBinding.getEmergencyMessagesForGroup(mGroup);
                     break;
                 case GET_MESSAGES_FOR_USER:
-                    returnObject = server.getMessagesForUser(mParentUser);
+                    returnObject = MessageApiBinding.getMessagesForUser(mParentUser);
                     break;
                 case GET_UNREAD_MESSAGES_FOR_USER:
-                    returnObject = server.getUnreadMessagesForUser(mParentUser);
+                    returnObject = MessageApiBinding.getUnreadMessagesForUser(mParentUser);
                     break;
                 case GET_READ_MESSAGES_FOR_USER:
-                    returnObject = server.getReadMessagesForUser(mParentUser);
+                    returnObject = MessageApiBinding.getReadMessagesForUser(mParentUser);
                     break;
                 case GET_UNREAD_EMERGENCY_MESSAGES_FOR_USER:
-                    returnObject = server.getUnreadEmergencyMessagesForUser(mParentUser);
+                    returnObject = MessageApiBinding.getUnreadEmergencyMessagesForUser(mParentUser);
                     break;
                 case POST_MESSAGE_TO_GROUP:
-                    returnObject = server.postMessageToGroup(mGroup,mMessage);
+                    returnObject = MessageApiBinding.postMessageToGroup(mGroup,mMessage);
                     break;
                 case POST_MESSAGE_TO_PARENTS:
-                    returnObject = server.postMessageToParents(mParentUser,mMessage);
+                    returnObject = MessageApiBinding.postMessageToParents(mParentUser,mMessage);
                     break;
                 case GET_ONE_MESSAGE:
-                    returnObject = server.getOneMessage(mMessage);
+                    returnObject = MessageApiBinding.getOneMessage(mMessage);
                     break;
                 case SET_MESSAGE_AS_READ_OR_UNREAD:
-                    returnObject = server.setMessageAsReadOrUnread(mParentUser,mMessage);
+                    returnObject = MessageApiBinding.setMessageAsReadOrUnread(mParentUser,mMessage);
                     break;
                 default:
                     returnObject = null;
