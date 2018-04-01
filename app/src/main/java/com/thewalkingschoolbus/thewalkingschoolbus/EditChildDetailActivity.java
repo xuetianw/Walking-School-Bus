@@ -71,7 +71,7 @@ public class EditChildDetailActivity extends AppCompatActivity {
                 emergencyContactInfo = emergencyContactInfoET.getText().toString();
 
                 if(loginName.isEmpty() || registerEmail.isEmpty()){
-                    Toast.makeText(getApplicationContext(),MainActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), LoginActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
                 } else if(!birthMonth.isEmpty()
                         && ((Integer.parseInt(birthMonth) > 12 || Integer.parseInt(birthMonth) < 0))){

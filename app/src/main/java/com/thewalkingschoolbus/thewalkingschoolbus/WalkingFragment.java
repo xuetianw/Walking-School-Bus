@@ -295,7 +295,7 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
 
     private static void arrived() {
         Log.d(TAG, "#### arrived");
-        Context context = MainMenuActivity.getContextOfApplication();
+        Context context = MainActivity.getContextOfApplication();
         if (view != null) {
             isWalking = false;
             Toast.makeText(context, "Arrived", Toast.LENGTH_SHORT).show();

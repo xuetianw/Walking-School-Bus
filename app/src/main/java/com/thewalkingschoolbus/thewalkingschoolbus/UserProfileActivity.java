@@ -14,8 +14,8 @@ import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.AppStates;
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.REGISTER_EMAIL;
+import static com.thewalkingschoolbus.thewalkingschoolbus.LoginActivity.AppStates;
+import static com.thewalkingschoolbus.thewalkingschoolbus.LoginActivity.REGISTER_EMAIL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
 
@@ -70,7 +70,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 emergencyContactInfo = emergencyContactInfoET.getText().toString();
 
                 if(loginName.isEmpty() || registerEmail.isEmpty()){
-                    Toast.makeText(getApplicationContext(),MainActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), LoginActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
                 } else if(!birthMonth.isEmpty()
                         && ((Integer.parseInt(birthMonth) > 12 || Integer.parseInt(birthMonth) < 0))){

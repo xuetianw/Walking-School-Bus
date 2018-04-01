@@ -13,7 +13,7 @@ import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.*;
+import static com.thewalkingschoolbus.thewalkingschoolbus.LoginActivity.*;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -58,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                 if(loginName.isEmpty() || registerEmail.isEmpty()|| registerPassword.isEmpty()){
-                    Toast.makeText(getApplicationContext(),MainActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), LoginActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
                 } else if(!birthMonth.isEmpty()
                         && ((Integer.parseInt(birthMonth) > 12 || Integer.parseInt(birthMonth) < 0))){
@@ -89,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),REGISTER_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
                             storeUserInfoToSharePreferences();
-                            Intent intent = MainMenuActivity.makeIntent(getApplicationContext());
+                            Intent intent = MainActivity.makeIntent(getApplicationContext());
                             startActivity(intent);
                             finish();
                         }
@@ -132,7 +132,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    public static Intent makeIntent(MainActivity mainActivity) {
-        return new Intent(mainActivity, RegisterActivity.class);
+    public static Intent makeIntent(LoginActivity loginActivity) {
+        return new Intent(loginActivity, RegisterActivity.class);
     }
 }
