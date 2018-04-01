@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.service;
+package com.thewalkingschoolbus.thewalkingschoolbus.services;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

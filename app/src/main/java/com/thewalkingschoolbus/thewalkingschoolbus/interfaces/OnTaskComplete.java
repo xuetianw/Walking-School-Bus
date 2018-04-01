@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.Interface;
+package com.thewalkingschoolbus.thewalkingschoolbus.interfaces;
 
 /**
  * Created by Jackyx on 2018-03-05.

@@ -1,5 +1,6 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,15 +25,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.GpsLocation;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.Message;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.GpsLocation;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.Message;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
-import com.thewalkingschoolbus.thewalkingschoolbus.service.UploadLocationStopService;
+import com.thewalkingschoolbus.thewalkingschoolbus.services.UploadLocationStopService;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.MapUtil;
-import com.thewalkingschoolbus.thewalkingschoolbus.service.UploadLocationService;
+import com.thewalkingschoolbus.thewalkingschoolbus.services.UploadLocationService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -347,6 +348,7 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
 
     // PANIC ALERT
 
+    @SuppressLint("RestrictedApi")
     private void panicAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Enter Message:");
@@ -356,7 +358,7 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
         input.setText("Help!");
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        builder.setView(input);
+        builder.setView(input, 48, 0, 48, 0);
 
         // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -384,7 +386,6 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
             }
         }).execute();
     }
-
 
     public static Intent makeIntent(Context context) {
         return new Intent(context, WalkingFragment.class);

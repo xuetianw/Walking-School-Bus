@@ -2,10 +2,8 @@ package com.thewalkingschoolbus.thewalkingschoolbus;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +16,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.Group;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.Message;
+import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.Message;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.MapUtil;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.GpsLocation;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.GpsLocation;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
 import java.util.ArrayList;
 import java.util.List;

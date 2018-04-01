@@ -1,6 +1,5 @@
 package com.thewalkingschoolbus.thewalkingschoolbus;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,20 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.Interface.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.Models.User;
+import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.AppStates;
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.LOGIN_PASSWORD;
 import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.REGISTER_EMAIL;
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.REGISTER_FAIL_MESSAGE;
-import static com.thewalkingschoolbus.thewalkingschoolbus.MainActivity.REGISTER_SUCCESSFULLY_MESSAGE;
 import static com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH;
-import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.CREATE_USER;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
 
 /**

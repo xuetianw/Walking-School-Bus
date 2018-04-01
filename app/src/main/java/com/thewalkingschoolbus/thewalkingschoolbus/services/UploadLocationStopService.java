@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.service;
+package com.thewalkingschoolbus.thewalkingschoolbus.services;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.WalkingFragment;
 
