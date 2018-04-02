@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus;
+package com.thewalkingschoolbus.thewalkingschoolbus.activities;
 
 import android.app.FragmentManager;
 import android.content.Context;
@@ -18,12 +18,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.ProfileFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.R;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.WalkingFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.FriendsFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.GroupFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.MapFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.MapMonitoringFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.MessagesFragment;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.MapFragmentState;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.LoginActivity.*;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_EMAIL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
 
@@ -81,9 +88,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getUserLastState() {
-        SharedPreferences preferences = getApplication().getSharedPreferences(AppStates, MODE_PRIVATE);
-        String email = preferences.getString(REGISTER_EMAIL, null);
-        String password = preferences.getString(LOGIN_PASSWORD, null);
+        SharedPreferences preferences = getApplication().getSharedPreferences(LoginActivity.AppStates, MODE_PRIVATE);
+        String email = preferences.getString(LoginActivity.REGISTER_EMAIL, null);
+        String password = preferences.getString(LoginActivity.LOGIN_PASSWORD, null);
         if( email == null || password == null) {
             Intent intent = LoginActivity.makeIntent(getApplicationContext());
             startActivity(intent);
@@ -96,7 +103,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(Object result) {
                     if(result == null){
-                        Toast.makeText(getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                        Toast.makeText(getApplicationContext(), LoginActivity.LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
                                 .show();
                     } else {
                         setLoginUser(User.getLoginUser());
@@ -254,11 +261,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void storeLogoutInfoToSharePreferences() {
-        SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(LoginActivity.AppStates, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
-        editor.putString(REGISTER_EMAIL, null);
-        editor.putString(LOGIN_PASSWORD, null );
+        editor.putString(LoginActivity.REGISTER_EMAIL, null);
+        editor.putString(LoginActivity.LOGIN_PASSWORD, null );
         editor.commit();
     }
 }

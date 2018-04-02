@@ -1,23 +1,29 @@
-package com.thewalkingschoolbus.thewalkingschoolbus;
+package com.thewalkingschoolbus.thewalkingschoolbus.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH;
+import static com.thewalkingschoolbus.thewalkingschoolbus.activities.LoginActivity.AppStates;
+import static com.thewalkingschoolbus.thewalkingschoolbus.activities.LoginActivity.REGISTER_EMAIL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
 
-public class EditChildDetailActivity extends AppCompatActivity {
+/**
+ * Created by Vaanyi Igiri on 2018-03-19.
+ */
 
+public class UserProfileActivity extends AppCompatActivity {
 
     public static final String EDIT_SUCCESSFULLY_MESSAGE = "edit successfully";
     private EditText nameET, emailET,
@@ -31,16 +37,15 @@ public class EditChildDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_child_detail);
+        setContentView(R.layout.activity_user_profile);
         setupTextviews();
-
         setupSavebutton();
-        setupCancelButton();
+        setupCancelbutton();
     }
 
-    private void setupCancelButton() {
-        Button saveButton = (Button)findViewById(R.id.childinfocancelbtnid);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+    private void setupCancelbutton() {
+        Button cancelButton = (Button)findViewById(R.id.button5);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
@@ -48,14 +53,8 @@ public class EditChildDetailActivity extends AppCompatActivity {
         });
     }
 
-    public static Intent makeIntent(Context context) {
-        Intent intent = new Intent(context, EditChildDetailActivity.class);
-        return intent;
-    }
-
-
     private void setupSavebutton() {
-        Button saveButton = (Button)findViewById(R.id.childinfosaveBtn);
+        Button saveButton = (Button)findViewById(R.id.button4);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,15 +74,15 @@ public class EditChildDetailActivity extends AppCompatActivity {
                             .show();
                 } else if(!birthMonth.isEmpty()
                         && ((Integer.parseInt(birthMonth) > 12 || Integer.parseInt(birthMonth) < 0))){
-                    Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
                 } else if(!birthYear.isEmpty()
                         && (Integer.parseInt(birthYear) > 2018 || Integer.parseInt(birthYear) < 1900)) {
-                    Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
                 } else {
                     final User user = new User();
-                    user.setId(MonitoringDetailActivity.monitoredUser.getId());
+                    user.setId(User.getLoginUser().getId());
                     user.setEmail(registerEmail);
                     user.setName(loginName);
                     user.setPassword(registerPassword);
@@ -101,10 +100,8 @@ public class EditChildDetailActivity extends AppCompatActivity {
                         public void onSuccess(Object result) {
                             Toast.makeText(getApplicationContext(), EDIT_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
-                            System.out.println(result);
-                            if(result.toString().equals("SUCCESSFUL")){
-                                MonitoringDetailActivity.userEmail = registerEmail;
-                            }
+                            User.setLoginUser((User)user );
+                            storeUserInfoToSharePreferences();
                             finish();
                         }
                         @Override
@@ -120,7 +117,13 @@ public class EditChildDetailActivity extends AppCompatActivity {
         });
     }
 
+    private void storeUserInfoToSharePreferences() {
+        SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
 
+        editor.putString(REGISTER_EMAIL, User.getLoginUser().getEmail());
+        editor.commit();
+    }
 
     private void setupTextviews() {
         nameET = (EditText)findViewById(R.id.enter_fullnameid);
@@ -134,20 +137,20 @@ public class EditChildDetailActivity extends AppCompatActivity {
         teacherNameDT = (EditText) findViewById(R.id.enter_teacher_name);
         emergencyContactInfoET = (EditText) findViewById(R.id.emergency_contact_info);
 
-        nameET.setText(MonitoringDetailActivity.monitoredUser.getName());
-        emailET.setText(MonitoringDetailActivity.monitoredUser.getEmail());
-        birthYearET.setText(MonitoringDetailActivity.monitoredUser.getBirthYear());
-        birthMonthET.setText(MonitoringDetailActivity.monitoredUser.getBirthMonth());
-        addressET.setText(MonitoringDetailActivity.monitoredUser.getAddress());
-        cellPhoneET.setText(MonitoringDetailActivity.monitoredUser.getCellPhone());
-        homePhoneET.setText(MonitoringDetailActivity.monitoredUser.getHomePhone());
-        gradeET.setText(MonitoringDetailActivity.monitoredUser.getGrade());
-        teacherNameDT.setText(MonitoringDetailActivity.monitoredUser.getTeacherName());;
-        emergencyContactInfoET.setText(MonitoringDetailActivity.monitoredUser.getEmergencyContactInfo());;
+        nameET.setText(User.getLoginUser().getName());
+        emailET.setText(User.getLoginUser().getEmail());
+        birthYearET.setText(User.getLoginUser().getBirthYear());
+        birthMonthET.setText(User.getLoginUser().getBirthMonth());
+        addressET.setText(User.getLoginUser().getAddress());
+        cellPhoneET.setText(User.getLoginUser().getCellPhone());
+        homePhoneET.setText(User.getLoginUser().getHomePhone());
+        gradeET.setText(User.getLoginUser().getGrade());
+        teacherNameDT.setText(User.getLoginUser().getTeacherName());;
+        emergencyContactInfoET.setText(User.getLoginUser().getEmergencyContactInfo());;
+    }
 
 
-
-
-
+    public static Intent makeIntent(Context context) {
+        return new Intent(context, UserProfileActivity.class);
     }
 }
