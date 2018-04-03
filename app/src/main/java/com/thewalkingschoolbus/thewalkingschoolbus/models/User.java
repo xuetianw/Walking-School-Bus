@@ -37,6 +37,11 @@ public class User {
     private List<Group> memberOfGroups;
     private List<Group> leadsGroups;
 
+    private String currentPoints;
+    private String totalPointsEarned;
+
+    //"customJson": "{\"title\": \"The Great One\"}",
+
     private String href;
 
     public User(){
@@ -237,6 +242,38 @@ public class User {
         this.leadsGroups = leadsGroups;
     }
 
+    public List<Message> getUnreadMessages() {
+        return unreadMessages;
+    }
+
+    public void setUnreadMessages(List<Message> unreadMessages) {
+        this.unreadMessages = unreadMessages;
+    }
+
+    public List<Message> getReadMessages() {
+        return readMessages;
+    }
+
+    public void setReadMessages(List<Message> readMessages) {
+        this.readMessages = readMessages;
+    }
+
+    public String getCurrentPoints() {
+        return currentPoints;
+    }
+
+    public void setCurrentPoints(String currentPoints) {
+        this.currentPoints = currentPoints;
+    }
+
+    public String getTotalPointsEarned() {
+        return totalPointsEarned;
+    }
+
+    public void setTotalPointsEarned(String totalPointsEarned) {
+        this.totalPointsEarned = totalPointsEarned;
+    }
+
     public static String getToken() throws Exception{
         return token;
     }
@@ -244,4 +281,5 @@ public class User {
     public static void setToken(String tokenReceive) {
         token = tokenReceive;
     }
+
 }

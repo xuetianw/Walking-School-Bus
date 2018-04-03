@@ -10,7 +10,7 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.SystemClock;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.WalkingFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.WalkingFragment;
 
 public class UploadLocationStopService extends Service {
 

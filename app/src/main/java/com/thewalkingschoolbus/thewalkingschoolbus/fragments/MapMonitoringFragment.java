@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus;
+package com.thewalkingschoolbus.thewalkingschoolbus.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.LatLng;
+import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Message;
@@ -48,7 +49,7 @@ public class MapMonitoringFragment extends android.support.v4.app.Fragment imple
         if (container != null) {
             container.removeAllViews();
         }
-        view = inflater.inflate(R.layout.fragment_map_monitoring, container, false);
+        view = inflater.inflate(com.thewalkingschoolbus.thewalkingschoolbus.R.layout.fragment_map_monitoring, container, false);
 
         setupRefreshButton();
         initializeMap();

@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thewalkingschoolbus.thewalkingschoolbus.UserProfileActivity"
+    tools:context="com.thewalkingschoolbus.thewalkingschoolbus.activities.UserProfileActivity"
     android:background="@color/graylight"
     android:orientation="vertical">
 

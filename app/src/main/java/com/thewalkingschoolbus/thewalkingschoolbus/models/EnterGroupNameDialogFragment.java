@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.MapFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.MapFragment;
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
 
 public class EnterGroupNameDialogFragment extends AppCompatDialogFragment {

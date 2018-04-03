@@ -34,7 +34,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -47,47 +47,47 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".activities.UserProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activities.RegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AddMonitoringActivity"
+            android:name=".activities.AddMonitoringActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AddMonitoredByActivity"
+            android:name=".activities.AddMonitoredByActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".JoinOrCreateGroupActivity"
+            android:name=".activities.JoinOrCreateGroupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".GroupDetailActivity"
+            android:name=".activities.GroupDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MonitoringDetailActivity"
+            android:name=".activities.MonitoringDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MonitoredbyDetailActivity"
+            android:name=".activities.MonitoredbyDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MessageNewActivity" />
+            android:name=".activities.MessageNewActivity" />
         <activity
-            android:name=".MessageViewActivity"/>
+            android:name=".activities.MessageViewActivity"/>
         <activity
-            android:name=".EditChildDetailActivity"/>
+            android:name=".activities.EditChildDetailActivity"/>
         <service android:name=".services.UploadLocationService" />
         <service android:name=".services.UploadLocationStopService" />
     </application>

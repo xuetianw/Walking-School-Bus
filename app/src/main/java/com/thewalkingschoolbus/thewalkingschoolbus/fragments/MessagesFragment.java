@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus;
+package com.thewalkingschoolbus.thewalkingschoolbus.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.activities.MessageNewActivity;
+import com.thewalkingschoolbus.thewalkingschoolbus.activities.MessageViewActivity;
+import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Message;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;

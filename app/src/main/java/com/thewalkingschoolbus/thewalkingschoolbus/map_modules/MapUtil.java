@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.thewalkingschoolbus.thewalkingschoolbus.MainActivity;
+import com.thewalkingschoolbus.thewalkingschoolbus.activities.MainActivity;
 
 public class MapUtil {
 
