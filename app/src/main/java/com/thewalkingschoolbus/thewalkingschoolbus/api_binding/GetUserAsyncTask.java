@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Message;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.PermissionRequest;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
 public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
@@ -20,8 +21,10 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
     private Exception mException;
     private Group mGroup;
     private Message mMessage;
+    private PermissionRequest mPermissionRequest;
 
-    public GetUserAsyncTask(functionType functionType, User parentUser, User childUser, Group group, Message message,OnTaskComplete listener){
+    public GetUserAsyncTask(functionType functionType, User parentUser, User childUser, Group group,
+                            Message message, PermissionRequest pr, OnTaskComplete listener){
         functionChoice = functionType;
         mlistener = listener;
         mGroup = group;
@@ -33,6 +36,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
             passwordEntered = null;
         }
         mMessage = message;
+        mPermissionRequest = pr;
     }
 
     protected Object doInBackground(Void... urls){
@@ -141,6 +145,30 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
                 case SET_MESSAGE_AS_READ_OR_UNREAD:
                     returnObject = MessageApiBinding.setMessageAsReadOrUnread(mParentUser,mMessage);
                     break;
+                case GET_ALL_PERMISSION_REQUESTS:
+                    returnObject = PermissionsApiBinding.getAllPermissionRequests();
+                    break;
+                case GET_PERMISSION_REQUESTS_FOR_USER:
+                    returnObject = PermissionsApiBinding.getPermissionRequestsForUser(mParentUser);
+                    break;
+                case GET_PERMISSION_REQUESTS_FOR_USER_WITH_CERTAIN_STATUS:
+                    returnObject = PermissionsApiBinding.getPermissionRequestsForUserWithCertainStatus(mParentUser,mPermissionRequest);
+                    break;
+                case GET_PERMISSION_REQUESTS_FOR_GROUP:
+                    returnObject = PermissionsApiBinding.getPermissionRequestsForGroup(mGroup);
+                    break;
+                case GET_PERMISSION_REQUESTS_WITH_STATUS:
+                    returnObject = PermissionsApiBinding.getPermissionRequestsWithStatus(mPermissionRequest);
+                    break;
+                case GET_PERMISSION_REQUESTS_FOR_USER_IN_GROUP_WITH_CERTAIN_STATUS:
+                    returnObject = PermissionsApiBinding.getPermissionRequestsForUserInGroupWithCertainStatus(mParentUser,mGroup,mPermissionRequest);
+                    break;
+                case GET_PERMISSION_REQUEST_WITH_ID:
+                    returnObject = PermissionsApiBinding.getPermissionRequestsWithID(mPermissionRequest);
+                    break;
+                case POST_PERMISSION_CHANGE_WITH_ID:
+                    returnObject = PermissionsApiBinding.postPermissionRequestsChangeWithId(mPermissionRequest);
+                    break;
                 default:
                     returnObject = null;
                     break;
@@ -178,7 +206,12 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
         GET_ALL_MESSAGES,GET_ALL_EMERGENCY_MESSAGES,GET_MESSAGES_FOR_GROUP,
         GET_EMERGENCY_MESSAGES_FOR_GROUP,GET_MESSAGES_FOR_USER,GET_UNREAD_MESSAGES_FOR_USER,
         GET_READ_MESSAGES_FOR_USER,GET_UNREAD_EMERGENCY_MESSAGES_FOR_USER,POST_MESSAGE_TO_GROUP,
-        POST_MESSAGE_TO_PARENTS,GET_ONE_MESSAGE,SET_MESSAGE_AS_READ_OR_UNREAD
+        POST_MESSAGE_TO_PARENTS,GET_ONE_MESSAGE,SET_MESSAGE_AS_READ_OR_UNREAD,
+
+        GET_ALL_PERMISSION_REQUESTS,GET_PERMISSION_REQUESTS_FOR_USER,
+        GET_PERMISSION_REQUESTS_FOR_USER_WITH_CERTAIN_STATUS,GET_PERMISSION_REQUESTS_FOR_GROUP,
+        GET_PERMISSION_REQUESTS_WITH_STATUS,GET_PERMISSION_REQUESTS_FOR_USER_IN_GROUP_WITH_CERTAIN_STATUS,
+        GET_PERMISSION_REQUEST_WITH_ID,POST_PERMISSION_CHANGE_WITH_ID
     }
 
 }

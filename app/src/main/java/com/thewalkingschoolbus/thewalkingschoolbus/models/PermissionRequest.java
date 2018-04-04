@@ -99,4 +99,12 @@ public class PermissionRequest {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public ServerManager.PermissionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ServerManager.PermissionStatus status) {
+        this.status = status;
+    }
 }
