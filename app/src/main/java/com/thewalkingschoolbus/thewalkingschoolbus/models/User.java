@@ -39,7 +39,7 @@ public class User {
     private Integer totalPointsEarned;
     private String customJson;
 
-    private CustomJson mCustomJson;
+    private Customization mCustomization;
 
     // Permissions
     // - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -294,21 +294,21 @@ public class User {
     }
 
     public void customJsonToJson(){
-        String str = new Gson().toJson(mCustomJson);
+        String str = new Gson().toJson(mCustomization);
         customJson = str;
     }
 
     public void customJsonFromJson(String str){
-        mCustomJson = new Gson().fromJson(str, CustomJson.class);
+        mCustomization = new Gson().fromJson(str, Customization.class);
     }
 
 
-    public CustomJson getmCustomJson() {
-        return mCustomJson;
+    public Customization getmCustomization() {
+        return mCustomization;
     }
 
-    public void setmCustomJson(CustomJson mCustomJson) {
-        this.mCustomJson = mCustomJson;
+    public void setmCustomization(Customization mCustomization) {
+        this.mCustomization = mCustomization;
     }
 
     public static String getToken() throws Exception{

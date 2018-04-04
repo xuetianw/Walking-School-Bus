@@ -4,7 +4,7 @@ package com.thewalkingschoolbus.thewalkingschoolbus.models;
  * Created by Jackyx on 2018-04-04.
  */
 
-public class CustomJson {
+public class Customization {
     private int[] avatarOwned;
     private int avatarEquipped;
 
@@ -14,7 +14,7 @@ public class CustomJson {
     private int[] themeOwned;
     private int themeEquipped;
 
-    public CustomJson(){
+    public Customization(){
         avatarOwned = null;
         avatarEquipped = -1;
         titleOwned = null;
@@ -22,7 +22,7 @@ public class CustomJson {
         themeOwned = null;
         themeEquipped = -1;
     }
-    public CustomJson(int[] avatarO,int avatarE,int[] titleO, int titleE, int[] themeO, int themeE){
+    public Customization(int[] avatarO, int avatarE, int[] titleO, int titleE, int[] themeO, int themeE){
         avatarOwned = avatarO;
         avatarEquipped = avatarE;
         titleOwned = titleO;
