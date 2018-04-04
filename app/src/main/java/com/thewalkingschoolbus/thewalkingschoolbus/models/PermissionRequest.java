@@ -28,6 +28,19 @@ public class PermissionRequest {
         private User whoApprovedOrDenied;
     }
 
+    public PermissionRequest(){
+        id = null;
+        href = null;
+        action = null;
+        status = null;
+        userA = null;
+        userB = null;
+        groupG = null;
+        requestingUser = null;
+        authorizors = null;
+        message = null;
+    }
+
     public Long getId() {
         return id;
     }
