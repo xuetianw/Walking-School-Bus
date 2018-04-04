@@ -14,6 +14,23 @@ public class CustomJson {
     private int[] themeOwned;
     private int themeEquipped;
 
+    public CustomJson(){
+        avatarOwned = null;
+        avatarEquipped = -1;
+        titleOwned = null;
+        titleEquipped = -1;
+        themeOwned = null;
+        themeEquipped = -1;
+    }
+    public CustomJson(int[] avatarO,int avatarE,int[] titleO, int titleE, int[] themeO, int themeE){
+        avatarOwned = avatarO;
+        avatarEquipped = avatarE;
+        titleOwned = titleO;
+        titleEquipped = titleE;
+        themeOwned = themeO;
+        themeEquipped = themeE;
+    }
+
     public int[] getAvatarOwned() {
         return avatarOwned;
     }
