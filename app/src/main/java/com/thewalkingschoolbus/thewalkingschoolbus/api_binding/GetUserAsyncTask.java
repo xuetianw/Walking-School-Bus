@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Message;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.PermissionRequest;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
 public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
@@ -21,7 +22,8 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
     private Group mGroup;
     private Message mMessage;
 
-    public GetUserAsyncTask(functionType functionType, User parentUser, User childUser, Group group, Message message,OnTaskComplete listener){
+    public GetUserAsyncTask(functionType functionType, User parentUser, User childUser, Group group,
+                            Message message, OnTaskComplete listener){
         functionChoice = functionType;
         mlistener = listener;
         mGroup = group;
@@ -178,7 +180,7 @@ public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
         GET_ALL_MESSAGES,GET_ALL_EMERGENCY_MESSAGES,GET_MESSAGES_FOR_GROUP,
         GET_EMERGENCY_MESSAGES_FOR_GROUP,GET_MESSAGES_FOR_USER,GET_UNREAD_MESSAGES_FOR_USER,
         GET_READ_MESSAGES_FOR_USER,GET_UNREAD_EMERGENCY_MESSAGES_FOR_USER,POST_MESSAGE_TO_GROUP,
-        POST_MESSAGE_TO_PARENTS,GET_ONE_MESSAGE,SET_MESSAGE_AS_READ_OR_UNREAD
+        POST_MESSAGE_TO_PARENTS,GET_ONE_MESSAGE,SET_MESSAGE_AS_READ_OR_UNREAD,
     }
 
 }

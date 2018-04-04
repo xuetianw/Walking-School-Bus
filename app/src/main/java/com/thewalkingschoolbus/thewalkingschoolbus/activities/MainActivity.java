@@ -99,7 +99,8 @@ public class MainActivity extends AppCompatActivity
             User.setLoginUser(new User());
             User.getLoginUser().setEmail(email);
             User.getLoginUser().setPassword(password);
-            new GetUserAsyncTask(LOGIN_REQUEST, User.getLoginUser(),null, null, null,new OnTaskComplete() {
+            new GetUserAsyncTask(LOGIN_REQUEST, User.getLoginUser(),null, null,
+                    null,new OnTaskComplete() {
                 @Override
                 public void onSuccess(Object result) {
                     if(result == null){

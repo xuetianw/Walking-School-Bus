@@ -75,6 +75,11 @@ public class MonitoredByFragment extends Fragment {
 
                 // configure the list view
                 ListView list = getActivity().findViewById(R.id.listViewMonitored);
+
+                if(adapter.getCount()==0) {
+                    return;
+                }
+
                 list.setAdapter(adapter);
 
                 // update clicks

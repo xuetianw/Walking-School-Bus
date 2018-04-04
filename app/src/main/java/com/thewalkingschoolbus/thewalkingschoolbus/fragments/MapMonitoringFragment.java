@@ -106,7 +106,8 @@ public class MapMonitoringFragment extends android.support.v4.app.Fragment imple
     }
 
     private void updateMapGetLoginUserDetail() {
-        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null,
+                null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 User userDetailed = (User) result;
