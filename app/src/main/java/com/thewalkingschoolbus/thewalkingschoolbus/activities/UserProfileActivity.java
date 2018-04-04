@@ -95,7 +95,8 @@ public class UserProfileActivity extends AppCompatActivity {
                     user.setTeacherName(teacherName);
                     user.setEmergencyContactInfo(emergencyContactInfo);
 
-                    new GetUserAsyncTask(EDIT_USER, user,null, null,null ,new OnTaskComplete() {
+                    new GetUserAsyncTask(EDIT_USER, user,null, null,null ,
+                            new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
                             Toast.makeText(getApplicationContext(), EDIT_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
