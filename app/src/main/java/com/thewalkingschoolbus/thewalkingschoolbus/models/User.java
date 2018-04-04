@@ -1,6 +1,8 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.models;
 
 //import java.util.ArrayList;
+import com.google.gson.Gson;
+
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ public class User {
     private static User loginUser;
 
     private String id;
-    private String name;
+    private String  name;
     private String email;
     private String password;
     private String birthYear;
@@ -42,6 +44,8 @@ public class User {
     private Integer currentPoints;
     private Integer totalPointsEarned;
     private String customJson;
+
+    private CustomJson mCustomJson;
 
     // Permissions
     // - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -295,6 +299,24 @@ public class User {
         this.pendingPermissionRequests = pendingPermissionRequests;
     }
 
+    public void customJsonToJson(){
+        String str = new Gson().toJson(mCustomJson);
+        customJson = str;
+    }
+
+    public void customJsonFromJson(String str){
+        mCustomJson = new Gson().fromJson(str, CustomJson.class);
+    }
+
+
+    public CustomJson getmCustomJson() {
+        return mCustomJson;
+    }
+
+    public void setmCustomJson(CustomJson mCustomJson) {
+        this.mCustomJson = mCustomJson;
+    }
+
     public static String getToken() throws Exception{
         return token;
     }
@@ -302,5 +324,6 @@ public class User {
     public static void setToken(String tokenReceive) {
         token = tokenReceive;
     }
+
 
 }
