@@ -1,14 +1,8 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.models;
 
-//import java.util.ArrayList;
 import com.google.gson.Gson;
 
 import java.util.List;
-
-/**
- * Created by Jackyx on 2018-03-04.
- */
-
 
 public class User {
 
