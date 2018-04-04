@@ -62,6 +62,12 @@ public class ServerManager {
 
     public static String SUCCESSFUL = "SUCCESSFUL";
 
+    public enum PermissionStatus {
+        PENDING,
+        APPROVED,
+        DENIED
+    }
+
     // for any type of post request, this does the initial connection and sending json file
     // Such as: create User, create Group, create monitoring
     // return httpURLconnection which is used to getResponseCode from server side

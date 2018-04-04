@@ -37,10 +37,15 @@ public class User {
     private List<Group> memberOfGroups;
     private List<Group> leadsGroups;
 
-    private String currentPoints;
-    private String totalPointsEarned;
+    // Gamification Support
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    private Integer currentPoints;
+    private Integer totalPointsEarned;
+    private String customJson;
 
-    //"customJson": "{\"title\": \"The Great One\"}",
+    // Permissions
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    private List<PermissionRequest> pendingPermissionRequests;
 
     private String href;
 
@@ -258,20 +263,36 @@ public class User {
         this.readMessages = readMessages;
     }
 
-    public String getCurrentPoints() {
+    public Integer getCurrentPoints() {
         return currentPoints;
     }
 
-    public void setCurrentPoints(String currentPoints) {
+    public void setCurrentPoints(Integer currentPoints) {
         this.currentPoints = currentPoints;
     }
 
-    public String getTotalPointsEarned() {
+    public Integer getTotalPointsEarned() {
         return totalPointsEarned;
     }
 
-    public void setTotalPointsEarned(String totalPointsEarned) {
+    public void setTotalPointsEarned(Integer totalPointsEarned) {
         this.totalPointsEarned = totalPointsEarned;
+    }
+
+    public String getCustomJson() {
+        return customJson;
+    }
+
+    public void setCustomJson(String customJson) {
+        this.customJson = customJson;
+    }
+
+    public List<PermissionRequest> getPendingPermissionRequests() {
+        return pendingPermissionRequests;
+    }
+
+    public void setPendingPermissionRequests(List<PermissionRequest> pendingPermissionRequests) {
+        this.pendingPermissionRequests = pendingPermissionRequests;
     }
 
     public static String getToken() throws Exception{
