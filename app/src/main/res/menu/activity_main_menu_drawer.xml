@@ -37,11 +37,19 @@
             android:icon="@android:drawable/btn_star"
             android:title="Messages" />
         <item
+            android:id="@+id/nav_fragment_collection"
+            android:icon="@android:drawable/btn_star"
+            android:title="Collection" />
+        <item
+            android:id="@+id/nav_fragment_leaderboard"
+            android:icon="@android:drawable/btn_star"
+            android:title="Leaderboard" />
+        <item
             android:checkable="false"
             android:enabled="false"
             android:title=" " />
         <item
-            android:id="@+id/nav_lougout"
+            android:id="@+id/nav_logout"
             android:icon="@drawable/places_ic_clear"
             android:title="Logout" />
 

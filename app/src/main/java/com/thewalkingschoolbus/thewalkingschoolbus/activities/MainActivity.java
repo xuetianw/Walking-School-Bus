@@ -18,8 +18,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.CollectionFragment;
 import com.thewalkingschoolbus.thewalkingschoolbus.fragments.FriendsFragment;
 import com.thewalkingschoolbus.thewalkingschoolbus.fragments.GroupFragment;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.LeaderboardFragment;
 import com.thewalkingschoolbus.thewalkingschoolbus.fragments.MapFragment;
 import com.thewalkingschoolbus.thewalkingschoolbus.fragments.MapMonitoringFragment;
 import com.thewalkingschoolbus.thewalkingschoolbus.fragments.MessagesFragment;
@@ -193,6 +195,11 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.content_frame, new WalkingFragment())
                     .commit();
             toolbar.setTitle("Walk");
+        } else if (id == R.id.nav_fragment_dashboard) {
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, new MapMonitoringFragment());
+            fragmentTransaction.commit();
+            toolbar.setTitle("Dashboard");
         } else if (id == R.id.nav_fragment_profile) {
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, new ProfileFragment())
@@ -217,16 +224,21 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.content_frame, new MessagesFragment())
                     .commit();
             toolbar.setTitle("Messages");
-        } else if (id == R.id.nav_lougout) {
+        } else if (id == R.id.nav_fragment_collection) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, new CollectionFragment())
+                    .commit();
+            toolbar.setTitle("Collection");
+        } else if (id == R.id.nav_fragment_leaderboard) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, new LeaderboardFragment())
+                    .commit();
+            toolbar.setTitle("Leaderboard");
+        } else if (id == R.id.nav_logout) {
             storeLogoutInfoToSharePreferences();
             Intent intent = LoginActivity.makeIntent(MainActivity.this);
             startActivity(intent);
             finish();
-        } else if (id == R.id.nav_fragment_dashboard) {
-            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, new MapMonitoringFragment());
-            fragmentTransaction.commit();
-            toolbar.setTitle("Dashboard");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

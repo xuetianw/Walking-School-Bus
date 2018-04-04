@@ -28,6 +28,9 @@ public class User {
     private String emergencyContactInfo;
     private GpsLocation lastGpsLocation;
 
+    private int points;
+    private int pointsAccumulative;
+
     private List<Message> unreadMessages;
     private List<Message> readMessages;
 
@@ -54,6 +57,9 @@ public class User {
         emergencyContactInfo = null;
         lastGpsLocation = null;
 
+        points = 0;
+        pointsAccumulative = 0;
+
         monitorsUsers = null;
         monitoredByUsers = null;
 
@@ -75,6 +81,9 @@ public class User {
         teacherName = null;
         emergencyContactInfo = null;
         lastGpsLocation = null;
+
+        points = 0;
+        pointsAccumulative = 0;
 
         monitorsUsers = null;
         monitoredByUsers = null;
@@ -211,11 +220,9 @@ public class User {
         this.id = id;
     }
 
-
     public void setName(String name) {
         this.name = name;
     }
-
 
     public void setEmail(String email) {
         this.email = email;
@@ -243,5 +250,25 @@ public class User {
 
     public static void setToken(String tokenReceive) {
         token = tokenReceive;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public boolean addPoints(int points) {
+        if (this.points + points < 0) {
+            return false;
+        } else {
+            if (points > 0) {
+                this.pointsAccumulative += points;
+            }
+            this.points += points;
+            return true;
+        }
+    }
+
+    public int getPointsAccumulative() {
+        return pointsAccumulative;
     }
 }
