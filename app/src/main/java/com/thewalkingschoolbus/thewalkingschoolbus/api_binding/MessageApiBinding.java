@@ -1,7 +1,7 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.api_binding;
 
 import com.google.gson.Gson;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.ApiException;
+import com.thewalkingschoolbus.thewalkingschoolbus.exceptions.ApiException;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Message;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;

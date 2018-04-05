@@ -3,7 +3,6 @@ package com.thewalkingschoolbus.thewalkingschoolbus.fragments;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,15 +14,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.collections.Avatar;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.collections.Theme;
@@ -33,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
-import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_ONE_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 
 public class CollectionFragment extends android.app.Fragment {
@@ -75,7 +70,7 @@ public class CollectionFragment extends android.app.Fragment {
 
     private void updatePointsView() {
         TextView textView = view.findViewById(R.id.userPoints);
-        textView.setText(User.getLoginUser().getPoints() + " Point(s)"); // TODO: does not call to server
+        textView.setText(User.getLoginUser().getCurrentPoints() + " Point(s)"); // TODO: does not call to server
     }
 
     private ImageButton[] imageButtonAvatars;

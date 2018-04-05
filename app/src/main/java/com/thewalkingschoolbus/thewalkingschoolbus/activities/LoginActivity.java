@@ -15,7 +15,6 @@ import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.activities.MainActivity.USER_LOGSTATUS;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 /*
@@ -143,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
 
-                    editor.putBoolean(USER_LOGSTATUS, true);
+                    editor.putBoolean(MainActivity.USER_LOGSTATUS, true);
                     editor.commit();
                 }
             }

@@ -20,6 +20,8 @@ public class Group {
     private User leader;
     private List<User> memberUsers;
 
+    //    "customJson": "{\"title\": \"The Great One\"}",
+
     private String href;
 
     public Group(){

@@ -1,4 +1,4 @@
-package com.thewalkingschoolbus.thewalkingschoolbus.services;
+package com.thewalkingschoolbus.thewalkingschoolbus.map_modules;
 
 
 /*

@@ -13,9 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.activities.GroupDetailActivity;
 import com.thewalkingschoolbus.thewalkingschoolbus.activities.JoinOrCreateGroupActivity;
+import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
@@ -58,7 +58,8 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
     }
 
     private void getGroupListAndPopulateList(){
-        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null,
+                null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 User returnUser = (User) result;

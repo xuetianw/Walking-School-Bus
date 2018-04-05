@@ -17,7 +17,6 @@ import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.activities.LoginActivity.AppStates;
 import static com.thewalkingschoolbus.thewalkingschoolbus.activities.LoginActivity.REGISTER_EMAIL;
-import static com.thewalkingschoolbus.thewalkingschoolbus.activities.RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
 
 /**
@@ -75,11 +74,11 @@ public class UserProfileActivity extends AppCompatActivity {
                             .show();
                 } else if(!birthMonth.isEmpty()
                         && ((Integer.parseInt(birthMonth) > 12 || Integer.parseInt(birthMonth) < 0))){
-                    Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
                 } else if(!birthYear.isEmpty()
                         && (Integer.parseInt(birthYear) > 2018 || Integer.parseInt(birthYear) < 1900)) {
-                    Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
                 } else {
                     final User user = new User();
@@ -96,7 +95,8 @@ public class UserProfileActivity extends AppCompatActivity {
                     user.setTeacherName(teacherName);
                     user.setEmergencyContactInfo(emergencyContactInfo);
 
-                    new GetUserAsyncTask(EDIT_USER, user,null, null,null ,new OnTaskComplete() {
+                    new GetUserAsyncTask(EDIT_USER, user,null, null,null ,
+                            new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
                             Toast.makeText(getApplicationContext(), EDIT_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)

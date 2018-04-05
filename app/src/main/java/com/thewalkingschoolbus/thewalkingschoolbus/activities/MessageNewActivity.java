@@ -134,7 +134,8 @@ public class MessageNewActivity extends AppCompatActivity {
     }
 
     private void updateGroupList(){
-        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, null, new OnTaskComplete() {
+        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null,
+                null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                User.setLoginUser((User)result);

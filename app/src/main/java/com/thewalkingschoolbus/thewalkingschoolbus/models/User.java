@@ -1,12 +1,8 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.models;
 
-//import java.util.ArrayList;
+import com.google.gson.Gson;
+
 import java.util.List;
-
-/**
- * Created by Jackyx on 2018-03-04.
- */
-
 
 public class User {
 
@@ -15,7 +11,7 @@ public class User {
     private static User loginUser;
 
     private String id;
-    private String name;
+    private String  name;
     private String email;
     private String password;
     private String birthYear;
@@ -28,9 +24,6 @@ public class User {
     private String emergencyContactInfo;
     private GpsLocation lastGpsLocation;
 
-    private int points;
-    private int pointsAccumulative;
-
     private List<Message> unreadMessages;
     private List<Message> readMessages;
 
@@ -39,6 +32,18 @@ public class User {
 
     private List<Group> memberOfGroups;
     private List<Group> leadsGroups;
+
+    // Gamification Support
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    private Integer currentPoints;
+    private Integer totalPointsEarned;
+    private String customJson;
+
+    private Customization mCustomization;
+
+    // Permissions
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    private List<PermissionRequest> pendingPermissionRequests;
 
     private String href;
 
@@ -57,14 +62,15 @@ public class User {
         emergencyContactInfo = null;
         lastGpsLocation = null;
 
-        points = 0;
-        pointsAccumulative = 0;
-
         monitorsUsers = null;
         monitoredByUsers = null;
 
         memberOfGroups = null;
         leadsGroups = null;
+
+        currentPoints = new Integer(0);
+        totalPointsEarned = new Integer(0);
+        mCustomization = null;
     }
 
     public User (String id, String name, String email) {
@@ -81,9 +87,6 @@ public class User {
         teacherName = null;
         emergencyContactInfo = null;
         lastGpsLocation = null;
-
-        points = 0;
-        pointsAccumulative = 0;
 
         monitorsUsers = null;
         monitoredByUsers = null;
@@ -220,9 +223,11 @@ public class User {
         this.id = id;
     }
 
+
     public void setName(String name) {
         this.name = name;
     }
+
 
     public void setEmail(String email) {
         this.email = email;
@@ -244,31 +249,93 @@ public class User {
         this.leadsGroups = leadsGroups;
     }
 
+    public List<Message> getUnreadMessages() {
+        return unreadMessages;
+    }
+
+    public void setUnreadMessages(List<Message> unreadMessages) {
+        this.unreadMessages = unreadMessages;
+    }
+
+    public List<Message> getReadMessages() {
+        return readMessages;
+    }
+
+    public void setReadMessages(List<Message> readMessages) {
+        this.readMessages = readMessages;
+    }
+
+    public int getCurrentPoints() {
+        if (currentPoints == null) {
+            currentPoints = 0;
+        }
+        return currentPoints;
+    }
+
+    public boolean addPoints(int points) {
+        if (currentPoints == null) {
+            currentPoints = 0;
+        }
+        if (totalPointsEarned == null) {
+            totalPointsEarned = 0;
+        }
+        if (currentPoints + points < 0) {
+            return false;
+        } else {
+            if (points > 0) {
+                totalPointsEarned += points;
+            }
+            currentPoints += points;
+            return true;
+        }
+    }
+
+    public int getTotalPointsEarned() {
+        if (totalPointsEarned == null) {
+            totalPointsEarned = 0;
+        }
+        return totalPointsEarned;
+    }
+
+    public String getCustomJson() {
+        return customJson;
+    }
+
+    public void setCustomJson(String customJson) {
+        this.customJson = customJson;
+    }
+
+    public List<PermissionRequest> getPendingPermissionRequests() {
+        return pendingPermissionRequests;
+    }
+
+    public void setPendingPermissionRequests(List<PermissionRequest> pendingPermissionRequests) {
+        this.pendingPermissionRequests = pendingPermissionRequests;
+    }
+
+    public void customJsonToJson(){
+        String str = new Gson().toJson(mCustomization);
+        customJson = str;
+    }
+
+    public void customJsonFromJson(String str){
+        mCustomization = new Gson().fromJson(str, Customization.class);
+    }
+
+
+    public Customization getmCustomization() {
+        return mCustomization;
+    }
+
+    public void setmCustomization(Customization mCustomization) {
+        this.mCustomization = mCustomization;
+    }
+
     public static String getToken() throws Exception{
         return token;
     }
 
     public static void setToken(String tokenReceive) {
         token = tokenReceive;
-    }
-
-    public int getPoints() {
-        return points;
-    }
-
-    public boolean addPoints(int points) {
-        if (this.points + points < 0) {
-            return false;
-        } else {
-            if (points > 0) {
-                this.pointsAccumulative += points;
-            }
-            this.points += points;
-            return true;
-        }
-    }
-
-    public int getPointsAccumulative() {
-        return pointsAccumulative;
     }
 }

@@ -90,7 +90,8 @@ public class UserDetailActivity extends AppCompatActivity {
     private void removeUserFromGroup(){
         Group group = new Group();
         group.setId(groupId);
-        new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, user, null, group, null, new OnTaskComplete() {
+        new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, user, null, group, null,
+                new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 finish();

@@ -3,7 +3,7 @@ package com.thewalkingschoolbus.thewalkingschoolbus.api_binding;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.ApiException;
+import com.thewalkingschoolbus.thewalkingschoolbus.exceptions.ApiException;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.GpsLocation;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
@@ -124,7 +124,12 @@ public class UserApiBinding {
         }
 
         StringBuffer response = readJsonIntoString(connection);
+        JSONObject json = new JSONObject(response.toString());
+        String str =(String) json.getString("customJson");
+
         user = new Gson().fromJson(response.toString(),User.class);
+        user.customJsonFromJson(str);
+
         return user;
     }
 
@@ -145,7 +150,10 @@ public class UserApiBinding {
         }
 
         StringBuffer response = readJsonIntoString(connection);
+        JSONObject json = new JSONObject(response.toString());
+        String str =(String) json.getString("customJson");
         user = new Gson().fromJson(response.toString(),User.class);
+        user.customJsonFromJson(str);
         return user;
     }
 
@@ -172,6 +180,7 @@ public class UserApiBinding {
     //  address which is already in use by another user will generate an error.
     public static String editUser(User user)throws Exception{
         String url = BASE_URL + String.format(EDIT_USER,user.getId());
+        user.customJsonToJson();
         String jsonFile = new Gson().toJson(user);
         JSONObject jsonObject = new JSONObject(jsonFile);
         HttpURLConnection connection = httpRequestPost(url,jsonObject);

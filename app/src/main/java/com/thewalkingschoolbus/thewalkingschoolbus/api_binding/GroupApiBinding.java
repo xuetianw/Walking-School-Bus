@@ -3,7 +3,7 @@ package com.thewalkingschoolbus.thewalkingschoolbus.api_binding;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.ApiException;
+import com.thewalkingschoolbus.thewalkingschoolbus.exceptions.ApiException;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 

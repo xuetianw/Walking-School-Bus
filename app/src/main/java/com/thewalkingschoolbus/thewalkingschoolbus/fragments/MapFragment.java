@@ -55,7 +55,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.common.api.ResultCallback;
 
-import com.thewalkingschoolbus.thewalkingschoolbus.services.PlaceAutocompleteAdapter;
+import com.thewalkingschoolbus.thewalkingschoolbus.map_modules.PlaceAutocompleteAdapter;
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.EnterGroupNameDialogFragment;

@@ -1,14 +1,6 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.api_binding;
 
-import android.util.Log;
-
-import com.thewalkingschoolbus.thewalkingschoolbus.models.ApiException;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.GpsLocation;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.Message;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
-
-import com.google.gson.Gson;
 
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -28,47 +20,13 @@ public class ServerManager {
     // private String BASE_URL = "http://walkgroup.api.tabjy.com/https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
     public static String BASE_URL="https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
 
-    /*
-    private String LOGIN = "/login";
-    private String CREATE_USER = "/users/signup";
-    private String LIST_USERS = "/users";
-    private String GET_USER_BY_ID = "/users/%s";
-    private String GET_USER_BY_EMAIL = "/users/byEmail?email=%s";
-    private String DELETE_USER = "/users/%s";
-    private String EDIT_USER = "/users/%s";
-    private String GET_GPS_LOCATION = "/users/%s/lastGpsLocation";
-    private String POST_GET_LOCATION = "/users/%s/lastGpsLocation";
-
-    private String USER_MONITORING_LIST = "/users/%s/monitorsUsers";
-    private String USER_MONITORING_BY_LIST = "/users/%s/monitoredByUsers";
-    private String CREATE_MONITORING = "/users/%s/monitorsUsers";
-    private String DELETE_MONITORING = "/users/%s/monitorsUsers/%s";
-
-    private String LIST_GROUPS = "/groups";
-    private String CREATE_GROUP = "/groups";
-    private String GET_ONE_GROUP = "/groups/%s";
-    private String UPDATE_EXISTING_GROUP = "/groups/%s";
-    private String DELETE_GROUP = "/groups/%s";
-    private String GET_MEMBERS_OF_GROUP = "/groups/%s/memberUsers";
-    private String ADD_MEMBERS_TO_GROUP = "/groups/%s/memberUsers";
-    private String REMOVE_MEMBER_OF_GROUP = "/groups/%s/memberUsers/%s";
-
-    private String GET_ALL_MESSAGES = "/messages";
-    private String GET_ALL_EMERGENCY_MESSAGES = "/messages?is-emergency=true";
-    private String GET_MESSAGES_FOR_GROUP = "/messages?togroup=%s";
-    private String GET_EMERGENCY_MESSAGES_FOR_GROUP = "/messages?togroup=%s&is-emergency=true";
-    private String GET_MESSAGES_FOR_USER = "/messages?foruser=%s";
-    private String GET_UNREAD_MESSAGES_FOR_USER = "/messages?foruser=%s&status=unread";
-    private String GET_READ_MESSAGES_FOR_USER = "/messages?foruser=%s&status=read";
-    private String GET_UNREAD_EMERGENCY_MESSAGES_FOR_USER = "/messages?foruser=%s&status=unread&is-emergency=true";
-
-    private String POST_MESSAGE_TO_GROUP = "/messages/togroup/%s";
-    private String POST_MESSAGE_TO_PARENTS = "/messages/toparentsof/%s";
-    private String GET_ONE_MESSAGE = "/messages/%s";
-    private String SET_MESSAGE_AS_READ_OR_UNREAD =  "/messages/%s/readby/%s";
-*/
-
     public static String SUCCESSFUL = "SUCCESSFUL";
+
+    public enum PermissionStatus {
+        PENDING,
+        APPROVED,
+        DENIED
+    }
 
     // for any type of post request, this does the initial connection and sending json file
     // Such as: create User, create Group, create monitoring
