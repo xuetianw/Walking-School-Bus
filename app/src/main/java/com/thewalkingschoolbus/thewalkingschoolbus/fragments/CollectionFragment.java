@@ -74,6 +74,18 @@ public class CollectionFragment extends android.app.Fragment {
         titles = Title.titles;
         themes = Theme.themes;
 
+        // Reset unlock
+        for (Avatar avatar : avatars) {
+            avatar.setAvailable(false);
+        }
+        for (Title title : titles) {
+            title.setAvailable(false);
+        }
+        for (Theme theme : themes) {
+            theme.setAvailable(false);
+        }
+
+        // Update unlock
         if (User.getLoginUser().getCustomization() != null) {
             int[] avatarOwned = User.getLoginUser().getCustomization().getAvatarOwned();
             if (avatarOwned != null) {
@@ -326,6 +338,22 @@ public class CollectionFragment extends android.app.Fragment {
 
         // Update clicks
         registerClickCallbackThemes();
+
+        // Highlight equipped title
+        highlightEquippedTheme();
+    }
+
+    private void highlightEquippedTheme() {
+        if (User.getLoginUser().getCustomization() != null && User.getLoginUser().getCustomization().getThemeEquipped() != -1) {
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ListView listView = view.findViewById(R.id.listViewThemes);
+                    listView.getChildAt(User.getLoginUser().getCustomization().getThemeEquipped()).setBackgroundColor(Color.LTGRAY);
+                }
+            }, 1);
+        }
     }
 
     private void registerClickCallbackThemes() {
@@ -334,42 +362,65 @@ public class CollectionFragment extends android.app.Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, final int position, long id) {
                 if (themes[position].isAvailable()) {
-                    for (int i = 0; i < listView.getChildCount(); i++) {
-                        listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+
+                    // Update theme equipped
+                    if (User.getLoginUser().getCustomization() == null) {
+                        User.getLoginUser().setCustomization(new Customization());
                     }
-                    listView.getChildAt(position).setBackgroundColor(Color.LTGRAY);
-                    Toast.makeText(getActivity(), "Selected!", Toast.LENGTH_SHORT).show();
-                } else {
-                    new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+                    User.getLoginUser().getCustomization().setThemeEquipped(position);
+
+                    new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
-                            final User userDetailed = (User) result;
-                            userDetailed.addPoints(50); // TODO: for testing only. remove later
-                            if (userDetailed.addPoints(- themes[position].getCost())) {
-                                new GetUserAsyncTask(EDIT_USER, userDetailed, null, null,null, new OnTaskComplete() {
-                                    @Override
-                                    public void onSuccess(Object result) {
-                                        Toast.makeText(getActivity(), "Purchased", Toast.LENGTH_SHORT).show();
-                                        TextView textView = (TextView) listView.getChildAt(position);
-                                        textView.setText(themes[position].getName());
-                                        themes[position].setAvailable(true);
-                                        updatePointsView();
-                                        // TODO: user has purchased this item. remember it this
-                                    }
-                                    @Override
-                                    public void onFailure(Exception e) {
-                                        Log.d(TAG, "Error: "+e.getMessage());
-                                    }
-                                }).execute();
-                            } else {
-                                Toast.makeText(getActivity(), "Too expensive", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Selected!", Toast.LENGTH_SHORT).show();
+                            for (int i = 0; i < listView.getChildCount(); i++) {
+                                listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                             }
+                            listView.getChildAt(position).setBackgroundColor(Color.LTGRAY);
                         }
                         @Override
                         public void onFailure(Exception e) {
                             Log.d(TAG, "Error: "+e.getMessage());
                         }
                     }).execute();
+
+                } else {
+                    if (User.getLoginUser().addPoints(- themes[position].getCost())) {
+                        updatePointsView();
+
+                        // Update theme purchased
+                        if (User.getLoginUser().getCustomization() == null) {
+                            User.getLoginUser().setCustomization(new Customization());
+                        }
+                        if (User.getLoginUser().getCustomization().getThemeOwned() == null) {
+                            int[] themeOwnedUpdate = new int[]{position};
+                            User.getLoginUser().getCustomization().setThemeOwned(themeOwnedUpdate);
+                        } else {
+                            Log.d(TAG, "$$$$ " + Arrays.toString(User.getLoginUser().getCustomization().getThemeOwned()));
+                            int[] themeOwned = User.getLoginUser().getCustomization().getThemeOwned();
+                            int[] themeOwnedUpdate = new int[themeOwned.length + 1];
+                            System.arraycopy(themeOwned, 0, themeOwnedUpdate, 0, themeOwned.length );
+                            themeOwnedUpdate[themeOwnedUpdate.length - 1] = position;
+                            User.getLoginUser().getCustomization().setThemeOwned(themeOwnedUpdate);
+                            Log.d(TAG, "$$$$ " + Arrays.toString(User.getLoginUser().getCustomization().getThemeOwned()));
+                        }
+
+                        new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+                            @Override
+                            public void onSuccess(Object result) {
+                                Toast.makeText(getActivity(), "Purchased", Toast.LENGTH_SHORT).show();
+                                TextView textView = (TextView) listView.getChildAt(position);
+                                textView.setText(themes[position].getName());
+                                themes[position].setAvailable(true);
+                            }
+                            @Override
+                            public void onFailure(Exception e) {
+                                Log.d(TAG, "Error: "+e.getMessage());
+                            }
+                        }).execute();
+                    } else {
+                        Toast.makeText(getActivity(), "Too expensive", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
