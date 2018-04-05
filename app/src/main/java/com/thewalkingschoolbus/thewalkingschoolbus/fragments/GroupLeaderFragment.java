@@ -14,9 +14,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.activities.GroupDetailActivity;
 import com.thewalkingschoolbus.thewalkingschoolbus.activities.JoinOrCreateGroupActivity;
-import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;

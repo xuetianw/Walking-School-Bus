@@ -72,7 +72,7 @@ public class MapMonitoringFragment extends android.support.v4.app.Fragment imple
     }
 
     private void setupRefreshButton() {
-        Button button = view.findViewById(R.id.refreshMapMonitoring);
+        Button button = view.findViewById(com.thewalkingschoolbus.thewalkingschoolbus.R.id.refreshMapMonitoring);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,7 +85,7 @@ public class MapMonitoringFragment extends android.support.v4.app.Fragment imple
         Log.d(TAG, "initMap: initializing map");
 
         SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager()
-                .findFragmentById(R.id.mapMonitoring);
+                .findFragmentById(com.thewalkingschoolbus.thewalkingschoolbus.R.id.mapMonitoring);
 
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -199,7 +199,7 @@ public class MapMonitoringFragment extends android.support.v4.app.Fragment imple
     }
 
     private void updateDropdown() {
-        Spinner dropdown = view.findViewById(R.id.spinnerSelectMonitoring);
+        Spinner dropdown = view.findViewById(com.thewalkingschoolbus.thewalkingschoolbus.R.id.spinnerSelectMonitoring);
         dropdown.setVisibility(View.VISIBLE);
 
         List<String> items = new ArrayList<>();
@@ -207,8 +207,8 @@ public class MapMonitoringFragment extends android.support.v4.app.Fragment imple
             items.add(user.getName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, items);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), com.thewalkingschoolbus.thewalkingschoolbus.R.layout.support_simple_spinner_dropdown_item, items);
+        adapter.setDropDownViewResource(com.thewalkingschoolbus.thewalkingschoolbus.R.layout.support_simple_spinner_dropdown_item);
         dropdown.setAdapter(adapter);
         dropdown.setOnItemSelectedListener(this);
     }

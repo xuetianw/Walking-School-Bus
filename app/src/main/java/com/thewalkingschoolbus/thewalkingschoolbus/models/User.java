@@ -67,6 +67,10 @@ public class User {
 
         memberOfGroups = null;
         leadsGroups = null;
+
+        currentPoints = new Integer(0);
+        totalPointsEarned = new Integer(0);
+        mCustomization = null;
     }
 
     public User (String id, String name, String email) {
@@ -261,20 +265,36 @@ public class User {
         this.readMessages = readMessages;
     }
 
-    public Integer getCurrentPoints() {
+    public int getCurrentPoints() {
+        if (currentPoints == null) {
+            currentPoints = 0;
+        }
         return currentPoints;
     }
 
-    public void setCurrentPoints(Integer currentPoints) {
-        this.currentPoints = currentPoints;
+    public boolean addPoints(int points) {
+        if (currentPoints == null) {
+            currentPoints = 0;
+        }
+        if (totalPointsEarned == null) {
+            totalPointsEarned = 0;
+        }
+        if (currentPoints + points < 0) {
+            return false;
+        } else {
+            if (points > 0) {
+                totalPointsEarned += points;
+            }
+            currentPoints += points;
+            return true;
+        }
     }
 
-    public Integer getTotalPointsEarned() {
+    public int getTotalPointsEarned() {
+        if (totalPointsEarned == null) {
+            totalPointsEarned = 0;
+        }
         return totalPointsEarned;
-    }
-
-    public void setTotalPointsEarned(Integer totalPointsEarned) {
-        this.totalPointsEarned = totalPointsEarned;
     }
 
     public String getCustomJson() {
@@ -318,6 +338,4 @@ public class User {
     public static void setToken(String tokenReceive) {
         token = tokenReceive;
     }
-
-
 }
