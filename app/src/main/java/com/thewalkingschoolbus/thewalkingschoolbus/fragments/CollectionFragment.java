@@ -3,6 +3,7 @@ package com.thewalkingschoolbus.thewalkingschoolbus.fragments;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,21 +51,10 @@ public class CollectionFragment extends android.app.Fragment {
         }
         view = inflater.inflate(R.layout.fragment_collection, container, false);
 
-
         // TEST
-        User.getLoginUser().addPoints(50);
-        new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-            }
-            @Override
-            public void onFailure(Exception e) {
-            }
-        }).execute();
-
+        //resetUnlocks();
 
         setupCustomizationInfo();
-
         updateListViewTitles();
         updateListViewThemes();
         updateAvatarSelection();
@@ -94,13 +84,13 @@ public class CollectionFragment extends android.app.Fragment {
             int[] titleOwned = User.getLoginUser().getCustomization().getTitleOwned();
             if (titleOwned != null) {
                 for (int i = 0; i < titleOwned.length; i ++) {
-                    themes[titleOwned[i]].setAvailable(true);
+                    titles[titleOwned[i]].setAvailable(true);
                 }
             }
             int[] themeOwned = User.getLoginUser().getCustomization().getThemeOwned();
             if (themeOwned != null) {
                 for (int i = 0; i < themeOwned.length; i ++) {
-                    avatars[themeOwned[i]].setAvailable(true);
+                    themes[themeOwned[i]].setAvailable(true);
                 }
             }
         }
@@ -132,9 +122,11 @@ public class CollectionFragment extends android.app.Fragment {
             LinearLayout avatarHolder = view.findViewById(R.id.AvatarHolder);
             avatarHolder.addView(imageButtonAvatars[i]);
 
+            // Darken locked avatar
             if (!avatars[i].isAvailable()) {
                 imageButtonAvatars[i].setColorFilter(Color.BLACK);
             }
+            // Highlight equipped avatar
             if (User.getLoginUser().getCustomization() != null && User.getLoginUser().getCustomization().getAvatarEquipped() == i) {
                 imageButtonAvatars[i].setBackgroundColor(Color.LTGRAY);
             }
@@ -143,42 +135,8 @@ public class CollectionFragment extends android.app.Fragment {
 
     private void onClickAvatar(final ImageButton imageButton) {
         final Avatar avatarClicked = avatars[(int) imageButton.getTag()];
-        if (!avatarClicked.isAvailable()) {
-            if (User.getLoginUser().addPoints(- avatarClicked.getCost())) { // Set new current points
-                // Update avatar owned
-                if (User.getLoginUser().getCustomization() == null) {
-                    User.getLoginUser().setCustomization(new Customization());
-                }
-                if (User.getLoginUser().getCustomization().getAvatarOwned() == null) {
-                    int[] avatarOwnedUpdate = new int[]{(int) imageButton.getTag()};
-                    User.getLoginUser().getCustomization().setAvatarOwned(avatarOwnedUpdate);
-                } else {
-                    Log.d(TAG, "$$$$ " + Arrays.toString(User.getLoginUser().getCustomization().getAvatarOwned()));
-                    int[] avatarOwned = User.getLoginUser().getCustomization().getAvatarOwned();
-                    int[] avatarOwnedUpdate = new int[avatarOwned.length + 1];
-                    System.arraycopy(avatarOwned, 0, avatarOwnedUpdate, 0, avatarOwned.length );
-                    avatarOwnedUpdate[avatarOwnedUpdate.length - 1] = (int) imageButton.getTag();
-                    User.getLoginUser().getCustomization().setAvatarOwned(avatarOwnedUpdate);
-                    Log.d(TAG, "$$$$ " + Arrays.toString(User.getLoginUser().getCustomization().getAvatarOwned()));
-                }
+        if (avatarClicked.isAvailable()) {
 
-                new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        Toast.makeText(getActivity(), "Purchased", Toast.LENGTH_SHORT).show();
-                        imageButton.setColorFilter(Color.TRANSPARENT);
-                        avatarClicked.setAvailable(true);
-                        updatePointsView();
-                    }
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.d(TAG, "Error: "+e.getMessage());
-                    }
-                }).execute();
-            } else {
-                Toast.makeText(getActivity(), "Too expensive", Toast.LENGTH_SHORT).show();
-            }
-        } else {
             // Update avatar equipped
             if (User.getLoginUser().getCustomization() == null) {
                 User.getLoginUser().setCustomization(new Customization());
@@ -199,6 +157,44 @@ public class CollectionFragment extends android.app.Fragment {
                     Log.d(TAG, "Error: "+e.getMessage());
                 }
             }).execute();
+
+        } else {
+            if (User.getLoginUser().addPoints(- avatarClicked.getCost())) { // Update points
+                updatePointsView();
+
+                // Update avatar purchased
+                if (User.getLoginUser().getCustomization() == null) {
+                    User.getLoginUser().setCustomization(new Customization());
+                }
+                if (User.getLoginUser().getCustomization().getAvatarOwned() == null) {
+                    int[] avatarOwnedUpdate = new int[]{(int) imageButton.getTag()};
+                    User.getLoginUser().getCustomization().setAvatarOwned(avatarOwnedUpdate);
+                } else {
+                    Log.d(TAG, "$$$$ " + Arrays.toString(User.getLoginUser().getCustomization().getAvatarOwned()));
+                    int[] avatarOwned = User.getLoginUser().getCustomization().getAvatarOwned();
+                    int[] avatarOwnedUpdate = new int[avatarOwned.length + 1];
+                    System.arraycopy(avatarOwned, 0, avatarOwnedUpdate, 0, avatarOwned.length );
+                    avatarOwnedUpdate[avatarOwnedUpdate.length - 1] = (int) imageButton.getTag();
+                    User.getLoginUser().getCustomization().setAvatarOwned(avatarOwnedUpdate);
+                    Log.d(TAG, "$$$$ " + Arrays.toString(User.getLoginUser().getCustomization().getAvatarOwned()));
+                }
+
+                // Save to server
+                new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        Toast.makeText(getActivity(), "Purchased", Toast.LENGTH_SHORT).show();
+                        imageButton.setColorFilter(Color.TRANSPARENT);
+                        avatarClicked.setAvailable(true);
+                    }
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d(TAG, "Error: "+e.getMessage());
+                    }
+                }).execute();
+            } else {
+                Toast.makeText(getActivity(), "Too expensive", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -222,50 +218,89 @@ public class CollectionFragment extends android.app.Fragment {
 
         // Update clicks
         registerClickCallbackTitles();
+
+        // Highlight equipped title
+        highlightEquippedTitle();
+    }
+
+    private void highlightEquippedTitle() {
+        if (User.getLoginUser().getCustomization() != null && User.getLoginUser().getCustomization().getTitleEquipped() != -1) {
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ListView listView = view.findViewById(R.id.listViewTitles);
+                    listView.getChildAt(User.getLoginUser().getCustomization().getTitleEquipped()).setBackgroundColor(Color.LTGRAY);
+                }
+            }, 1);
+        }
     }
 
     private void registerClickCallbackTitles() {
-        final ListView listview = view.findViewById(R.id.listViewTitles);
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        final ListView listView = view.findViewById(R.id.listViewTitles);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, final int position, long id) {
                 if (titles[position].isAvailable()) {
-                    for (int i = 0; i < listview.getChildCount(); i++) {
-                        listview.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+
+                    // Update title equipped
+                    if (User.getLoginUser().getCustomization() == null) {
+                        User.getLoginUser().setCustomization(new Customization());
                     }
-                    listview.getChildAt(position).setBackgroundColor(Color.LTGRAY);
-                    Toast.makeText(getActivity(), "Selected!", Toast.LENGTH_SHORT).show();
-                } else {
-                    new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+                    User.getLoginUser().getCustomization().setTitleEquipped(position);
+
+                    new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
-                            final User userDetailed = (User) result;
-                            userDetailed.addPoints(50); // TODO: for testing only. remove later
-                            if (userDetailed.addPoints(- titles[position].getCost())) {
-                                new GetUserAsyncTask(EDIT_USER, userDetailed, null, null,null, new OnTaskComplete() {
-                                    @Override
-                                    public void onSuccess(Object result) {
-                                        Toast.makeText(getActivity(), "Purchased", Toast.LENGTH_SHORT).show();
-                                        TextView textView = (TextView) listview.getChildAt(position);
-                                        textView.setText(titles[position].getTitle());
-                                        titles[position].setAvailable(true);
-                                        updatePointsView();
-                                        // TODO: user has purchased this item. remember it this
-                                    }
-                                    @Override
-                                    public void onFailure(Exception e) {
-                                        Log.d(TAG, "Error: "+e.getMessage());
-                                    }
-                                }).execute();
-                            } else {
-                                Toast.makeText(getActivity(), "Too expensive", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Selected!", Toast.LENGTH_SHORT).show();
+                            for (int i = 0; i < listView.getChildCount(); i++) {
+                                listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                             }
+                            listView.getChildAt(position).setBackgroundColor(Color.LTGRAY);
                         }
                         @Override
                         public void onFailure(Exception e) {
                             Log.d(TAG, "Error: "+e.getMessage());
                         }
                     }).execute();
+
+                } else {
+                    if (User.getLoginUser().addPoints(- titles[position].getCost())) {
+                        updatePointsView();
+
+                        // Update title purchased
+                        if (User.getLoginUser().getCustomization() == null) {
+                            User.getLoginUser().setCustomization(new Customization());
+                        }
+                        if (User.getLoginUser().getCustomization().getTitleOwned() == null) {
+                            int[] titleOwnedUpdate = new int[]{position};
+                            User.getLoginUser().getCustomization().setTitleOwned(titleOwnedUpdate);
+                        } else {
+                            Log.d(TAG, "$$$$ " + Arrays.toString(User.getLoginUser().getCustomization().getTitleOwned()));
+                            int[] titleOwned = User.getLoginUser().getCustomization().getTitleOwned();
+                            int[] titleOwnedUpdate = new int[titleOwned.length + 1];
+                            System.arraycopy(titleOwned, 0, titleOwnedUpdate, 0, titleOwned.length );
+                            titleOwnedUpdate[titleOwnedUpdate.length - 1] = position;
+                            User.getLoginUser().getCustomization().setTitleOwned(titleOwnedUpdate);
+                            Log.d(TAG, "$$$$ " + Arrays.toString(User.getLoginUser().getCustomization().getTitleOwned()));
+                        }
+
+                        new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+                            @Override
+                            public void onSuccess(Object result) {
+                                Toast.makeText(getActivity(), "Purchased", Toast.LENGTH_SHORT).show();
+                                TextView textView = (TextView) listView.getChildAt(position);
+                                textView.setText(titles[position].getTitle());
+                                titles[position].setAvailable(true);
+                            }
+                            @Override
+                            public void onFailure(Exception e) {
+                                Log.d(TAG, "Error: "+e.getMessage());
+                            }
+                        }).execute();
+                    } else {
+                        Toast.makeText(getActivity(), "Too expensive", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -294,15 +329,15 @@ public class CollectionFragment extends android.app.Fragment {
     }
 
     private void registerClickCallbackThemes() {
-        final ListView listview = view.findViewById(R.id.listViewThemes);
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        final ListView listView = view.findViewById(R.id.listViewThemes);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, final int position, long id) {
                 if (themes[position].isAvailable()) {
-                    for (int i = 0; i < listview.getChildCount(); i++) {
-                        listview.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                    for (int i = 0; i < listView.getChildCount(); i++) {
+                        listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                     }
-                    listview.getChildAt(position).setBackgroundColor(Color.LTGRAY);
+                    listView.getChildAt(position).setBackgroundColor(Color.LTGRAY);
                     Toast.makeText(getActivity(), "Selected!", Toast.LENGTH_SHORT).show();
                 } else {
                     new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null,null, new OnTaskComplete() {
@@ -315,7 +350,7 @@ public class CollectionFragment extends android.app.Fragment {
                                     @Override
                                     public void onSuccess(Object result) {
                                         Toast.makeText(getActivity(), "Purchased", Toast.LENGTH_SHORT).show();
-                                        TextView textView = (TextView) listview.getChildAt(position);
+                                        TextView textView = (TextView) listView.getChildAt(position);
                                         textView.setText(themes[position].getName());
                                         themes[position].setAvailable(true);
                                         updatePointsView();
@@ -344,65 +379,28 @@ public class CollectionFragment extends android.app.Fragment {
         return context.getResources().getIdentifier("drawable/" + imageName, null, context.getPackageName());
     }
 
-//    private void updateDropdownTitles() {
-//        Spinner dropdown = view.findViewById(R.id.spinnerTitles);
-//
-//        List<String> items = new ArrayList<>();
-//        for (Title title : titles) {
-//            if (title.isAvailable()) {
-//                items.add(title.getTitle());
-//            } else {
-//                items.add(title.getTitle() + " (LOCKED " + title.getCost() + "PTS)" );
-//            }
-//        }
-//
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), com.thewalkingschoolbus.thewalkingschoolbus.R.layout.support_simple_spinner_dropdown_item, items);
-//        adapter.setDropDownViewResource(com.thewalkingschoolbus.thewalkingschoolbus.R.layout.support_simple_spinner_dropdown_item);
-//        dropdown.setAdapter(adapter);
-//        dropdown.setOnItemSelectedListener(this);
-//    }
-//
-//    private void updateDropdownThemes() {
-//        Spinner dropdown = view.findViewById(R.id.spinnerThemes);
-//
-//        List<String> items = new ArrayList<>();
-//        for (Theme theme: themes) {
-//            items.add(theme.getName());
-//        }
-//
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), com.thewalkingschoolbus.thewalkingschoolbus.R.layout.support_simple_spinner_dropdown_item, items);
-//        adapter.setDropDownViewResource(com.thewalkingschoolbus.thewalkingschoolbus.R.layout.support_simple_spinner_dropdown_item);
-//        dropdown.setAdapter(adapter);
-//        dropdown.setOnItemSelectedListener(this);
-//    }
-//
-//    @Override
-//    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-//        switch(adapterView.getId()){
-//            case R.id.spinnerTitles:
-//                Title titleSelected = titles[position];
-//
-//                if (titleSelected.isAvailable()) {
-//                    Toast.makeText(getActivity(), titleSelected.getTitle() + " selected!", Toast.LENGTH_SHORT).show();
-//                    // TODO: make this the user's equipped image
-//                } else {
-//
-//                }
-//
-//
-//                break;
-//            case R.id.spinnerThemes:
-//                Theme themeSelected = themes[position];
-//                Toast.makeText(getActivity(), themeSelected.getName() + " selected!", Toast.LENGTH_SHORT).show();
-//                // TODO: make this the user's equipped image
-//                break;
-//            default:
-//                break;
-//        }
-//    }
-//
-//    @Override
-//    public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//    }
+    // TEST
+
+    private void resetUnlocks() {
+        int[] avatarOwnedUpdate = new int[] {};
+        User.getLoginUser().getCustomization().setAvatarOwned(avatarOwnedUpdate);
+        User.getLoginUser().getCustomization().setAvatarEquipped(-1);
+        int[] titleOwnedUpdate = new int[] {};
+        User.getLoginUser().getCustomization().setTitleOwned(titleOwnedUpdate);
+        User.getLoginUser().getCustomization().setTitleEquipped(-1);
+        int[] themeOwnedUpdate = new int[] {};
+        User.getLoginUser().getCustomization().setThemeOwned(themeOwnedUpdate);
+        User.getLoginUser().getCustomization().setThemeEquipped(-1);
+
+        new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                Toast.makeText(getActivity(), "Unlocks reset", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Log.d(TAG, "Error: "+e.getMessage());
+            }
+        }).execute();
+    }
 }
