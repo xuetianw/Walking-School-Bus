@@ -1,5 +1,7 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.api_binding;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.thewalkingschoolbus.thewalkingschoolbus.exceptions.ApiException;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
@@ -11,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
-
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.BASE_URL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.httpRequestGet;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.httpRequestPost;
@@ -149,6 +150,7 @@ public class PermissionsApiBinding {
         outStream.close();
 
         if (connection.getResponseCode() >= 400) {
+            Log.e("TAG","responseCode: "+connection.getResponseCode());
             // failed
             BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
             throw new Gson().fromJson(error, ApiException.class);
