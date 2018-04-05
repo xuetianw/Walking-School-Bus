@@ -39,7 +39,7 @@ public class User {
     private Integer totalPointsEarned;
     private String customJson;
 
-    private Customization mCustomization;
+    private Customization customization;
 
     // Permissions
     // - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -68,9 +68,9 @@ public class User {
         memberOfGroups = null;
         leadsGroups = null;
 
-        currentPoints = new Integer(0);
-        totalPointsEarned = new Integer(0);
-        mCustomization = null;
+        currentPoints = 0;
+        totalPointsEarned = 0;
+        customization = null;
     }
 
     public User (String id, String name, String email) {
@@ -93,6 +93,8 @@ public class User {
 
         memberOfGroups = null;
         leadsGroups = null;
+
+        customization = new Customization();
     }
 
     public String getBirthYear() {
@@ -314,21 +316,21 @@ public class User {
     }
 
     public void customJsonToJson(){
-        String str = new Gson().toJson(mCustomization);
+        String str = new Gson().toJson(customization);
         customJson = str;
     }
 
     public void customJsonFromJson(String str){
-        mCustomization = new Gson().fromJson(str, Customization.class);
+        customization = new Gson().fromJson(str, Customization.class);
     }
 
 
-    public Customization getmCustomization() {
-        return mCustomization;
+    public Customization getCustomization() {
+        return customization;
     }
 
-    public void setmCustomization(Customization mCustomization) {
-        this.mCustomization = mCustomization;
+    public void setCustomization(Customization customization) {
+        this.customization = customization;
     }
 
     public static String getToken() throws Exception{
