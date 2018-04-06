@@ -9,24 +9,25 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
-import com.thewalkingschoolbus.thewalkingschoolbus.activities.MonitoringDetailActivity;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
-import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class LeaderboardFragment extends android.app.Fragment {
 
     private static final String TAG = "LeaderboardFragment";
     private View view;
+    ArrayList <User> userList = new ArrayList<>();
+    User []users;
+    public static ArrayList<String> arrayList;
 
     @Nullable
     @Override
@@ -40,25 +41,38 @@ public class LeaderboardFragment extends android.app.Fragment {
     }
 
     private void updateListView() {
-//        monitoringList = new ArrayList<>();
-//        users = (User[]) result;
-//        if(users.length == 0){
-//            Toast.makeText(getActivity(),"Not monitoring anyone", Toast.LENGTH_SHORT).show();
-//        }
-//        Toast.makeText(getActivity(),"Monitoring list updated", Toast.LENGTH_SHORT)
-//                .show();
-//        for(User user: users){
-//            monitoringList.add("Name: "+ user.getName() + " "+"Email: "+ user.getEmail() );
-//        }
-//        // build adapter
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.leaderboard_entry, monitoringList);
-//
-//        // configure the list view
-//        ListView list = view.findViewById(R.id.listViewLeaderboard);
-//        list.setAdapter(adapter);
-//
-//        // update clicks
-//        registerClickCallback();
+        new GetUserAsyncTask(LIST_USERS, null,null, null,
+                null,new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                users = (User[]) result;
+
+                for(User user: users){
+                    userList.add(user);
+                }
+                java.util.Collections.sort(userList);
+                for(User user:userList){
+                    System.out.println(user.getTotalPointsEarned());
+                }
+
+                arrayList = new ArrayList();
+                for (int i = 0; i < 10; i++){
+
+                }
+                for(User user: userList){
+                    arrayList.add("Name: "+ user.getName() + " "+"Email: "+ user.getEmail()+ " totalPointsEarned: " + user.getTotalPointsEarned());
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.leaderboard_entry, arrayList);
+                ListView list = view.findViewById(R.id.listViewLeaderboard);
+                list.setAdapter(adapter);
+
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getActivity(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }).execute();
     }
 
     private void registerClickCallback() {
