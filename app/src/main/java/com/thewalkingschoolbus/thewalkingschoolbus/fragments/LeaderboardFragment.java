@@ -57,9 +57,11 @@ public class LeaderboardFragment extends android.app.Fragment {
                 }
 
                 arrayList = new ArrayList();
-                for(User user: userList){
-                    arrayList.add("Name: "+ user.getName() + " "+"Email: "+ user.getEmail()+ " totalPointsEarned: " + user.getTotalPointsEarned());
+                for(int i = 0; i < userList.size(); i++) {
+                    arrayList.add("Ranking: " + i + " totalPointsEarned: " + userList.get(i).getTotalPointsEarned()
+                            + " Name: "+ userList.get(i).getName());
                 }
+
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.leaderboard_entry, arrayList);
                 ListView list = view.findViewById(R.id.listViewLeaderboard);
