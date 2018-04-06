@@ -1,16 +1,12 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.fragments;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,13 +31,11 @@ import com.thewalkingschoolbus.thewalkingschoolbus.models.collections.Avatar;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.collections.Theme;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.collections.Title;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
-import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 
 public class CollectionFragment extends android.app.Fragment {
 
@@ -50,6 +44,8 @@ public class CollectionFragment extends android.app.Fragment {
     private Avatar[] avatars;
     private Title[] titles;
     private Theme[] themes;
+    private ImageButton[] imageButtonAvatars;
+    private TextView[] textViewAvatars;
 
     @Nullable
     @Override
@@ -59,9 +55,10 @@ public class CollectionFragment extends android.app.Fragment {
         }
         view = inflater.inflate(R.layout.fragment_collection, container, false);
 
-        // TEST
+        // TEST //
         //resetUnlocks();
         setupAddTestPoints();
+        // TEST //
 
         setupCustomizationInfo();
         updateListViewTitles();
@@ -70,12 +67,6 @@ public class CollectionFragment extends android.app.Fragment {
         updatePointsView();
 
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
     }
 
     private void setupAddTestPoints() {
@@ -143,14 +134,14 @@ public class CollectionFragment extends android.app.Fragment {
 
     private void updatePointsView() {
         TextView textView = view.findViewById(R.id.userPoints);
-        textView.setText(User.getLoginUser().getCurrentPoints() + " Point(s)"); // TODO: does not call to server
+        textView.setText(User.getLoginUser().getCurrentPoints() + " PTS / " + User.getLoginUser().getTotalPointsEarned() + " PTS TOTAL");
     }
-
-    private ImageButton[] imageButtonAvatars;
 
     private void updateAvatarSelection() {
         imageButtonAvatars = new ImageButton[avatars.length];
+        textViewAvatars = new TextView[avatars.length];
         for (int i = 0; i < imageButtonAvatars.length; i++) {
+            // Set up image buttons
             imageButtonAvatars[i] = new ImageButton(getActivity());
             imageButtonAvatars[i].setImageResource(getImageId(getActivity(), avatars[i].getName()));
             imageButtonAvatars[i].setAdjustViewBounds(true);
@@ -167,9 +158,17 @@ public class CollectionFragment extends android.app.Fragment {
             LinearLayout avatarHolder = view.findViewById(R.id.AvatarHolder);
             avatarHolder.addView(imageButtonAvatars[i]);
 
-            // Darken locked avatar
+            // Set up text view avatar cost
+            textViewAvatars[i] = new TextView(getActivity());
+            textViewAvatars[i].setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            textViewAvatars[i].setLayoutParams(new LinearLayout.LayoutParams(240, ViewGroup.LayoutParams.WRAP_CONTENT));
+            LinearLayout avatarHolderCost = view.findViewById(R.id.AvatarHolderCost);
+            avatarHolderCost.addView(textViewAvatars[i]);
+
+            // Darken locked avatar, remove cost for unlocked avatar
             if (!avatars[i].isAvailable()) {
                 imageButtonAvatars[i].setColorFilter(Color.BLACK);
+                textViewAvatars[i].setText(avatars[i].getCost() + " PTS");
             }
             // Highlight equipped avatar
             if (User.getLoginUser().getCustomization() != null && User.getLoginUser().getCustomization().getAvatarEquipped() == i) {
@@ -199,19 +198,6 @@ public class CollectionFragment extends android.app.Fragment {
                 }
                 imageButton.setBackgroundColor(Color.LTGRAY);
             }
-
-            // Save to server
-            new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
-                @Override
-                public void onSuccess(Object result) {
-
-                }
-                @Override
-                public void onFailure(Exception e) {
-                    Log.d(TAG, "Error: "+e.getMessage());
-                }
-            }).execute();
-
         } else {
             if (User.getLoginUser().addPoints(- avatarClicked.getCost())) { // Update points
                 updatePointsView();
@@ -233,23 +219,28 @@ public class CollectionFragment extends android.app.Fragment {
                     Log.d(TAG, "$$$$ " + Arrays.toString(User.getLoginUser().getCustomization().getAvatarOwned()));
                 }
 
-                // Save to server
-                new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        Toast.makeText(getActivity(), "Purchased", Toast.LENGTH_SHORT).show();
-                        imageButton.setColorFilter(Color.TRANSPARENT);
-                        avatarClicked.setAvailable(true);
-                    }
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.d(TAG, "Error: "+e.getMessage());
-                    }
-                }).execute();
+                // Update visually
+                textViewAvatars[(int) imageButton.getTag()].setText("");
+                Toast.makeText(getActivity(), "Purchased", Toast.LENGTH_SHORT).show();
+                imageButton.setColorFilter(Color.TRANSPARENT);
+                avatarClicked.setAvailable(true);
             } else {
                 Toast.makeText(getActivity(), "Too expensive", Toast.LENGTH_SHORT).show();
+                return;
             }
         }
+
+        // Save to server
+        new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Log.d(TAG, "Error: "+e.getMessage());
+            }
+        }).execute();
     }
 
     private void updateListViewTitles() {
@@ -259,7 +250,7 @@ public class CollectionFragment extends android.app.Fragment {
             if (title.isAvailable()) {
                 monitoringList.add(title.getTitle());
             } else {
-                monitoringList.add(title.getTitle() + " (LOCKED " + title.getCost() + "PTS)" );
+                monitoringList.add(title.getTitle() + " (LOCKED " + title.getCost() + " PTS)" );
             }
         }
 
@@ -314,19 +305,6 @@ public class CollectionFragment extends android.app.Fragment {
                         }
                         listView.getChildAt(position).setBackgroundColor(Color.LTGRAY);
                     }
-
-                    // Save to server
-                    new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
-                        @Override
-                        public void onSuccess(Object result) {
-
-                        }
-                        @Override
-                        public void onFailure(Exception e) {
-                            Log.d(TAG, "Error: "+e.getMessage());
-                        }
-                    }).execute();
-
                 } else {
                     if (User.getLoginUser().addPoints(- titles[position].getCost())) {
                         updatePointsView();
@@ -348,23 +326,27 @@ public class CollectionFragment extends android.app.Fragment {
                             Log.d(TAG, "$$$$ " + Arrays.toString(User.getLoginUser().getCustomization().getTitleOwned()));
                         }
 
-                        new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
-                            @Override
-                            public void onSuccess(Object result) {
-                                Toast.makeText(getActivity(), "Purchased", Toast.LENGTH_SHORT).show();
-                                TextView textView = (TextView) listView.getChildAt(position);
-                                textView.setText(titles[position].getTitle());
-                                titles[position].setAvailable(true);
-                            }
-                            @Override
-                            public void onFailure(Exception e) {
-                                Log.d(TAG, "Error: "+e.getMessage());
-                            }
-                        }).execute();
+                        // Update visually
+                        Toast.makeText(getActivity(), "Purchased", Toast.LENGTH_SHORT).show();
+                        TextView textView = (TextView) listView.getChildAt(position);
+                        textView.setText(titles[position].getTitle());
+                        titles[position].setAvailable(true);
                     } else {
                         Toast.makeText(getActivity(), "Too expensive", Toast.LENGTH_SHORT).show();
                     }
                 }
+
+                // Save to server
+                new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(Object result) {
+
+                    }
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d(TAG, "Error: "+e.getMessage());
+                    }
+                }).execute();
             }
         });
     }
@@ -376,7 +358,7 @@ public class CollectionFragment extends android.app.Fragment {
             if (theme.isAvailable()) {
                 monitoringList.add(theme.getName());
             } else {
-                monitoringList.add(theme.getName() + " (LOCKED " + theme.getCost() + "PTS)" );
+                monitoringList.add(theme.getName() + " (LOCKED " + theme.getCost() + " PTS)" );
             }
         }
 
@@ -434,19 +416,6 @@ public class CollectionFragment extends android.app.Fragment {
 
                     // Set theme
                     setToolbarTheme();
-
-                    // Save to server
-                    new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
-                        @Override
-                        public void onSuccess(Object result) {
-
-                        }
-                        @Override
-                        public void onFailure(Exception e) {
-                            Log.d(TAG, "Error: "+e.getMessage());
-                        }
-                    }).execute();
-
                 } else {
                     if (User.getLoginUser().addPoints(- themes[position].getCost())) {
                         updatePointsView();
@@ -468,23 +437,27 @@ public class CollectionFragment extends android.app.Fragment {
                             Log.d(TAG, "$$$$ " + Arrays.toString(User.getLoginUser().getCustomization().getThemeOwned()));
                         }
 
-                        new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
-                            @Override
-                            public void onSuccess(Object result) {
-                                Toast.makeText(getActivity(), "Purchased", Toast.LENGTH_SHORT).show();
-                                TextView textView = (TextView) listView.getChildAt(position);
-                                textView.setText(themes[position].getName());
-                                themes[position].setAvailable(true);
-                            }
-                            @Override
-                            public void onFailure(Exception e) {
-                                Log.d(TAG, "Error: "+e.getMessage());
-                            }
-                        }).execute();
+                        // Update visually
+                        Toast.makeText(getActivity(), "Purchased", Toast.LENGTH_SHORT).show();
+                        TextView textView = (TextView) listView.getChildAt(position);
+                        textView.setText(themes[position].getName());
+                        themes[position].setAvailable(true);
                     } else {
                         Toast.makeText(getActivity(), "Too expensive", Toast.LENGTH_SHORT).show();
                     }
                 }
+
+                // Save to server
+                new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(Object result) {
+
+                    }
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d(TAG, "Error: "+e.getMessage());
+                    }
+                }).execute();
             }
         });
     }
