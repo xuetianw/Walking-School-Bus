@@ -17,6 +17,7 @@
             android:layout_marginBottom="18dp"
             android:text="0 Points"
             android:textAlignment="center"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -75,5 +76,13 @@
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/addTestPoints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Points Test"
+            android:visibility="gone" />
+
     </LinearLayout>
+
 </RelativeLayout>

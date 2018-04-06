@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,6 +54,7 @@ public class CollectionFragment extends android.app.Fragment {
 
         // TEST
         //resetUnlocks();
+        setupAddTestPoints();
 
         setupCustomizationInfo();
         updateListViewTitles();
@@ -67,6 +69,30 @@ public class CollectionFragment extends android.app.Fragment {
     public void onResume() {
         super.onResume();
 
+    }
+
+    private void setupAddTestPoints() {
+        Button button = view.findViewById(R.id.addTestPoints);
+        button.setVisibility(View.VISIBLE);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                User.getLoginUser().addPoints(100);
+                updatePointsView();
+
+                // Save to server
+                new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        Toast.makeText(getActivity(), "+ 100", Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d(TAG, "Error: "+e.getMessage());
+                    }
+                }).execute();
+            }
+        });
     }
 
     private void setupCustomizationInfo() {

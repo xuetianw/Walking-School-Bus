@@ -15,6 +15,7 @@ import com.thewalkingschoolbus.thewalkingschoolbus.activities.UserProfileActivit
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.collections.Title;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
@@ -49,26 +50,6 @@ public class ProfileFragment extends android.app.Fragment {
         setUpEditProfileBtn();
 
         return view;
-
-
-
-
-        /*
-        * How to add content in fragment:
-        *
-        * Fragments function identical to regular activities, except it does not extend from AppCompatActivity.
-        * Hence, some things such as findViewByID or executing context related code works differently.
-        *
-        * FindViewBYId Example
-        * instead   of: Button btn = findViewById(R.id.example);
-        *           do: Button btn = view.findViewById(R.id.example);
-        *
-        * Context Example
-        * Instead   of: Toast.makeText(this, "example", Toast.LENGTH_SHORT).show()
-        *           do: Toast.makeText(getActivity(), "example.", Toast.LENGTH_SHORT).show()
-        *
-        * If this is unclear, look at example code in MonitoringFragment.
-        */
     }
 
     @Override
@@ -97,7 +78,11 @@ public class ProfileFragment extends android.app.Fragment {
                 } else {
                     User.setLoginUser((User)result);
                     if(User.getLoginUser().getName() !=  null){
-                        profileNametv.setText("" +  User.getLoginUser().getName());
+                        if (User.getLoginUser().getCustomization() != null && User.getLoginUser().getCustomization().getTitleEquipped() != -1) {
+                            profileNametv.setText("" +  User.getLoginUser().getName() + " " + Title.titles[User.getLoginUser().getCustomization().getTitleEquipped()].getTitle());
+                        } else {
+                            profileNametv.setText("" +  User.getLoginUser().getName());
+                        }
                     }
                     if(User.getLoginUser().getEmail() != null){
                         profileEmailtv.setText("" +  User.getLoginUser().getEmail());
