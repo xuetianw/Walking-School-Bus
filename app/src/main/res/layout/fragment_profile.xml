@@ -20,12 +20,19 @@
             android:layout_height="230dp"
             android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                app:srcCompat="@drawable/logo" />
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="0dp"
-                android:src="@drawable/logo" />
+                android:src="@drawable/logo"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/profileNameid"

@@ -12,24 +12,32 @@
     android:layout_marginTop="2dp">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+
             android:orientation="vertical">
 
-            <LinearLayout
+            <ImageView
+                android:id="@+id/imageView2"
                 android:layout_width="match_parent"
-                android:layout_height="225dp"
+                android:layout_height="200dp"
+                app:srcCompat="@drawable/logo" />
 
-                android:orientation="vertical">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20dp"
-                    android:src="@drawable/logo" />
-<!--
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/logo"
+                android:visibility="gone" />
+            <!--
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -39,57 +47,57 @@
                     android:textColor="#fff"
                     android:layout_gravity="center"/>
                     -->
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/emailid"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="30dp"
-                    android:background="@color/logoBlue"
-                    android:drawableStart="@drawable/ic_email_black_24dp"
-                    android:hint="@string/mainact_enter_email"
-                    android:inputType="textPersonName"
-                    android:padding="10dp"
-                    android:textColor="#fff"
-                    android:textColorHint="@color/graylight" />
-
-                <EditText
-                    android:id="@+id/passwordid"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/logoBlue"
-                    android:drawableStart="@drawable/ic_lock_outline_black_24dp"
-                    android:hint="@string/mainact_enter_password"
-                    android:inputType="textPersonName"
-                    android:padding="10dp"
-                    android:textColor="#fff"
-                    android:textColorHint="@color/graylight" />
-
-                <Button
-                    android:id="@+id/registerid"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="100dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/mainact_registerBtn" />
-
-                <Button
-                    android:id="@+id/loginid"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="100dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:text="@string/mainact_loginBtn" />
-            </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/emailid"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:background="@color/logoBlue"
+                android:drawableStart="@drawable/ic_email_black_24dp"
+                android:hint="@string/mainact_enter_email"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:textColor="#fff"
+                android:textColorHint="@color/graylight" />
+
+            <EditText
+                android:id="@+id/passwordid"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@color/logoBlue"
+                android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                android:hint="@string/mainact_enter_password"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:textColor="#fff"
+                android:textColorHint="@color/graylight" />
+
+            <Button
+                android:id="@+id/loginid"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="@string/mainact_loginBtn" />
+
+            <Button
+                android:id="@+id/registerid"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:text="@string/mainact_registerBtn" />
+        </LinearLayout>
+    </LinearLayout>
     </RelativeLayout>
