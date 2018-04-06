@@ -118,7 +118,6 @@ public class ProfileFragment extends android.app.Fragment {
                         if (User.getLoginUser().getCustomization().getTitleEquipped() != -1) {
                             profileNametv.setText(profileNametv.getText() + " - " + Title.titles[User.getLoginUser().getCustomization().getTitleEquipped()].getTitle());
                         }
-                        CollectionFragment.setToolbarTheme();
                     }
                 }
             }
