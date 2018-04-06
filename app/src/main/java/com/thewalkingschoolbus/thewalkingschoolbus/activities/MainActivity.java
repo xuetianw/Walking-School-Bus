@@ -84,10 +84,6 @@ public class MainActivity extends AppCompatActivity
 
         // OPEN DEFAULT FRAGMENT //
         openDefaultFragment();
-
-
-        // SET UP TEST //
-        //setupTest();
     }
 
     private void getUserLastState() {

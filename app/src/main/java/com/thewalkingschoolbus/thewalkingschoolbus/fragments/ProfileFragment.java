@@ -112,12 +112,13 @@ public class ProfileFragment extends android.app.Fragment {
                         emergencyContactInfotv.setText("" + User.getLoginUser().getEmergencyContactInfo());
                     }
                     if (User.getLoginUser().getCustomization() != null) {
-                        if (User.getLoginUser().getCustomization().getTitleEquipped() != -1) {
-                            profileNametv.setText(profileNametv.getText() + " - " + Title.titles[User.getLoginUser().getCustomization().getTitleEquipped()].getTitle());
-                        }
                         if (User.getLoginUser().getCustomization().getAvatarEquipped() != -1) {
                             profileImage.setImageResource(CollectionFragment.getImageId(getActivity(), Avatar.avatars[User.getLoginUser().getCustomization().getAvatarEquipped()].getName()));
                         }
+                        if (User.getLoginUser().getCustomization().getTitleEquipped() != -1) {
+                            profileNametv.setText(profileNametv.getText() + " - " + Title.titles[User.getLoginUser().getCustomization().getTitleEquipped()].getTitle());
+                        }
+                        CollectionFragment.setToolbarTheme();
                     }
                 }
             }

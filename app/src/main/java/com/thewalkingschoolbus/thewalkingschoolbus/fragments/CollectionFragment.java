@@ -1,10 +1,16 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.fragments;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
+import com.thewalkingschoolbus.thewalkingschoolbus.activities.MainActivity;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Customization;
@@ -425,6 +432,9 @@ public class CollectionFragment extends android.app.Fragment {
                         listView.getChildAt(position).setBackgroundColor(Color.LTGRAY);
                     }
 
+                    // Set theme
+                    setToolbarTheme();
+
                     // Save to server
                     new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
                         @Override
@@ -477,6 +487,25 @@ public class CollectionFragment extends android.app.Fragment {
                 }
             }
         });
+    }
+
+    public static void setToolbarTheme() {
+        ColorDrawable colorDrawable;
+        android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) MainActivity.getContextOfApplication()).getSupportActionBar();
+        if (actionBar == null || User.getLoginUser().getCustomization() == null) {
+            return;
+        }
+        int themeEquipped = User.getLoginUser().getCustomization().getThemeEquipped();
+        if (themeEquipped == 0) {
+            colorDrawable = new ColorDrawable(MainActivity.getContextOfApplication().getResources().getColor(R.color.logoBlue));
+        } else if (themeEquipped == 1) {
+            colorDrawable = new ColorDrawable(MainActivity.getContextOfApplication().getResources().getColor(R.color.green));
+        } else if (themeEquipped == 2) {
+            colorDrawable = new ColorDrawable(MainActivity.getContextOfApplication().getResources().getColor(R.color.logoYellow));
+        } else {
+            colorDrawable = new ColorDrawable(MainActivity.getContextOfApplication().getResources().getColor(R.color.transparent));
+        }
+        actionBar.setBackgroundDrawable(colorDrawable);
     }
 
     public static int getImageId(Context context, String imageName) {
