@@ -50,15 +50,13 @@ public class LeaderboardFragment extends android.app.Fragment {
                 for(User user: users){
                     userList.add(user);
                 }
+                // sort the userList by the total points earned
                 java.util.Collections.sort(userList);
                 for(User user:userList){
                     System.out.println(user.getTotalPointsEarned());
                 }
 
                 arrayList = new ArrayList();
-                for (int i = 0; i < 10; i++){
-
-                }
                 for(User user: userList){
                     arrayList.add("Name: "+ user.getName() + " "+"Email: "+ user.getEmail()+ " totalPointsEarned: " + user.getTotalPointsEarned());
                 }
@@ -75,13 +73,4 @@ public class LeaderboardFragment extends android.app.Fragment {
         }).execute();
     }
 
-    private void registerClickCallback() {
-        ListView list = view.findViewById(R.id.listViewLeaderboard);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-
-            }
-        });
-    }
 }
