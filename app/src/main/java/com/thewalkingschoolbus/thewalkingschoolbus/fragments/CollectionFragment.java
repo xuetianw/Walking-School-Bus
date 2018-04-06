@@ -179,16 +179,25 @@ public class CollectionFragment extends android.app.Fragment {
             if (User.getLoginUser().getCustomization() == null) {
                 User.getLoginUser().setCustomization(new Customization());
             }
-            User.getLoginUser().getCustomization().setAvatarEquipped((int) imageButton.getTag());
 
+            // If already equipped, un-equip. Else equip
+            if (User.getLoginUser().getCustomization().getAvatarEquipped() == (int) imageButton.getTag()) {
+                User.getLoginUser().getCustomization().setAvatarEquipped(-1);
+                imageButton.setBackgroundColor(Color.TRANSPARENT);
+            } else {
+                Toast.makeText(getActivity(), "Selected!", Toast.LENGTH_SHORT).show();
+                User.getLoginUser().getCustomization().setAvatarEquipped((int) imageButton.getTag());
+                for (ImageButton button : imageButtonAvatars) {
+                    button.setBackgroundColor(Color.TRANSPARENT);
+                }
+                imageButton.setBackgroundColor(Color.LTGRAY);
+            }
+
+            // Save to server
             new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
                 @Override
                 public void onSuccess(Object result) {
-                    Toast.makeText(getActivity(), "Selected!", Toast.LENGTH_SHORT).show();
-                    for (ImageButton button : imageButtonAvatars) {
-                        button.setBackgroundColor(Color.TRANSPARENT);
-                    }
-                    imageButton.setBackgroundColor(Color.LTGRAY);
+
                 }
                 @Override
                 public void onFailure(Exception e) {
@@ -285,16 +294,25 @@ public class CollectionFragment extends android.app.Fragment {
                     if (User.getLoginUser().getCustomization() == null) {
                         User.getLoginUser().setCustomization(new Customization());
                     }
-                    User.getLoginUser().getCustomization().setTitleEquipped(position);
 
+                    // If already equipped, un-equip. Else equip
+                    if (User.getLoginUser().getCustomization().getTitleEquipped() == position) {
+                        User.getLoginUser().getCustomization().setTitleEquipped(-1);
+                        listView.getChildAt(position).setBackgroundColor(Color.TRANSPARENT);
+                    } else {
+                        Toast.makeText(getActivity(), "Selected!", Toast.LENGTH_SHORT).show();
+                        User.getLoginUser().getCustomization().setTitleEquipped(position);
+                        for (int i = 0; i < listView.getChildCount(); i++) {
+                            listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                        }
+                        listView.getChildAt(position).setBackgroundColor(Color.LTGRAY);
+                    }
+
+                    // Save to server
                     new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
-                            Toast.makeText(getActivity(), "Selected!", Toast.LENGTH_SHORT).show();
-                            for (int i = 0; i < listView.getChildCount(); i++) {
-                                listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
-                            }
-                            listView.getChildAt(position).setBackgroundColor(Color.LTGRAY);
+
                         }
                         @Override
                         public void onFailure(Exception e) {
@@ -393,16 +411,25 @@ public class CollectionFragment extends android.app.Fragment {
                     if (User.getLoginUser().getCustomization() == null) {
                         User.getLoginUser().setCustomization(new Customization());
                     }
-                    User.getLoginUser().getCustomization().setThemeEquipped(position);
 
+                    // If already equipped, un-equip. Else equip
+                    if (User.getLoginUser().getCustomization().getThemeEquipped() == position) {
+                        User.getLoginUser().getCustomization().setThemeEquipped(-1);
+                        listView.getChildAt(position).setBackgroundColor(Color.TRANSPARENT);
+                    } else {
+                        Toast.makeText(getActivity(), "Selected!", Toast.LENGTH_SHORT).show();
+                        User.getLoginUser().getCustomization().setThemeEquipped(position);
+                        for (int i = 0; i < listView.getChildCount(); i++) {
+                            listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                        }
+                        listView.getChildAt(position).setBackgroundColor(Color.LTGRAY);
+                    }
+
+                    // Save to server
                     new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
                         @Override
                         public void onSuccess(Object result) {
-                            Toast.makeText(getActivity(), "Selected!", Toast.LENGTH_SHORT).show();
-                            for (int i = 0; i < listView.getChildCount(); i++) {
-                                listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
-                            }
-                            listView.getChildAt(position).setBackgroundColor(Color.LTGRAY);
+
                         }
                         @Override
                         public void onFailure(Exception e) {
