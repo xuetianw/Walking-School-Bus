@@ -9,21 +9,27 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
+import com.thewalkingschoolbus.thewalkingschoolbus.fragments.CollectionFragment;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.collections.Avatar;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.collections.Title;
 
 import java.util.ArrayList;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 public class MonitoringDetailActivity extends AppCompatActivity {
+
+    private ImageView profileImage;
     private TextView profileNametv, profileEmailtv,
             birthYeartv, birthMonthtv, profileAddresstv,
             profileCellphonetv, homePhonetv, gradetv,
@@ -71,7 +77,7 @@ public class MonitoringDetailActivity extends AppCompatActivity {
             public void onSuccess(Object result) {
                 monitoredUser = (User) result;
 
-
+                profileImage = (ImageView) findViewById(R.id.profileImage);
                 profileNametv = (TextView)findViewById(R.id.profileNameid);
                 profileEmailtv = (TextView)findViewById(R.id.profileEmailid);
                 birthYeartv = (TextView)findViewById(R.id.profileBrithdayYearid);
@@ -95,11 +101,9 @@ public class MonitoringDetailActivity extends AppCompatActivity {
                 if(monitoredUser.getBirthYear() !=  null){
                     birthYeartv.setText("" +  monitoredUser.getBirthYear());
                 }
-
                 if(monitoredUser.getAddress() !=  null){
                     profileAddresstv.setText("" +  monitoredUser.getAddress());
                 }
-
                 if(monitoredUser.getCellPhone() != null){
                     profileCellphonetv.setText("" + monitoredUser.getCellPhone());
                 }
@@ -114,6 +118,14 @@ public class MonitoringDetailActivity extends AppCompatActivity {
                 }
                 if(monitoredUser.getEmergencyContactInfo() != null){
                     emergencyContactInfotv.setText("" + monitoredUser.getEmergencyContactInfo());
+                }
+                if (monitoredUser.getCustomization() != null) {
+                    if (monitoredUser.getCustomization().getAvatarEquipped() != -1) {
+                        profileImage.setImageResource(CollectionFragment.getImageId(MonitoringDetailActivity.this, Avatar.avatars[monitoredUser.getCustomization().getAvatarEquipped()].getName()));
+                    }
+                    if (monitoredUser.getCustomization().getTitleEquipped() != -1) {
+                        profileNametv.setText(profileNametv.getText() + " - " + Title.titles[monitoredUser.getCustomization().getTitleEquipped()].getTitle());
+                    }
                 }
                 groupArrayList = (ArrayList<Group>) monitoredUser.getMemberOfGroups();
                 arrayList = new ArrayList();
