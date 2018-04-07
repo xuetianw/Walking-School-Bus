@@ -142,8 +142,10 @@ public class PermissionsApiBinding {
 
     public static PermissionRequest postPermissionRequestsChangeWithId(PermissionRequest pr)throws Exception{
         String url = BASE_URL+ String.format(POST_PERMISSION_CHANGE_WITH_ID,pr.getId());
-        String str =  pr.getStatus().toString();
+        String str =  "\""+pr.getStatus().toString()+"\"";
+
         HttpURLConnection connection = httpRequestPost(url,null,null);
+        connection.setDoOutput(true);
 
         PrintStream outStream = new PrintStream(connection.getOutputStream());
         outStream.println(str);
@@ -153,8 +155,6 @@ public class PermissionsApiBinding {
             Log.e("TAG","responseCode: "+connection.getResponseCode());
             // failed
             BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
-            Log.e("TAG","responseCode: "+connection.getResponseCode());
-
             throw new Gson().fromJson(error, ApiException.class);
         }
 
