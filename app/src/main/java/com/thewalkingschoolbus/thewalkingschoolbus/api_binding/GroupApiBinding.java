@@ -19,6 +19,7 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerMana
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.httpRequestGet;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.httpRequestPost;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.readJsonIntoString;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.requiresPermission;
 
 public class GroupApiBinding {
     private static String LIST_GROUPS = "/groups";
@@ -58,7 +59,8 @@ public class GroupApiBinding {
         String url = BASE_URL+CREATE_GROUP;
         String string = new Gson().toJson(group);
         JSONObject jsonObject = new JSONObject(string);
-        HttpURLConnection connection = httpRequestPost(url,jsonObject);
+        requiresPermission = true;
+        HttpURLConnection connection = httpRequestPost(url,jsonObject,null);
 
         if (connection.getResponseCode() >= 400) {
             // failed
@@ -67,6 +69,7 @@ public class GroupApiBinding {
         }
 
         StringBuffer response = readJsonIntoString(connection);
+        requiresPermission = false;
         group = new Gson().fromJson(response.toString(),Group.class);
         return group;
     }
@@ -79,7 +82,7 @@ public class GroupApiBinding {
         String url = BASE_URL+CREATE_GROUP;
         String string = new Gson().toJson(group);
         JSONObject jsonObject = new JSONObject(string);
-        HttpURLConnection connection = httpRequestPost(url,jsonObject);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject,null);
 
         if (connection.getResponseCode() >= 400) {
             // failed
@@ -119,7 +122,8 @@ public class GroupApiBinding {
         String url = BASE_URL+String.format(UPDATE_EXISTING_GROUP,group.getId());
         String string = new Gson().toJson(group);
         JSONObject jsonObject = new JSONObject(string);
-        HttpURLConnection connection = httpRequestPost(url, jsonObject);
+        requiresPermission = true;
+        HttpURLConnection connection = httpRequestPost(url, jsonObject,null);
 
         if (connection.getResponseCode() >= 400) {
             // failed
@@ -128,6 +132,7 @@ public class GroupApiBinding {
         }
 
         StringBuffer response = readJsonIntoString(connection);
+        requiresPermission = false;
         group = new Gson().fromJson(response.toString(),Group.class);
         return group;
     }
@@ -175,7 +180,7 @@ public class GroupApiBinding {
         String url = BASE_URL+ String.format(ADD_MEMBERS_TO_GROUP,group.getId());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id",user.getId());
-        HttpURLConnection connection = httpRequestPost(url,jsonObject);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject,null);
 
         if (connection.getResponseCode() >= 400) {
             // failed
