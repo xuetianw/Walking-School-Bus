@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ServerManager {
+
     public static boolean requiresPermission = false;
 
     private static String GET = "GET";

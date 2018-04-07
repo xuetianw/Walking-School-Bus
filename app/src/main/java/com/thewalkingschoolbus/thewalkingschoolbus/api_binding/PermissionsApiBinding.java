@@ -20,6 +20,7 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerMana
 
 
 public class PermissionsApiBinding {
+
     private static String GET_ALL_PERMISSION_REQUESTS = "/permissions";
     private static String GET_PERMISSION_REQUESTS_FOR_USER = "/permissions?userId=%s";
     private static String GET_PERMISSION_REQUESTS_FOR_USER_WITH_CERTAIN_STATUS ="/permissions?userId=%s%statusForUser=%s";

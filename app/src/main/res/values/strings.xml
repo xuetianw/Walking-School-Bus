@@ -98,4 +98,5 @@
     <string name="mainact_wsb_header">The Walking School Bus</string>
     <string name="permifrag_All_pending_permissions">ALL PENDING REQUEST(S) (approve/deny)</string>
     <string name="permifrag_ALL_permissions">ALL REQUEST(S) (see messages)</string>
+    <string name="permifrag_ALL">ALL REQUEST(S) (see messages)</string>
 </resources>

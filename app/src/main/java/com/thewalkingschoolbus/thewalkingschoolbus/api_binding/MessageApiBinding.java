@@ -20,6 +20,7 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerMana
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.readJsonIntoString;
 
 public class MessageApiBinding {
+
     private static String GET_ALL_MESSAGES = "/messages";
     private static String GET_ALL_EMERGENCY_MESSAGES = "/messages?is-emergency=true";
     private static String GET_MESSAGES_FOR_GROUP = "/messages?togroup=%s";

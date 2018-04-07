@@ -133,6 +133,7 @@ public class PermissionFragment extends android.app.Fragment {
         registerClickCallbackForAll();
     }
 
+    //call back for pending list
     private void registerClickCallbackForPending(){
         ListView list = view.findViewById(R.id.listViewForPermission);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -144,6 +145,7 @@ public class PermissionFragment extends android.app.Fragment {
         });
     }
 
+    //call back for all-list
     private void registerClickCallbackForAll(){
         ListView list = view.findViewById(R.id.listViewForAllPermissions);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -154,7 +156,7 @@ public class PermissionFragment extends android.app.Fragment {
             }
         });
     }
-
+    // set up both altert dialog when list view on item click
     private void alertDialogForAll(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Message");
@@ -193,6 +195,7 @@ public class PermissionFragment extends android.app.Fragment {
         alert.show();
     }
 
+    // update status for permission
     private void updateStatus(ServerManager.PermissionStatus functionType){
         selectedPermissionRequest.setStatus(functionType);
         new GetPermissionAsyncTask(POST_PERMISSION_CHANGE_WITH_ID, null, null, selectedPermissionRequest, new OnTaskComplete() {
