@@ -155,7 +155,7 @@ public class MessageApiBinding {
         String url = BASE_URL+ String.format(POST_MESSAGE_TO_GROUP,group.getId());
         String str = new Gson().toJson(message);
         JSONObject jsonObject = new JSONObject(str);
-        HttpURLConnection connection = httpRequestPost(url,jsonObject,null);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject);
 
         if (connection.getResponseCode() >= 400) {
             // failed
@@ -172,7 +172,7 @@ public class MessageApiBinding {
         String url = BASE_URL + String.format(POST_MESSAGE_TO_PARENTS,user.getId());
         String str = new Gson().toJson(message);
         JSONObject jsonObject = new JSONObject(str);
-        HttpURLConnection connection = httpRequestPost(url,jsonObject,null);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject);
 
         if (connection.getResponseCode() >= 400) {
             // failed
@@ -204,7 +204,7 @@ public class MessageApiBinding {
     public static String setMessageAsReadOrUnread(User user, Message message)throws Exception{
         String url = BASE_URL + String.format(SET_MESSAGE_AS_READ_OR_UNREAD,message.getId(),user.getId());
         String str = String.valueOf(message.isMessageRead());
-        HttpURLConnection connection = httpRequestPost(url,null,null);
+        HttpURLConnection connection = httpRequestPost(url,null);
 
         PrintStream outStream = new PrintStream(connection.getOutputStream());
         outStream.println(str);

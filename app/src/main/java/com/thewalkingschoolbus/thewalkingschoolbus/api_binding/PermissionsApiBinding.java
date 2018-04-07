@@ -1,7 +1,5 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.api_binding;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.thewalkingschoolbus.thewalkingschoolbus.exceptions.ApiException;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
@@ -13,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
+
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.BASE_URL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.httpRequestGet;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.httpRequestPost;
@@ -49,8 +48,6 @@ public class PermissionsApiBinding {
     public static PermissionRequest[] getPermissionRequestsForUser(User user)throws Exception{
         String url = BASE_URL+ String.format(GET_PERMISSION_REQUESTS_FOR_USER,user.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
-        connection.setRequestProperty("JSON-DEPTH","1");
-
 
         if (connection.getResponseCode() >= 400) {
             // failed
@@ -144,17 +141,14 @@ public class PermissionsApiBinding {
 
     public static PermissionRequest postPermissionRequestsChangeWithId(PermissionRequest pr)throws Exception{
         String url = BASE_URL+ String.format(POST_PERMISSION_CHANGE_WITH_ID,pr.getId());
-        String str =  "\""+pr.getStatus().toString()+"\"";
-
-        HttpURLConnection connection = httpRequestPost(url,null,null);
-        connection.setDoOutput(true);
+        String str =  pr.getStatus().toString();
+        HttpURLConnection connection = httpRequestPost(url,null);
 
         PrintStream outStream = new PrintStream(connection.getOutputStream());
         outStream.println(str);
         outStream.close();
 
         if (connection.getResponseCode() >= 400) {
-            Log.e("TAG","responseCode: "+connection.getResponseCode());
             // failed
             BufferedReader error = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
             throw new Gson().fromJson(error, ApiException.class);
