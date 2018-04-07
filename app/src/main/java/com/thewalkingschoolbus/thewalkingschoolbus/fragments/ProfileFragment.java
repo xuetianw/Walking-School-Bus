@@ -1,12 +1,14 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.fragments;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +17,8 @@ import com.thewalkingschoolbus.thewalkingschoolbus.activities.UserProfileActivit
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.collections.Avatar;
+import com.thewalkingschoolbus.thewalkingschoolbus.models.collections.Title;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
@@ -29,6 +33,7 @@ public class ProfileFragment extends android.app.Fragment {
     private static final String TAG = "ProfileFragment";
     private View view;
 
+    private ImageView profileImage;
     private TextView profileNametv, profileEmailtv,
             birthYeartv, birthMonthtv, profileAddresstv,
             profileCellphonetv, homePhonetv, gradetv,
@@ -49,26 +54,6 @@ public class ProfileFragment extends android.app.Fragment {
         setUpEditProfileBtn();
 
         return view;
-
-
-
-
-        /*
-        * How to add content in fragment:
-        *
-        * Fragments function identical to regular activities, except it does not extend from AppCompatActivity.
-        * Hence, some things such as findViewByID or executing context related code works differently.
-        *
-        * FindViewBYId Example
-        * instead   of: Button btn = findViewById(R.id.example);
-        *           do: Button btn = view.findViewById(R.id.example);
-        *
-        * Context Example
-        * Instead   of: Toast.makeText(this, "example", Toast.LENGTH_SHORT).show()
-        *           do: Toast.makeText(getActivity(), "example.", Toast.LENGTH_SHORT).show()
-        *
-        * If this is unclear, look at example code in MonitoringFragment.
-        */
     }
 
     @Override
@@ -78,6 +63,7 @@ public class ProfileFragment extends android.app.Fragment {
     }
 
     private void setupTextViews() {
+        profileImage = (ImageView) view.findViewById(R.id.profileImage);
         profileNametv = (TextView)view.findViewById(R.id.profileNameid);
         profileEmailtv = (TextView)view.findViewById(R.id.profileEmailid);
         birthYeartv = (TextView)view.findViewById(R.id.profileBrithdayYearid);
@@ -88,7 +74,6 @@ public class ProfileFragment extends android.app.Fragment {
         gradetv = (TextView)view.findViewById(R.id.profileGradeid);
         teacherNametv = (TextView)view.findViewById(R.id.profileteachernameid);
         emergencyContactInfotv = (TextView)view.findViewById(R.id.profileemergenceyid);
-
 
         new GetUserAsyncTask(GET_USER_BY_EMAIL, User.getLoginUser(),null, null, null,new OnTaskComplete() {
             @Override
@@ -108,11 +93,9 @@ public class ProfileFragment extends android.app.Fragment {
                     if(User.getLoginUser().getBirthYear() !=  null){
                         birthYeartv.setText("" +  User.getLoginUser().getBirthYear());
                     }
-
                     if(User.getLoginUser().getAddress() !=  null){
                         profileAddresstv.setText("" +  User.getLoginUser().getAddress());
                     }
-
                     if(User.getLoginUser().getCellPhone() != null){
                         profileCellphonetv.setText("" + User.getLoginUser().getCellPhone());
                     }
@@ -127,6 +110,14 @@ public class ProfileFragment extends android.app.Fragment {
                     }
                     if(User.getLoginUser().getEmergencyContactInfo() != null){
                         emergencyContactInfotv.setText("" + User.getLoginUser().getEmergencyContactInfo());
+                    }
+                    if (User.getLoginUser().getCustomization() != null) {
+                        if (User.getLoginUser().getCustomization().getAvatarEquipped() != -1) {
+                            profileImage.setImageResource(CollectionFragment.getImageId(getActivity(), Avatar.avatars[User.getLoginUser().getCustomization().getAvatarEquipped()].getName()));
+                        }
+                        if (User.getLoginUser().getCustomization().getTitleEquipped() != -1) {
+                            profileNametv.setText(profileNametv.getText() + " - " + Title.titles[User.getLoginUser().getCustomization().getTitleEquipped()].getTitle());
+                        }
                     }
                 }
             }
