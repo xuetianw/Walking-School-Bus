@@ -49,6 +49,8 @@ public class PermissionsApiBinding {
     public static PermissionRequest[] getPermissionRequestsForUser(User user)throws Exception{
         String url = BASE_URL+ String.format(GET_PERMISSION_REQUESTS_FOR_USER,user.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
+        connection.setRequestProperty("JSON-DEPTH","1");
+
 
         if (connection.getResponseCode() >= 400) {
             // failed

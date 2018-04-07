@@ -2,7 +2,6 @@ package com.thewalkingschoolbus.thewalkingschoolbus.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,33 +10,37 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetPermissionAsyncTask;
-import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager;
 import com.thewalkingschoolbus.thewalkingschoolbus.interfaces.OnTaskComplete;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.PermissionRequest;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetPermissionAsyncTask.functionTypeForPermission.GET_PERMISSION_REQUESTS_FOR_USER;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetPermissionAsyncTask.functionTypeForPermission.GET_PERMISSION_REQUEST_WITH_ID;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetPermissionAsyncTask.functionTypeForPermission.POST_PERMISSION_CHANGE_WITH_ID;
-import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.PermissionStatus.APPROVED;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.PermissionStatus.DENIED;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.PermissionStatus.PENDING;
 
 public class PermissionFragment extends android.app.Fragment {
     private static final String TAG = "PermissionFragment";
     private View view;
 
-    private List<PermissionRequest> permissionRequests;
+    private List<PermissionRequest> allPermissionRequests;
+    private List<PermissionRequest> pendingPermissionRequests;
+
     private PermissionRequest selectedPermissionRequest;
-    private List<String> permissionRequestsStr;
+    private List<String> pendingPermissionRequestsStr;
+    private List<String> allPermissionRequestsStr;
 
     @Nullable
     @Override
@@ -53,19 +56,22 @@ public class PermissionFragment extends android.app.Fragment {
     public void onResume() {
         super.onResume();
         updateUser();
-
     }
 
     private void updateUser(){
-        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, null, new OnTaskComplete() {
+        new GetPermissionAsyncTask(GET_PERMISSION_REQUESTS_FOR_USER, User.getLoginUser(), null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                permissionRequests = User.getLoginUser().getPendingPermissionRequests();
-                if(permissionRequests.isEmpty()){
+                PermissionRequest[] pr = (PermissionRequest[]) result;
+                allPermissionRequests = Arrays.asList(pr);
+
+                if(allPermissionRequests.isEmpty()){
                     Toast.makeText(getActivity(),"NO REQUESTS",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                stringPrep();
+
+                extractPending();
+
             }
 
             @Override
@@ -75,46 +81,91 @@ public class PermissionFragment extends android.app.Fragment {
         }).execute();
     }
 
-    private void stringPrep(){
-        permissionRequestsStr = new ArrayList<>();
-        for(PermissionRequest pr: permissionRequests){
-            permissionRequestsStr.add(pr.getId().toString());
+    private void extractPending(){
+        pendingPermissionRequests = new ArrayList<>();
+
+        List<PermissionRequest> toKeep = new ArrayList<>();
+
+        for (PermissionRequest pr: allPermissionRequests) {
+            if(pr.getStatus() == PENDING) {
+                pendingPermissionRequests.add(pr);
+            }else{
+                toKeep.add(pr);
+            }
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.permission_entry, permissionRequestsStr);
+
+
+        if(!pendingPermissionRequests.isEmpty()){
+            allPermissionRequests = toKeep;
+            stringPrepForPendingList();
+        }else {
+            Toast.makeText(getActivity(), "NO PENDING REQUESTS", Toast.LENGTH_SHORT).show();
+        }
+
+        stringPrepForAlll();
+    }
+
+    private void stringPrepForPendingList(){
+        pendingPermissionRequestsStr = new ArrayList<>();
+        for(PermissionRequest pr: pendingPermissionRequests){
+            pendingPermissionRequestsStr.add("Permission Id: "+pr.getId().toString()+" from user: "+pr.getRequestingUser().getName());
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.permission_entry, pendingPermissionRequestsStr);
         // configure the list view
         ListView list = view.findViewById(R.id.listViewForPermission);
 
         list.setAdapter(adapter);
 
-        registerClickCallback();
+        registerClickCallbackForPending();
     }
-    private void registerClickCallback(){
+
+    private void stringPrepForAlll(){
+        allPermissionRequestsStr = new ArrayList<>();
+        for(PermissionRequest pr: allPermissionRequests){
+            allPermissionRequestsStr.add("Permission Id: "+pr.getId().toString()+" from user: "+pr.getRequestingUser().getName()+ " ("+pr.getStatus().toString()+")");
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.permission_entry, allPermissionRequestsStr);
+        // configure the list view
+        ListView list = view.findViewById(R.id.listViewForAllPermissions);
+
+        list.setAdapter(adapter);
+
+        registerClickCallbackForAll();
+    }
+
+    private void registerClickCallbackForPending(){
         ListView list = view.findViewById(R.id.listViewForPermission);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-                selectedPermissionRequest = permissionRequests.get(position);
-                getPermissionDetail();
+                selectedPermissionRequest = pendingPermissionRequests.get(position);
+                alertDialogForPending();
             }
         });
     }
-    private void getPermissionDetail(){
-        new GetPermissionAsyncTask(GET_PERMISSION_REQUEST_WITH_ID, null, null, selectedPermissionRequest, new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                selectedPermissionRequest = (PermissionRequest) result;
-                alertDialog();
-            }
 
+    private void registerClickCallbackForAll(){
+        ListView list = view.findViewById(R.id.listViewForAllPermissions);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onFailure(Exception e) {
-
+            public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
+                selectedPermissionRequest = allPermissionRequests.get(position);
+                alertDialogForAll();
             }
-        }).execute();
+        });
     }
 
-    private void alertDialog(){
+    private void alertDialogForAll(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Message");
+        builder.setMessage(selectedPermissionRequest.getMessage());
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void alertDialogForPending(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
 
         builder.setTitle("Confirm");
         builder.setMessage(selectedPermissionRequest.getMessage());
@@ -148,6 +199,7 @@ public class PermissionFragment extends android.app.Fragment {
             @Override
             public void onSuccess(Object result) {
                 Toast.makeText(getActivity(),"ez",Toast.LENGTH_SHORT).show();
+                updateUser();
             }
 
             @Override
