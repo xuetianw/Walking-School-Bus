@@ -277,13 +277,13 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
 
     private static void checkArrival(Location currentLocation) {
 
-        Log.d(TAG, "#### checkArrival");
-        Log.d(TAG, "#### currentDestination LatLng " + currentDestination.latitude + ", " + currentDestination.longitude);
-
         if (currentLocation == null || currentDestination == null) {
             Log.d(TAG, "#### currentLocation == null || currentDestination == null");
             return;
         }
+
+        Log.d(TAG, "#### checkArrival");
+        Log.d(TAG, "#### currentDestination LatLng " + currentDestination.latitude + ", " + currentDestination.longitude);
 
         float[] results = new float[1];
 
