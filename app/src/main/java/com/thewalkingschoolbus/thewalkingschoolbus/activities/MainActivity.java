@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
+        setContentView(R.layout.activity_main);
 
         contextOfApplication = this;
         getUserLastState();
@@ -84,10 +84,6 @@ public class MainActivity extends AppCompatActivity
 
         // OPEN DEFAULT FRAGMENT //
         openDefaultFragment();
-
-
-        // SET UP TEST //
-        //setupTest();
     }
 
     private void getUserLastState() {
@@ -127,6 +123,7 @@ public class MainActivity extends AppCompatActivity
             public void onSuccess(Object result) {
                 if(result != null){
                     User.setLoginUser((User)result);
+                    CollectionFragment.setToolbarTheme();
                 }
             }
             @Override

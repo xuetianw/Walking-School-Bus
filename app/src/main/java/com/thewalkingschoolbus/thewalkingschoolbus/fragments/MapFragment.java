@@ -346,7 +346,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements Goog
                 public void onDirectionFinderSuccess(List<Route> routes) {
                     progressDialog.dismiss();
 
-                    if (routes.size() < 0) {
+                    if (routes.size() <= 0) {
                         Toast.makeText(getActivity(), "No result. Try rephrasing direction.", Toast.LENGTH_SHORT).show();
                     } else {
                         if (isTooFar(routes.get(0).originLocation, routes.get(0).destinationLocation)) {

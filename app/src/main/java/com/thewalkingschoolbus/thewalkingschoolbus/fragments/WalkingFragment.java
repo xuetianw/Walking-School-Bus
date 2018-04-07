@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.Nullable;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_ONE_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.POST_GPS_LOCATION;
@@ -275,13 +277,13 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
 
     private static void checkArrival(Location currentLocation) {
 
-        Log.d(TAG, "#### checkArrival");
-        Log.d(TAG, "#### currentDestination LatLng " + currentDestination.latitude + ", " + currentDestination.longitude);
-
         if (currentLocation == null || currentDestination == null) {
             Log.d(TAG, "#### currentLocation == null || currentDestination == null");
             return;
         }
+
+        Log.d(TAG, "#### checkArrival");
+        Log.d(TAG, "#### currentDestination LatLng " + currentDestination.latitude + ", " + currentDestination.longitude);
 
         float[] results = new float[1];
 
@@ -300,7 +302,7 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
         Context context = MainActivity.getContextOfApplication();
         if (view != null) {
             isWalking = false;
-            Toast.makeText(context, "Arrived", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Arrived!", Toast.LENGTH_SHORT).show();
             TextView text = view.findViewById(R.id.walkStatusTxt);
             text.setText("Arrived!");
 
@@ -313,6 +315,24 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
         } else {
             Log.d(TAG, "#### view != null");
         }
+        // Give user points
+        rewardPoints(100);
+    }
+
+    private static void rewardPoints(final int pointsAmount) {
+        User.getLoginUser().addPoints(pointsAmount);
+
+        // Save to server
+        new GetUserAsyncTask(EDIT_USER, User.getLoginUser(), null, null,null, new OnTaskComplete() {
+            @Override
+            public void onSuccess(Object result) {
+                Toast.makeText(MainActivity.getContextOfApplication(), "+ " + pointsAmount + " points!", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Log.d(TAG, "Error: "+e.getMessage());
+            }
+        }).execute();
     }
 
     private void updateLocationFirstTime() {
