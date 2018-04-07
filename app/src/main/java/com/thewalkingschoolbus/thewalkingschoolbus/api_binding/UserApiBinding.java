@@ -69,7 +69,7 @@ public class UserApiBinding {
         String jsonFile = new Gson().toJson(user);
         JSONObject jsonObject = new JSONObject(jsonFile);
 
-        HttpURLConnection connection = httpRequestPost(url,jsonObject);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject,null);
         // send json file
 
         if (connection.getResponseCode() >= 400) {
@@ -183,7 +183,7 @@ public class UserApiBinding {
         user.customJsonToJson();
         String jsonFile = new Gson().toJson(user);
         JSONObject jsonObject = new JSONObject(jsonFile);
-        HttpURLConnection connection = httpRequestPost(url,jsonObject);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject,null);
 
         if (connection.getResponseCode() >= 400) {
             // failed
@@ -215,7 +215,7 @@ public class UserApiBinding {
         String url = BASE_URL + String.format(POST_GET_LOCATION,user.getId());
         String jsonFile = new Gson().toJson(user.getLastGpsLocation());
         JSONObject jsonObject = new JSONObject(jsonFile);
-        HttpURLConnection connection = httpRequestPost(url,jsonObject);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject,null);
 
         if (connection.getResponseCode() >= 400) {
             // failed

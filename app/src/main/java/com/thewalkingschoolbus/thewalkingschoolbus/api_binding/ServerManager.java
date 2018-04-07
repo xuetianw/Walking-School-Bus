@@ -32,7 +32,7 @@ public class ServerManager {
     // for any type of post request, this does the initial connection and sending json file
     // Such as: create User, create Group, create monitoring
     // return httpURLconnection which is used to getResponseCode from server side
-    public static HttpURLConnection httpRequestPost(String url, JSONObject jsonObject)throws Exception{
+    public static HttpURLConnection httpRequestPost(String url, JSONObject jsonObject,String str)throws Exception{
         URL obj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
         connection.setRequestMethod(POST);
@@ -45,6 +45,13 @@ public class ServerManager {
 
         if(requiresPermission == true){
             connection.setRequestProperty("permissions-enabled","true");
+        }
+
+        if(str != null){
+            connection.setDoOutput(true);
+            PrintStream printStream = new PrintStream(connection.getOutputStream());
+            printStream.println(str);
+            printStream.close();
         }
 
         if(jsonObject != null){
