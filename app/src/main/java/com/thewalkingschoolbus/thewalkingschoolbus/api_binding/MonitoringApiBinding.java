@@ -87,7 +87,7 @@ public class MonitoringApiBinding {
         String url = BASE_URL+String.format(CREATE_MONITORING,parentUser.getId());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id",childUser.getId());
-        HttpURLConnection connection = httpRequestPost(url,jsonObject,null);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject);
 
         if (connection.getResponseCode() >= 400) {
             // failed
