@@ -19,6 +19,7 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerMana
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.UserApiBinding.getUserByEmail;
 
 public class MonitoringApiBinding {
+
     private static String USER_MONITORING_LIST = "/users/%s/monitorsUsers";
     private static String USER_MONITORING_BY_LIST = "/users/%s/monitoredByUsers";
     private static String CREATE_MONITORING = "/users/%s/monitorsUsers";

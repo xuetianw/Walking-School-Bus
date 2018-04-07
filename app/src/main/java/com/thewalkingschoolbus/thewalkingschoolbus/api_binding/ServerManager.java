@@ -11,13 +11,15 @@ import java.net.URL;
 
 public class ServerManager {
 
+    public static boolean requiresPermission = false;
+
     private static String GET = "GET";
     private static String POST = "POST";
     private static String DELETE = "DELETE";
 
     private static String API_KEY = "BB390E20-F40E-40D1-BE2D-2F99AAF8E449"; //api key for flame group
     // Debug: Proxy server for plaintext debugging purpose
-    // private String BASE_URL = "http://walkgroup.api.tabjy.com/https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
+     //public static String BASE_URL = "http://walkgroup.api.tabjy.com/https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
     public static String BASE_URL="https://cmpt276-1177-bf.cmpt.sfu.ca:8443";
 
     public static String SUCCESSFUL = "SUCCESSFUL";
@@ -40,6 +42,10 @@ public class ServerManager {
 
         if(User.getToken()!= null){
             connection.setRequestProperty("Authorization", User.getToken());
+        }
+
+        if(requiresPermission == true){
+            connection.setRequestProperty("permissions-enabled","true");
         }
 
         if(jsonObject != null){

@@ -32,6 +32,7 @@ public class UserApiBinding {
     private static String GET_GPS_LOCATION = "/users/%s/lastGpsLocation";
     private static String POST_GET_LOCATION = "/users/%s/lastGpsLocation";
 
+    // for login
     public static String loginRequest(User user, String enteredPassword)throws Exception, ApiException {
         String url = BASE_URL+LOGIN;
         // create json file here

@@ -19,6 +19,7 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerMana
 
 
 public class PermissionsApiBinding {
+
     private static String GET_ALL_PERMISSION_REQUESTS = "/permissions";
     private static String GET_PERMISSION_REQUESTS_FOR_USER = "/permissions?userId=%s";
     private static String GET_PERMISSION_REQUESTS_FOR_USER_WITH_CERTAIN_STATUS ="/permissions?userId=%s%statusForUser=%s";
@@ -48,6 +49,7 @@ public class PermissionsApiBinding {
     public static PermissionRequest[] getPermissionRequestsForUser(User user)throws Exception{
         String url = BASE_URL+ String.format(GET_PERMISSION_REQUESTS_FOR_USER,user.getId());
         HttpURLConnection connection = httpRequestGet(url,null);
+        connection.setRequestProperty("JSON-DEPTH","1");
 
         if (connection.getResponseCode() >= 400) {
             // failed
@@ -141,7 +143,8 @@ public class PermissionsApiBinding {
 
     public static PermissionRequest postPermissionRequestsChangeWithId(PermissionRequest pr)throws Exception{
         String url = BASE_URL+ String.format(POST_PERMISSION_CHANGE_WITH_ID,pr.getId());
-        String str =  pr.getStatus().toString();
+
+        String str =  "\""+pr.getStatus().toString()+"\"";
         HttpURLConnection connection = httpRequestPost(url,null);
 
         PrintStream outStream = new PrintStream(connection.getOutputStream());
