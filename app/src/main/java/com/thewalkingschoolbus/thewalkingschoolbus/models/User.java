@@ -1,10 +1,12 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.models;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.Gson;
 
 import java.util.List;
 
-public class User {
+public class User implements Comparable<User> {
 
     private static String token = null;
 
@@ -339,5 +341,14 @@ public class User {
 
     public static void setToken(String tokenReceive) {
         token = tokenReceive;
+    }
+
+    @Override
+    public int compareTo(@NonNull User user) {
+        if (totalPointsEarned == null){
+            totalPointsEarned = 0;
+        }
+
+        return user.totalPointsEarned.compareTo(totalPointsEarned);
     }
 }
