@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/item_iconlid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
+        android:adjustViewBounds="true"
+        android:maxHeight="40dp"
+        android:maxWidth="40dp"
+        app:srcCompat="@drawable/gold_medal" />
+
+    <TextView
+        android:id="@+id/nameofgoldmedalwiner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/item_iconlid"
+        android:layout_toEndOf="@+id/item_iconlid"
+        android:text="name shown here" />
+
+    <TextView
+        android:id="@+id/totalpointesid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/item_iconlid"
+        android:layout_toEndOf="@+id/item_iconlid"
+        android:text="total pointes earned" />
+</RelativeLayout>
