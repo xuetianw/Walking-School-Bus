@@ -19,6 +19,7 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerMana
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.httpRequestGet;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.httpRequestPost;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.readJsonIntoString;
+import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.requiresPermission;
 
 public class GroupApiBinding {
     private static String LIST_GROUPS = "/groups";
@@ -57,6 +58,7 @@ public class GroupApiBinding {
     public static Group createGroup(Group group)throws Exception{
         String url = BASE_URL+CREATE_GROUP;
         String string = new Gson().toJson(group);
+        requiresPermission = true;
         JSONObject jsonObject = new JSONObject(string);
         HttpURLConnection connection = httpRequestPost(url,jsonObject);
 
@@ -67,6 +69,7 @@ public class GroupApiBinding {
         }
 
         StringBuffer response = readJsonIntoString(connection);
+        requiresPermission = false;
         group = new Gson().fromJson(response.toString(),Group.class);
         return group;
     }
