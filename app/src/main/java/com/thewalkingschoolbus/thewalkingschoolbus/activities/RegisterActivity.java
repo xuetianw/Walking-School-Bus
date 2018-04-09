@@ -44,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // get Edit TextView values
                 loginName = nameET.getText().toString();
                 registerEmail = emailET.getText().toString();
                 registerPassword = passwordET.getText().toString();
@@ -61,15 +62,16 @@ public class RegisterActivity extends AppCompatActivity {
                 if(loginName.isEmpty() || registerEmail.isEmpty()|| registerPassword.isEmpty()){
                     Toast.makeText(getApplicationContext(), LoginActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
-                } else if(!birthMonth.isEmpty()
+                } else if(!birthMonth.isEmpty()  //setup birthMonth restrictions
                         && ((Integer.parseInt(birthMonth) > 12 || Integer.parseInt(birthMonth) < 0))){
                     Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
-                } else if(!birthYear.isEmpty()
+                } else if(!birthYear.isEmpty()  //add birthYear restrictions
                         && (Integer.parseInt(birthYear) > 2018 || Integer.parseInt(birthYear) < 1900)) {
                     Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
                 } else {
+                    // create a temp user in case create user fails
                     User user = new User();
                     user.setEmail(registerEmail);
                     user.setName(loginName);
@@ -90,7 +92,9 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onSuccess(Object result) {
                             Toast.makeText(getApplicationContext(),REGISTER_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
+                            //store user info so that user can automatically login
                             storeUserInfoToSharePreferences();
+                            //direct user to MainActivity
                             Intent intent = MainActivity.makeIntent(getApplicationContext());
                             startActivity(intent);
                             finish();
@@ -131,7 +135,6 @@ public class RegisterActivity extends AppCompatActivity {
         gradeET = (EditText) findViewById(R.id.gradeid);
         teacherNameDT = (EditText) findViewById(R.id.teacherNameid);
         emergencyContactInfoET = (EditText) findViewById(R.id.emergencyid);
-
     }
 
     public static Intent makeIntent(LoginActivity loginActivity) {
