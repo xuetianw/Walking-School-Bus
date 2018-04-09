@@ -33,7 +33,6 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
     private Group[] mGroup;
 
     // Used for recursive loop in getGroupWithDetailLoop()
-    private boolean populateListReady = false;
     private int loopCount = 0;
 
     @Nullable
@@ -44,9 +43,9 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
 //        }
         view = inflater.inflate(R.layout.fragment_group_member, container, false);
 
-        getGroupListAndPopulateList();
         setUpRefresh();
         setUpAddButton();
+        
         return view;
     }
 
@@ -73,9 +72,8 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
                     return;
                 }
 
-                // Begin get group detail recursion
+                // Begin get group detail, and proceed to stringPrep when all detail is ready
                 getGroupWithDetail();
-                //stringsPrep();
             }
 
             @Override
@@ -86,34 +84,23 @@ public class GroupMemberFragment extends android.support.v4.app.Fragment {
     }
 
     private void getGroupWithDetail() {
-        // Set up recursion
-        populateListReady = false;
         loopCount = 0;
-        getGroupWithDetailLoop();
-    }
-
-    private void getGroupWithDetailLoop() {
-        if (loopCount >= mGroup.length - 1) {
-            populateListReady = true;
-        }
-        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mGroup[loopCount], null,new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                mGroup[loopCount] = (Group) result;
-
-                if (populateListReady) {
-                    stringsPrep();
-                } else {
-                    loopCount++;
-                    getGroupWithDetailLoop();
+        for (Group group : mGroup) {
+            new GetUserAsyncTask(GET_ONE_GROUP, null, null, group,null, new OnTaskComplete() {
+                @Override
+                public void onSuccess(Object result) {
+                    mGroup[loopCount] = (Group) result;
+                    loopCount ++;
+                    if (loopCount == mGroup.length) {
+                        stringsPrep();
+                    }
                 }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(getActivity(),"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
-            }
-        }).execute();
+                @Override
+                public void onFailure(Exception e) {
+                    Toast.makeText(getActivity(),"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
+                }
+            }).execute();
+        }
     }
 
     private void stringsPrep(){
