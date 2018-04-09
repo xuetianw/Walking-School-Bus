@@ -176,7 +176,7 @@ public class PermissionFragment extends android.app.Fragment {
         StringBuilder str = new StringBuilder();
 
         for(PermissionRequest.Authorizor pa:authorizors){
-            if(!pa.getWhoApprovedOrDenied().getId().equals(User.getLoginUser().getId())) {
+            if(!pa.getWhoApprovedOrDenied().getId().equals(selectedPermissionRequest.getRequestingUser().getId())) {
                 str.append(pa.getStatus().toString() + " By User: " + pa.getWhoApprovedOrDenied().getName() + "\n");
             }
         }
