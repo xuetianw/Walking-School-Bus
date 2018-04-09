@@ -89,13 +89,17 @@ public class PermissionFragment extends android.app.Fragment {
         List<PermissionRequest> toKeep = new ArrayList<>();
 
         for (PermissionRequest pr: allPermissionRequests) {
-            if(!pr.getRequestingUser().getId().equals(User.getLoginUser().getId())) {
                 if (pr.getStatus() == PENDING) {
-                    pendingPermissionRequests.add(pr);
+                    if(pr.getRequestingUser().getId().equals(User.getLoginUser().getId())) {
+                        toKeep.add(pr);
+                    }else{
+                        pendingPermissionRequests.add(pr);
+                    }
+
                 } else {
                     toKeep.add(pr);
                 }
-            }
+
         }
 
 
@@ -176,8 +180,12 @@ public class PermissionFragment extends android.app.Fragment {
         StringBuilder str = new StringBuilder();
 
         for(PermissionRequest.Authorizor pa:authorizors){
-            if(!pa.getWhoApprovedOrDenied().getId().equals(selectedPermissionRequest.getRequestingUser().getId())) {
-                str.append(pa.getStatus().toString() + " By User: " + pa.getWhoApprovedOrDenied().getName() + "\n");
+            if(pa.getWhoApprovedOrDenied()!=null) {
+                if (!pa.getWhoApprovedOrDenied().getId().equals(selectedPermissionRequest.getRequestingUser().getId())) {
+                    str.append(pa.getStatus().toString() + " By User: " + pa.getWhoApprovedOrDenied().getName() + "\n");
+                }
+            }else{
+                str.append("waiting for approval result");
             }
         }
 
@@ -216,11 +224,12 @@ public class PermissionFragment extends android.app.Fragment {
 
     // update status for permission
     private void updateStatus(ServerManager.PermissionStatus functionType){
+        final ServerManager.PermissionStatus status = functionType;
         selectedPermissionRequest.setStatus(functionType);
         new GetPermissionAsyncTask(POST_PERMISSION_CHANGE_WITH_ID, null, null, selectedPermissionRequest, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                Toast.makeText(getActivity(),"ez",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),status.toString()+" successfully!",Toast.LENGTH_SHORT).show();
                 updateUser();
             }
 
