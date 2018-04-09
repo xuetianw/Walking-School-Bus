@@ -8,6 +8,14 @@ import com.thewalkingschoolbus.thewalkingschoolbus.models.Message;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.PermissionRequest;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
+/*
+    this file allow all server call to be running on a seperate thread
+    so it will not crash the main thread
+
+    this aysncTask contain api binding for
+        group, user, messages, monitoring
+ */
+
 public class GetUserAsyncTask extends AsyncTask<Void, Void, Object>{
 
     private OnTaskComplete mlistener;

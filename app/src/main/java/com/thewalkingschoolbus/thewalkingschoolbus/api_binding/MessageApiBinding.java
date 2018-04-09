@@ -19,6 +19,14 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerMana
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.httpRequestPost;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.readJsonIntoString;
 
+/*
+    this file contain all api binding that are related to messages
+    including api:
+    get messages : group user emergency (read/unread)
+    send messages
+    set messages as read or unread
+ */
+
 public class MessageApiBinding {
 
     private static String GET_ALL_MESSAGES = "/messages";
