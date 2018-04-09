@@ -27,8 +27,6 @@ public class JoinOrCreateGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_or_create_group);
         setUpJoinGroupBut();
-        setUpJoinNearByGroupBut();
-        setCreateGroupBut();
     }
 
     public static Intent makeIntent(Context context) {
@@ -74,25 +72,5 @@ public class JoinOrCreateGroupActivity extends AppCompatActivity {
                 }
             }).execute();
         }
-    }
-
-    private void setUpJoinNearByGroupBut(){
-        Button but = (Button) findViewById(R.id.joinNearbyGroupBut);
-        but.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // go to map fragment
-            }
-        });
-    }
-
-    private void setCreateGroupBut(){
-        Button but = (Button) findViewById(R.id.createGroupBut);
-        but.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // go to map fragment
-            }
-        });
     }
 }

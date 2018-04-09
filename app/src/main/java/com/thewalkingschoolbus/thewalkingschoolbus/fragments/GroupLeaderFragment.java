@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,10 +33,7 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
     private static final String TAG = "GroupLeaderFragment";
     private View view;
     private Group[] mGroup;
-
-    // Used for recursive loop in getGroupWithDetailLoop()
-    private static boolean populateListReady = false;
-    private static int loopCount = 0;
+    private int loopCount = 0;
 
     @Nullable
     @Override
@@ -45,9 +43,9 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
 //        }
         view = inflater.inflate(R.layout.fragment_group_leader, container, false);
 
-        getGroupListAndPopulateList();
         setUpRefresh();
         setUpAddButton();
+
         return view;
     }
 
@@ -64,7 +62,6 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
             public void onSuccess(Object result) {
                 User returnUser = (User) result;
                 List<Group> mGroupList = returnUser.getLeadsGroups();
-
                 mGroup = new Group[mGroupList.size()];
                 mGroupList.toArray(mGroup);
 
@@ -74,9 +71,8 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
                     return;
                 }
 
-                // Begin get group detail recursion
+                // Begin get group detail, and proceed to stringPrep when all detail is ready
                 getGroupWithDetail();
-                //stringsPrep();
             }
 
             @Override
@@ -87,34 +83,23 @@ public class GroupLeaderFragment extends android.support.v4.app.Fragment {
     }
 
     private void getGroupWithDetail() {
-        // Set up recursion
-        populateListReady = false;
         loopCount = 0;
-        getGroupWithDetailLoop();
-    }
-
-    private void getGroupWithDetailLoop() {
-        if (loopCount >= mGroup.length - 1) {
-            populateListReady = true;
-        }
-        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mGroup[loopCount],null, new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                mGroup[loopCount] = (Group) result;
-
-                if (populateListReady) {
-                    stringsPrep();
-                } else {
-                    loopCount++;
-                    getGroupWithDetailLoop();
+        for (Group group : mGroup) {
+            new GetUserAsyncTask(GET_ONE_GROUP, null, null, group,null, new OnTaskComplete() {
+                @Override
+                public void onSuccess(Object result) {
+                    mGroup[loopCount] = (Group) result;
+                    loopCount ++;
+                    if (loopCount == mGroup.length) {
+                        stringsPrep();
+                    }
                 }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(getActivity(),"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
-            }
-        }).execute();
+                @Override
+                public void onFailure(Exception e) {
+                    Toast.makeText(getActivity(),"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
+                }
+            }).execute();
+        }
     }
 
     private void stringsPrep(){
