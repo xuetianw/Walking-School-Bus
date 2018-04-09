@@ -27,7 +27,6 @@ public class LeaderboardFragment extends android.app.Fragment {
     private View view;
     ArrayList <User> userList = new ArrayList<>();
     User []users;
-    public static ArrayList<String> arrayList;
     TextView winnerName;
     TextView winnderPoints;
 
@@ -49,22 +48,14 @@ public class LeaderboardFragment extends android.app.Fragment {
             public void onSuccess(Object result) {
                 users = (User[]) result;
 
+                //add all users to the userList
                 for(User user: users){
                     userList.add(user);
                 }
                 // sort the userList by the total points earned
                 java.util.Collections.sort(userList);
-                for(User user:userList){
-                    System.out.println(user.getTotalPointsEarned());
-                }
 
-                arrayList = new ArrayList();
-                for(int i = 0; i < userList.size(); i++) {
-                    arrayList.add("Ranking: " + i + " totalPointsEarned: " + userList.get(i).getTotalPointsEarned()
-                            + " Name: "+ userList.get(i).getName());
-                }
-
-                ArrayAdapter<String> adapter = new MyListadapter();
+                ArrayAdapter<User> adapter = new MyListAdapter();
                 ListView list = view.findViewById(R.id.listViewLeaderboard);
                 list.setAdapter(adapter);
 
@@ -76,9 +67,9 @@ public class LeaderboardFragment extends android.app.Fragment {
         }).execute();
     }
 
-    private class MyListadapter extends ArrayAdapter<String> {
-        public MyListadapter(){
-            super(getActivity(), R.layout.item_view, arrayList);
+    private class MyListAdapter extends ArrayAdapter<User> {
+        public MyListAdapter(){
+            super(getActivity(), R.layout.item_view, userList);
         }
 
         @NonNull
@@ -90,9 +81,10 @@ public class LeaderboardFragment extends android.app.Fragment {
                 itemView = getActivity().getLayoutInflater().inflate(R.layout.item_view, parent, false);
             }
 
-            //find the gold to work with
-
-            String string = arrayList.get(position);
+            /*find the gold to work with
+            first three users have gold, silver and bronze medal
+            and the rest have plain medal
+             */
             int iconid;
             if(position == 0){
                 iconid = R.drawable.gold_medal;
@@ -106,11 +98,12 @@ public class LeaderboardFragment extends android.app.Fragment {
             ImageView imageView = (ImageView)itemView.findViewById(R.id.item_iconlid);
             imageView.setImageResource(iconid);
 
+
+            //setup textview for image Icon
             winnerName = (TextView) itemView.findViewById(R.id.nameofgoldmedalwiner);
             winnderPoints = (TextView) itemView.findViewById(R.id.totalpointesid);
 
             winnerName.setText("Name: " + userList.get(position).getName());
-
             winnderPoints.setText("Total Points: " + userList.get(position).getTotalPointsEarned());
 
             return itemView;

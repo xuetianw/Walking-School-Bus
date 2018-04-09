@@ -28,7 +28,7 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
  * Description here.
  */
 public class LoginActivity extends AppCompatActivity {
-
+    //setup toast message
     public static final String REGISTER_EMAIL = "registerEmail";
     public static final String LOGIN_NAME = "loginName";
     public static final String LOGIN_PASSWORD = "loginPassword";
@@ -54,19 +54,17 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        setupTextviews();
+        setupEditTextViews();
         setupLoginButton();
         setupRegisterButton();
         //getUserLastState(getApplicationContext());
     }
 
 
-    private void setupTextviews() {
+    private void setupEditTextViews() {
         emailET = (EditText)findViewById(R.id.emailid);
         passwordET = (EditText) findViewById(R.id.passwordid);
     }
-
-
 
 
     private void setupRegisterButton() {
@@ -83,9 +81,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-
-
-    // Temporary - delete after proper login is written.
     private void setupLoginButton() {
         final Button loginButton = (Button) findViewById(R.id.loginid);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +113,9 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
+                    // store user login status so that user can automatically login
                     storeUserInfoToSharePreferences();
+                    // set up login user information
                     setLoginUser(User.getLoginUser());
                 }
             }
@@ -138,12 +135,6 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = MainActivity.makeIntent(LoginActivity.this);
                     startActivity(intent);
                     finish();
-
-                    SharedPreferences preferences = getSharedPreferences(AppStates, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-
-                    editor.putBoolean(MainActivity.USER_LOGSTATUS, true);
-                    editor.commit();
                 }
             }
             @Override

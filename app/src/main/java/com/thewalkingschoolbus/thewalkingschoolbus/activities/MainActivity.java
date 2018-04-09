@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         contextOfApplication = this;
+        //check if user is logged in
         getUserLastState();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences preferences = getApplication().getSharedPreferences(LoginActivity.AppStates, MODE_PRIVATE);
         String email = preferences.getString(LoginActivity.REGISTER_EMAIL, null);
         String password = preferences.getString(LoginActivity.LOGIN_PASSWORD, null);
+        //if user is logged out, go to loginActivity
         if( email == null || password == null) {
             Intent intent = LoginActivity.makeIntent(getApplicationContext());
             startActivity(intent);

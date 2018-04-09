@@ -39,11 +39,11 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         setupTextviews();
-        setupSavebutton();
-        setupCancelbutton();
+        setupSaveButton();
+        setupCancelButton();
     }
 
-    private void setupCancelbutton() {
+    private void setupCancelButton() {
         Button cancelButton = (Button)findViewById(R.id.button5);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +53,7 @@ public class UserProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void setupSavebutton() {
+    private void setupSaveButton() {
         Button saveButton = (Button)findViewById(R.id.button4);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,11 +72,11 @@ public class UserProfileActivity extends AppCompatActivity {
                 if(loginName.isEmpty() || registerEmail.isEmpty()){
                     Toast.makeText(getApplicationContext(), LoginActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
-                } else if(!birthMonth.isEmpty()
+                } else if(!birthMonth.isEmpty() //setup birthMonth restriction
                         && ((Integer.parseInt(birthMonth) > 12 || Integer.parseInt(birthMonth) < 0))){
                     Toast.makeText(getApplicationContext(), RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
-                } else if(!birthYear.isEmpty()
+                } else if(!birthYear.isEmpty() // //setup birthYear restriction
                         && (Integer.parseInt(birthYear) > 2018 || Integer.parseInt(birthYear) < 1900)) {
                     Toast.makeText(getApplicationContext(), RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
@@ -102,7 +102,10 @@ public class UserProfileActivity extends AppCompatActivity {
                         public void onSuccess(Object result) {
                             Toast.makeText(getApplicationContext(), EDIT_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
+                            //set up login user
                             User.setLoginUser((User)user );
+                            // store user editing information so that user
+                            // can still automatically login after successfully editing
                             storeUserInfoToSharePreferences();
                             finish();
                         }
@@ -139,6 +142,10 @@ public class UserProfileActivity extends AppCompatActivity {
         teacherNameDT = (EditText) findViewById(R.id.enter_teacher_name);
         emergencyContactInfoET = (EditText) findViewById(R.id.emergency_contact_info);
 
+        /* get the user information and pass to the EditTextView
+         so that it is easier for user's parents can see the
+          orginal information before editing
+         */
         nameET.setText(User.getLoginUser().getName());
         emailET.setText(User.getLoginUser().getEmail());
         birthYearET.setText(User.getLoginUser().getBirthYear());

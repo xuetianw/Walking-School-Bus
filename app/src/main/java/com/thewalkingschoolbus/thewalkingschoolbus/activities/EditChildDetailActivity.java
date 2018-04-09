@@ -33,9 +33,11 @@ public class EditChildDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_child_detail);
-        setupTextviews();
+        setupTextViews();
 
-        setupSavebutton();
+        //set up save button
+        setupSaveButton();
+        //set up cancel button
         setupCancelButton();
     }
 
@@ -55,11 +57,12 @@ public class EditChildDetailActivity extends AppCompatActivity {
     }
 
 
-    private void setupSavebutton() {
+    private void setupSaveButton() {
         Button saveButton = (Button)findViewById(R.id.childinfosaveBtn);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //get EditTextView values
                 loginName = nameET.getText().toString();
                 registerEmail = emailET.getText().toString();
                 birthYear = birthYearET.getText().toString();
@@ -74,15 +77,16 @@ public class EditChildDetailActivity extends AppCompatActivity {
                 if(loginName.isEmpty() || registerEmail.isEmpty()){
                     Toast.makeText(getApplicationContext(), LoginActivity.USERNAME_EMAIL_AND_PASSWORD_REQUIRED_EMPTY_MESSAGE, Toast.LENGTH_SHORT)
                             .show();
-                } else if(!birthMonth.isEmpty()
+                } else if(!birthMonth.isEmpty() // setup birthMonth restrictions
                         && ((Integer.parseInt(birthMonth) > 12 || Integer.parseInt(birthMonth) < 0))){
                     Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
-                } else if(!birthYear.isEmpty()
+                } else if(!birthYear.isEmpty()   // setup birthYear restrictions
                         && (Integer.parseInt(birthYear) > 2018 || Integer.parseInt(birthYear) < 1900)) {
                     Toast.makeText(getApplicationContext(), PLEASE_CORRECT_YOUR_DATE_OF_BIRTH, Toast.LENGTH_SHORT)
                             .show();
                 } else {
+                    //creating a temp new user in case edit fails
                     final User user = new User();
                     user.setId(MonitoringDetailActivity.monitoredUser.getId());
                     user.setEmail(registerEmail);
@@ -111,9 +115,6 @@ public class EditChildDetailActivity extends AppCompatActivity {
                         }
                         @Override
                         public void onFailure(Exception e) {
-                            /*
-                            Toast.makeText(getApplicationContext(),"edit failed", Toast.LENGTH_SHORT)
-                                    .show();*/
                             Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }).execute();
@@ -122,9 +123,7 @@ public class EditChildDetailActivity extends AppCompatActivity {
         });
     }
 
-
-
-    private void setupTextviews() {
+    private void setupTextViews() {
         nameET = (EditText)findViewById(R.id.enter_fullnameid);
         emailET = (EditText)findViewById(R.id.enter_emailid);
         birthYearET = (EditText) findViewById(R.id.birthdayYearid);
@@ -146,10 +145,6 @@ public class EditChildDetailActivity extends AppCompatActivity {
         gradeET.setText(MonitoringDetailActivity.monitoredUser.getGrade());
         teacherNameDT.setText(MonitoringDetailActivity.monitoredUser.getTeacherName());;
         emergencyContactInfoET.setText(MonitoringDetailActivity.monitoredUser.getEmergencyContactInfo());;
-
-
-
-
 
     }
 }
