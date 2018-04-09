@@ -26,6 +26,38 @@ public class PermissionRequest {
         private Set<User> users;
         private ServerManager.PermissionStatus status;
         private User whoApprovedOrDenied;
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public Set<User> getUsers() {
+            return users;
+        }
+
+        public void setUsers(Set<User> users) {
+            this.users = users;
+        }
+
+        public ServerManager.PermissionStatus getStatus() {
+            return status;
+        }
+
+        public void setStatus(ServerManager.PermissionStatus status) {
+            this.status = status;
+        }
+
+        public User getWhoApprovedOrDenied() {
+            return whoApprovedOrDenied;
+        }
+
+        public void setWhoApprovedOrDenied(User whoApprovedOrDenied) {
+            this.whoApprovedOrDenied = whoApprovedOrDenied;
+        }
     }
 
     public PermissionRequest(){
@@ -119,5 +151,9 @@ public class PermissionRequest {
 
     public void setStatus(ServerManager.PermissionStatus status) {
         this.status = status;
+    }
+
+    public User getter(){
+        return  userA;
     }
 }

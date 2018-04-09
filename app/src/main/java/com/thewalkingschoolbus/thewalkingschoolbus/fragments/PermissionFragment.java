@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetPermissionAsyncTask.functionTypeForPermission.GET_PERMISSION_REQUESTS_FOR_USER;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetPermissionAsyncTask.functionTypeForPermission.GET_PERMISSION_REQUEST_WITH_ID;
@@ -41,6 +42,7 @@ public class PermissionFragment extends android.app.Fragment {
     private PermissionRequest selectedPermissionRequest;
     private List<String> pendingPermissionRequestsStr;
     private List<String> allPermissionRequestsStr;
+    private PermissionRequest.Authorizor[] authorizors;
 
     @Nullable
     @Override
@@ -87,21 +89,27 @@ public class PermissionFragment extends android.app.Fragment {
         List<PermissionRequest> toKeep = new ArrayList<>();
 
         for (PermissionRequest pr: allPermissionRequests) {
-            if(pr.getStatus() == PENDING) {
-                pendingPermissionRequests.add(pr);
-            }else{
-                toKeep.add(pr);
-            }
+                if (pr.getStatus() == PENDING) {
+                    if(pr.getRequestingUser().getId().equals(User.getLoginUser().getId())) {
+                        toKeep.add(pr);
+                    }else{
+                        pendingPermissionRequests.add(pr);
+                    }
+
+                } else {
+                    toKeep.add(pr);
+                }
+
         }
 
 
-        if(!pendingPermissionRequests.isEmpty()){
-            allPermissionRequests = toKeep;
-            stringPrepForPendingList();
-        }else {
+        if(pendingPermissionRequests.isEmpty()) {
             Toast.makeText(getActivity(), "NO PENDING REQUESTS", Toast.LENGTH_SHORT).show();
+            allPermissionRequests = toKeep;
         }
+        allPermissionRequests = toKeep;
 
+        stringPrepForPendingList();
         stringPrepForAlll();
     }
 
@@ -158,11 +166,30 @@ public class PermissionFragment extends android.app.Fragment {
     }
     // set up both altert dialog when list view on item click
     private void alertDialogForAll(){
+        Set<PermissionRequest.Authorizor> authorizor = selectedPermissionRequest.getAuthorizors();
+        authorizors = authorizor.toArray(new PermissionRequest.Authorizor[0]);
+        String infoOnAuthorizer = stringPrepForAuthorizor();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Message");
-        builder.setMessage(selectedPermissionRequest.getMessage());
+        builder.setMessage(selectedPermissionRequest.getMessage()+"\n\n Authorizers :\n"+ infoOnAuthorizer);
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private String stringPrepForAuthorizor(){
+        StringBuilder str = new StringBuilder();
+
+        for(PermissionRequest.Authorizor pa:authorizors){
+            if(pa.getWhoApprovedOrDenied()!=null) {
+                if (!pa.getWhoApprovedOrDenied().getId().equals(selectedPermissionRequest.getRequestingUser().getId())) {
+                    str.append(pa.getStatus().toString() + " By User: " + pa.getWhoApprovedOrDenied().getName() + "\n");
+                }
+            }else{
+                str.append("waiting for approval result");
+            }
+        }
+
+        return str.toString();
     }
 
     private void alertDialogForPending(){
@@ -197,11 +224,12 @@ public class PermissionFragment extends android.app.Fragment {
 
     // update status for permission
     private void updateStatus(ServerManager.PermissionStatus functionType){
+        final ServerManager.PermissionStatus status = functionType;
         selectedPermissionRequest.setStatus(functionType);
         new GetPermissionAsyncTask(POST_PERMISSION_CHANGE_WITH_ID, null, null, selectedPermissionRequest, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
-                Toast.makeText(getActivity(),"ez",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),status.toString()+" successfully!",Toast.LENGTH_SHORT).show();
                 updateUser();
             }
 
