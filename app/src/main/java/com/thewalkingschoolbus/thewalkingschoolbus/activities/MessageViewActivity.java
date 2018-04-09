@@ -17,6 +17,11 @@ import java.util.Calendar;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.SET_MESSAGE_AS_READ_OR_UNREAD;
 
+/*
+ * MessageNewActivity.java
+ * Populate the view message UI.
+ * User may see the message, along with its sender and sent time.
+ */
 public class MessageViewActivity extends AppCompatActivity {
 
     private static final String GIVEN_MESSAGE_ID = "ca.sfu.servingsizecalculator.CalculateActivity - messageId";

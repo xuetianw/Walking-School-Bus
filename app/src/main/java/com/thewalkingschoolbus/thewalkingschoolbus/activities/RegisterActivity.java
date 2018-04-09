@@ -17,6 +17,12 @@ import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import static com.thewalkingschoolbus.thewalkingschoolbus.activities.LoginActivity.*;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
+/*
+ * RegisterActivity.java
+ * Registration is handled here.
+ * User may choose to skip non essential information when creating new account.
+ * Essential informations are email, name, and password.
+ */
 public class RegisterActivity extends AppCompatActivity {
 
     public static final String PLEASE_CORRECT_YOUR_DATE_OF_BIRTH = "Please correct your date of birth";

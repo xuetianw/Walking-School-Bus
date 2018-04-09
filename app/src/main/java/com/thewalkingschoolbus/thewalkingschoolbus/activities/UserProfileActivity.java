@@ -19,10 +19,11 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.activities.LoginActivi
 import static com.thewalkingschoolbus.thewalkingschoolbus.activities.LoginActivity.REGISTER_EMAIL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
 
-/**
- * Created by Vaanyi Igiri on 2018-03-19.
+/*
+ * UserDetailActivity.java
+ * Display the user profile edit here.
+ * Allow users to edit profile.
  */
-
 public class UserProfileActivity extends AppCompatActivity {
 
     public static final String EDIT_SUCCESSFULLY_MESSAGE = "edit successfully";

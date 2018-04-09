@@ -18,14 +18,13 @@ import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 /*
-* SOURCES - Based on following tutorials:
-* - Login UI Design in XML #2
-*    https://www.youtube.com/watch?v=oGmcFGlth0w
-* */
-
-/**
- * LoginActivity
- * Description here.
+ * LoginActivity.java
+ * Display the login screen.
+ * User may log in with existing account or create a new account.
+ *
+ * SOURCES - Based on following tutorials:
+ * Login UI Design in XML #2
+ * https://www.youtube.com/watch?v=oGmcFGlth0w
  */
 public class LoginActivity extends AppCompatActivity {
     //setup toast message

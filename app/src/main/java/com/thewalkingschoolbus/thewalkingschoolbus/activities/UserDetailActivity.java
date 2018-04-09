@@ -24,6 +24,10 @@ import java.util.List;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.REMOVE_MEMBER_OF_GROUP;
 
+/*
+ * UserDetailActivity.java
+ * Used to show user detail.
+ */
 public class UserDetailActivity extends AppCompatActivity {
 
     private static final String USER_ID = "USER_ID";

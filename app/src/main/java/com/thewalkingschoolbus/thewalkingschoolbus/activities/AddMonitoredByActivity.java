@@ -17,6 +17,10 @@ import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.CREATE_MONITORING;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_EMAIL;
 
+/*
+ * AddMonitoredByActivity.java
+ * Allow user to add another user they wish to be monitored by.
+ */
 public class AddMonitoredByActivity extends AppCompatActivity {
 
     private User addMonitoredUser;

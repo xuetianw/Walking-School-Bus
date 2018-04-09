@@ -37,6 +37,11 @@ import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_EMAIL;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LOGIN_REQUEST;
 
+/*
+ * MainActivity.java
+ * Display the side drawer, and fragments relevant to drawer selection is presented in the view.
+ * When app is started, main activity will first check if the user can be automatically logged in.
+ */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 

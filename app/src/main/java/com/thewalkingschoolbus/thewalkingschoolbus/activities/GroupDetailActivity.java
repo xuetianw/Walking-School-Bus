@@ -30,6 +30,10 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.REMOVE_MEMBER_OF_GROUP;
 
+/*
+ * JoinOrCreateGroupActivity.java
+ * Display detailed information of a group.
+ */
 public class GroupDetailActivity extends AppCompatActivity {
     private static final String GROUP_ID ="GROUP_ID";
     private Group mSelectedGroup;
