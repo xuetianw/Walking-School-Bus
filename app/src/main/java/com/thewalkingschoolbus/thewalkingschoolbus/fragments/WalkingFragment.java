@@ -50,6 +50,13 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.POST_GPS_LOCATION;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.POST_MESSAGE_TO_PARENTS;
 
+/*
+ * WalkingFragment.java
+ * Populate the walking UI fragment.
+ * Allow user to start walking, stop walking, or send emergency message.
+ * User may optionally choose group they are walking for at any point to enable automatic arrival.
+ * Automatic arrival triggers when group destination and current gps location is close in proximity.
+ */
 public class WalkingFragment extends android.app.Fragment implements AdapterView.OnItemSelectedListener {
 
     private static int DEFAULT_ARRIVAL_RADIUS_METERS = 50;
@@ -58,7 +65,6 @@ public class WalkingFragment extends android.app.Fragment implements AdapterView
     private static View view;
     private static boolean isWalking = false;
     private static List<Group> totalGroupList;
-    private static int i;
     private static LatLng currentDestination;
     private Message message;
 

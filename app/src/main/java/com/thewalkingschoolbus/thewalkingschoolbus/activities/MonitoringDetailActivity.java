@@ -27,6 +27,11 @@ import java.util.ArrayList;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
+/*
+ * MonitoringDetailActivity.java
+ * Populate the monitoring detail UI.
+ * Details for monitoring user is shown here.
+ */
 public class MonitoringDetailActivity extends AppCompatActivity {
 
     private ImageView profileImage;

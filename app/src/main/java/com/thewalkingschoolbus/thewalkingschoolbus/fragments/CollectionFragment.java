@@ -37,6 +37,13 @@ import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
 
+/*
+ * CollectionFragment.java
+ * Populate the collection UI fragment.
+ * Allow user to unlock avatars, titles, and themes, and equip or un-equip them as they please.
+ * Use the test function "resetUnlock()" to undo unlocks the user has made.
+ * Use the test function "setupAddTestPoints()" to enable a button that easily adds points to user.
+ */
 public class CollectionFragment extends android.app.Fragment {
 
     private static final String TAG = "CollectionFragment";

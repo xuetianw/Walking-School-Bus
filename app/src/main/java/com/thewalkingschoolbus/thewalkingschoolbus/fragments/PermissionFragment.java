@@ -32,6 +32,12 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerMana
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.PermissionStatus.DENIED;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.PermissionStatus.PENDING;
 
+/*
+ * PermissionFragment.java
+ * Populate the permission UI fragment.
+ * Display pending permission request made by the user, as well as permission requested by another user the current user monitors.
+ * Display history and result of all former permission requests.
+ */
 public class PermissionFragment extends android.app.Fragment {
     private static final String TAG = "PermissionFragment";
     private View view;

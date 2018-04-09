@@ -21,6 +21,11 @@ import java.util.ArrayList;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
+/*
+ * LeaderboardFragment.java
+ * Populate the leaderboard UI fragment.
+ * Displays the ranking of all users using their total points earned.
+ */
 public class LeaderboardFragment extends android.app.Fragment {
 
     private static final String TAG = "LeaderboardFragment";

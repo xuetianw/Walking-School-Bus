@@ -17,8 +17,11 @@ import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import static com.thewalkingschoolbus.thewalkingschoolbus.activities.RegisterActivity.PLEASE_CORRECT_YOUR_DATE_OF_BIRTH;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.EDIT_USER;
 
+/*
+ * EditChildDetailActivity.java
+ * Allow user to edit details of a child they monitor.
+ */
 public class EditChildDetailActivity extends AppCompatActivity {
-
 
     public static final String EDIT_SUCCESSFULLY_MESSAGE = "edit successfully";
     private EditText nameET, emailET,

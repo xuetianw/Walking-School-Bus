@@ -20,6 +20,10 @@ import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 import static android.content.ContentValues.TAG;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.ADD_MEMBER_TO_GROUP;
 
+/*
+ * JoinOrCreateGroupActivity.java
+ * User may enter group ID to join a group.
+ */
 public class JoinOrCreateGroupActivity extends AppCompatActivity {
 
     @Override

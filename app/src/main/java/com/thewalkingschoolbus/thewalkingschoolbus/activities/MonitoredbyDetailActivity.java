@@ -17,6 +17,11 @@ import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_EMAIL;
 
+/*
+ * MonitoredbyDetailActivity.java
+ * Populate the monitored by detail UI.
+ * Details for monitored by user is shown here.
+ */
 public class MonitoredbyDetailActivity extends AppCompatActivity {
 
     public static String userEmail;

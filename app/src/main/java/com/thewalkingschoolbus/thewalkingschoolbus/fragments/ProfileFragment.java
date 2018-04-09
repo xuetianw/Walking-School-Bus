@@ -23,11 +23,15 @@ import com.thewalkingschoolbus.thewalkingschoolbus.models.collections.Title;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
 /*
-* SOURCES - Based on following tutorials:
-* - Modern Profile UI Design in Android Studio
-*    https://www.youtube.com/watch?v=2pirZvqXza0
-* */
-
+ * ProfileFragment.java
+ * Populate the profile UI fragment.
+ * Display all user profile information, as well as customized avatar and title.
+ * User may edit profile information from the edit profile button.
+ *
+ * SOURCES - Based on following tutorials:
+ * Modern Profile UI Design in Android Studio
+ * https://www.youtube.com/watch?v=2pirZvqXza0
+ */
 public class ProfileFragment extends android.app.Fragment {
 
     private static final String TAG = "ProfileFragment";

@@ -79,16 +79,22 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.LIST_GROUPS;
 
 /*
-* SOURCES - Based on following tutorials:
-* Google Maps Android API tutorial
-*   https://developers.google.com/maps/documentation/android-api/current-place-tutorial
-* Youtube tutorial "Get Device Location" by "CodingWithMitch"
-*   https://www.youtube.com/watch?v=fPFr0So1LmI
-* Youtube tutorial "Basic Google Maps API Android Tutorial + Google Maps Directions API" by "Hiep Mai Thanh"
-*   https://www.youtube.com/watch?v=fPFr0So1LmI
-* map_modules from source code by "Hiep Mai Thanh"
-*   https://github.com/hiepxuan2008/GoogleMapDirectionSimple
-*/
+ * MapFragment.java
+ * Populate the create group UI fragment OR join group UI fragment, depending on "map fragment state" saved.
+ * Relevant UI elements are enabled and disabled according to fragment state.
+ * In create group UI state, the user should search origin and destination, search route, and confirm creation of group.
+ * In join group UI state, the user should initiate search, and choose groups to join in proximity of the current user location.
+ *
+ * SOURCES - Based on following tutorials:
+ * Google Maps Android API tutorial
+ *   https://developers.google.com/maps/documentation/android-api/current-place-tutorial
+ * Youtube tutorial "Get Device Location" by "CodingWithMitch"
+ *   https://www.youtube.com/watch?v=fPFr0So1LmI
+ * Youtube tutorial "Basic Google Maps API Android Tutorial + Google Maps Directions API" by "Hiep Mai Thanh"
+ *   https://www.youtube.com/watch?v=fPFr0So1LmI
+ * map_modules from source code by "Hiep Mai Thanh"
+ *   https://github.com/hiepxuan2008/GoogleMapDirectionSimple
+ */
 public class MapFragment extends android.support.v4.app.Fragment implements GoogleMap.OnInfoWindowClickListener,
         GoogleApiClient.OnConnectionFailedListener {
 

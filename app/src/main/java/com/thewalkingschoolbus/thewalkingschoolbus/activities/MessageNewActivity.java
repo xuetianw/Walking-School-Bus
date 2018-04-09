@@ -25,6 +25,12 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.POST_MESSAGE_TO_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.POST_MESSAGE_TO_PARENTS;
 
+/*
+ * MessageNewActivity.java
+ * Populate the new message UI.
+ * User can send new messages here.
+ * Select who they wish to send the message to using the radio check box.
+ */
 public class MessageNewActivity extends AppCompatActivity {
 
     private GetUserAsyncTask.functionType messageTo;
