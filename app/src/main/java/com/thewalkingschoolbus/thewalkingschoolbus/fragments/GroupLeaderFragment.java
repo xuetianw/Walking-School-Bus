@@ -28,6 +28,12 @@ import java.util.List;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_ONE_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 
+/*
+ * GroupLeaderFragment.java
+ * Populate the leader UI fragment in group fragment.
+ * Displays all groups user is leader of.
+ * Allows editing of said groups by clicking on the entries.
+ */
 public class GroupLeaderFragment extends android.support.v4.app.Fragment {
 
     private static final String TAG = "GroupLeaderFragment";

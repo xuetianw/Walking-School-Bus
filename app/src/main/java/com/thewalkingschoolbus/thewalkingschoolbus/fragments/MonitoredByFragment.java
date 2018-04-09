@@ -27,6 +27,13 @@ import java.util.List;
 
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.*;
 
+/*
+ * MonitoredByFragment.java
+ * Populate the monitored by UI fragment in friend fragment.
+ * Displays all users monitoring current user.
+ * Display additional details when the said entry is clicked.
+ * User may add additional users to monitor to this list.
+ */
 public class MonitoredByFragment extends Fragment {
 
     private static final String TAG = "MonitoredByFragment";

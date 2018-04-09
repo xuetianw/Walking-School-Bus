@@ -34,6 +34,15 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_UNREAD_MESSAGES_FOR_USER;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 
+/*
+ * MapMonitoringFragment.java
+ * Populate the monitoring UI fragment.
+ * Display all relevant information when it comes to monitoring users under monitoring list.
+ * Map displays markers for all monitoring users, and group leaders of said users.
+ * User may navigate to each marker using the spinner dropdown which will jump the camera to the marker.
+ * Press the marker to display additional details.
+ * Unread email count is displayed in the UI element.
+ */
 public class MapMonitoringFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemSelectedListener {
 
     private static final String TAG = "MapMonitoringFragment";

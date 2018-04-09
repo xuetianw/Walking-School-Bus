@@ -27,6 +27,13 @@ import java.util.List;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_READ_MESSAGES_FOR_USER;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_UNREAD_MESSAGES_FOR_USER;
 
+/*
+ * MessagesFragment.java
+ * Populate the messages UI fragment.
+ * Display all read and unread messages, and display whether it is read or unread and urgent or not urgent.
+ * Select the email entry in the listview to read the message.
+ * Select the new email button to send new message.
+ */
 public class MessagesFragment extends android.app.Fragment {
 
     private static final String TAG = "MessagesFragment";

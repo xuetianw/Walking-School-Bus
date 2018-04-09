@@ -26,6 +26,13 @@ import java.util.List;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_ONE_GROUP;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsyncTask.functionType.GET_USER_BY_ID;
 
+/*
+ * GroupMemberFragment.java
+ * Populate the member UI fragment in group fragment.
+ * Displays all groups user is member of.
+ * Allows editing of said groups by clicking on the entries.
+ * Allows adding of groups by group ID.
+ */
 public class GroupMemberFragment extends android.support.v4.app.Fragment {
 
     private static final String TAG = "GroupMemberFragment";

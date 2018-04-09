@@ -16,6 +16,10 @@ import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * FriendsFragment.java
+ * Fragment holding and displaying the two tabs "MonitoringFragment" and "MonitoredByFragment".
+ */
 public class FriendsFragment extends Fragment {
 
     private static final String TAG = "FriendsFragment";

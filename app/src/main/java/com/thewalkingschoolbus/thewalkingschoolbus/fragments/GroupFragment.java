@@ -16,6 +16,10 @@ import com.thewalkingschoolbus.thewalkingschoolbus.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * GroupFragment.java
+ * Fragment holding and displaying the two tabs "GroupLeaderFragment" and "GroupMemberFragment".
+ */
 public class GroupFragment extends Fragment {
 
     private static final String TAG = "GroupFragment";
