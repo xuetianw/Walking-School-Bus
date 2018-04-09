@@ -38,9 +38,6 @@ public class ProfileFragment extends android.app.Fragment {
             birthYeartv, birthMonthtv, profileAddresstv,
             profileCellphonetv, homePhonetv, gradetv,
             teacherNametv, emergencyContactInfotv;
-    private String loginName, registerEmail,
-            birthYear, birthMonth, address, cellPhone, homePhone,
-            grade, teacherName, emergencyContactInfo;
 
     @Nullable
     @Override
@@ -80,6 +77,7 @@ public class ProfileFragment extends android.app.Fragment {
             public void onSuccess(Object result) {
                 if(result == null){
                 } else {
+                    // set up textView display message
                     User.setLoginUser((User)result);
                     if(User.getLoginUser().getName() !=  null){
                         profileNametv.setText("" +  User.getLoginUser().getName());
@@ -126,15 +124,6 @@ public class ProfileFragment extends android.app.Fragment {
                 Toast.makeText(getActivity(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }).execute();
-
-
-
-
-
-    }
-
-    private void getUserLastState() {
-
     }
 
     private void setUpEditProfileBtn(){

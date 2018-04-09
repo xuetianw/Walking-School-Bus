@@ -38,9 +38,6 @@ public class MonitoredByFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        if (container != null) {
-//            container.removeAllViews();
-//        }
         view = inflater.inflate(R.layout.fragment_monitored_by, container, false);
 
         //updateListView();
@@ -75,11 +72,6 @@ public class MonitoredByFragment extends Fragment {
 
                 // configure the list view
                 ListView list = getActivity().findViewById(R.id.listViewMonitored);
-
-                if(adapter.getCount()==0) {
-                    return;
-                }
-
                 list.setAdapter(adapter);
 
                 // update clicks
