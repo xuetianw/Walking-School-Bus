@@ -1,7 +1,9 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.exceptions;
 
-/**
- * Created by Jackyx on 2018-03-17.
+/*
+    this is the class file for error return by the server
+    if server return error code > 400 api binding throws exception
+    and map each error message in to this class
  */
 
 public class ApiException extends Exception{

@@ -1,5 +1,9 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.models;
 
+/*
+    this class is for gps location variable in the user class
+    allow us to modify and update the varible such as lat and lng
+ */
 
 public class GpsLocation {
     private String lat;

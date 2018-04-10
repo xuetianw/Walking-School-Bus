@@ -1,7 +1,11 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.models;
 
-/**
- * Created by Jackyx on 2018-03-19.
+/*
+    this class is mainly use for the unreadMessages and read messages variable inside
+    user class. and allow us to initiate a new message and send it by calling
+     message api binding
+
+     so ... manipulate  message object
  */
 
 public class Message {

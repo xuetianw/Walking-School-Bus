@@ -1,7 +1,8 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.models;
 
-/**
- * Created by Jackyx on 2018-04-04.
+/*
+    this class is for the customJson field in User class
+    which allow us to store an object as a string to the server
  */
 
 public class Customization {

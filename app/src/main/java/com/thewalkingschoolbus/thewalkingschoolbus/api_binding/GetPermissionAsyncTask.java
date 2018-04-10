@@ -7,8 +7,12 @@ import com.thewalkingschoolbus.thewalkingschoolbus.models.Group;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.PermissionRequest;
 import com.thewalkingschoolbus.thewalkingschoolbus.models.User;
 
-/**
- * Created by JackyX on 2018-04-03.
+/*
+    this file allow all server call to be running on a seperate thread
+    so it will not crash the main thread
+
+    this aysncTask contain api binding for
+        permission only since we dont want to have a longer parameter when calling async Task
  */
 
 public class GetPermissionAsyncTask extends AsyncTask<Void, Void, Object> {

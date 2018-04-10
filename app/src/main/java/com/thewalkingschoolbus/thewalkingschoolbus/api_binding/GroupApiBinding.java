@@ -21,6 +21,16 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerMana
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.readJsonIntoString;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.requiresPermission;
 
+/*
+    file contain api binding relating to group
+    including api:
+    get group detail
+    create group
+    update group
+    delete group
+    get/set variable of a variable in group class
+ */
+
 public class GroupApiBinding {
     private static String LIST_GROUPS = "/groups";
     private static String CREATE_GROUP = "/groups";

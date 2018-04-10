@@ -20,7 +20,21 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerMana
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.httpRequestPost;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.readJsonIntoString;
 
+/*
+    all the api binding tha has to do with user.class
+
+    including api:
+    get specific variable inside a user class such as gps
+    login
+    create user
+    delete user
+    etc
+ */
+
 public class UserApiBinding {
+
+    // URL that needs to be access
+    // and the variable name is what api should do for each url
 
     private static String LOGIN = "/login";
     private static String CREATE_USER = "/users/signup";

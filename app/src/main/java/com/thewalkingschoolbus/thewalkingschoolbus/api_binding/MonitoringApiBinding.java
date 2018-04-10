@@ -18,6 +18,14 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerMana
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager.readJsonIntoString;
 import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.UserApiBinding.getUserByEmail;
 
+/*
+    contain api binding that has to do with monitoring (parent child) relationship
+    including api:
+    create monitoring
+    delete monitoring
+    list monitoring
+ */
+
 public class MonitoringApiBinding {
 
     private static String USER_MONITORING_LIST = "/users/%s/monitorsUsers";
