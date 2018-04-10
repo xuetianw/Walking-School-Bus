@@ -1,7 +1,8 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.models;
 
-/**
- * Created by JackyX on 2018-04-03.
+/*
+    this class is mainly use for the permission api binding which allow us to retrieve permission
+    object from server and manipulate them
  */
 import com.thewalkingschoolbus.thewalkingschoolbus.api_binding.ServerManager;
 

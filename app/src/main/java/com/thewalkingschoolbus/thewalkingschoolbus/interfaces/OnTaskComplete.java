@@ -1,7 +1,7 @@
 package com.thewalkingschoolbus.thewalkingschoolbus.interfaces;
 
-/**
- * Created by Jackyx on 2018-03-05.
+/*
+    interface that is used in aysnctask to determine if a task is complete in the separate thread
  */
 
 public interface OnTaskComplete {

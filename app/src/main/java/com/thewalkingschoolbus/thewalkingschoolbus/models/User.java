@@ -6,6 +6,20 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+/*
+    this class is mainly user for user api which allow us to retrieve or create info about a user
+
+        contain
+            token - that is generated every time user successfully login
+            login - user which tell every other activity which user is logged in
+            user detail
+            message object
+            gps object
+            permission object
+            customization object
+            + more
+ */
+
 public class User implements Comparable<User> {
 
     private static String token = null;
