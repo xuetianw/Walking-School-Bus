@@ -58,7 +58,7 @@ public class UserApiBinding {
             jsonObject.put("password", enteredPassword);
         }
 
-        HttpURLConnection connection = httpRequestGet(url,jsonObject);
+        HttpURLConnection connection = httpRequestPost(url,jsonObject);
 
         if (connection.getResponseCode() >= 400) {
             // failed
