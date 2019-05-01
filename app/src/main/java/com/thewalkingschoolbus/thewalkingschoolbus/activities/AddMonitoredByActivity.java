@@ -37,15 +37,12 @@ public class AddMonitoredByActivity extends AppCompatActivity {
 
     private void setupAddButton() {
         Button button = findViewById(R.id.addMonitoredByBut);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditText email = findViewById(R.id.enterdEmailField);
-                if(email.getText().toString().equals("")){
-                    Toast.makeText(AddMonitoredByActivity.this,"please enter user email" , Toast.LENGTH_SHORT).show();
-                }else{
-                    addMonitoringUser(email.getText().toString());
-                }
+        button.setOnClickListener((view)-> {
+            EditText email = findViewById(R.id.enterdEmailField);
+            if(email.getText().toString().equals("")){
+                Toast.makeText(AddMonitoredByActivity.this,"please enter user email" , Toast.LENGTH_SHORT).show();
+            }else{
+                addMonitoringUser(email.getText().toString());
             }
         });
     }
