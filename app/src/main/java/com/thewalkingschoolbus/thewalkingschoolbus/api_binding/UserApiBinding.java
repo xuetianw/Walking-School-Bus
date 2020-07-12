@@ -48,7 +48,7 @@ public class UserApiBinding {
 
     // for login
     public static String loginRequest(User user, String enteredPassword)throws Exception, ApiException {
-        String url = BASE_URL+LOGIN;
+        String url = BASE_URL + LOGIN;
         // create json file here
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("email",user.getEmail());
@@ -58,7 +58,7 @@ public class UserApiBinding {
             jsonObject.put("password", enteredPassword);
         }
 
-        HttpURLConnection connection = httpRequestPost(url,jsonObject);
+        HttpURLConnection connection = httpRequestPost(url, jsonObject);
 
         if (connection.getResponseCode() >= 400) {
             // failed

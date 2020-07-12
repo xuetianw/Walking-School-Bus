@@ -24,6 +24,7 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 public class AddMonitoredByActivity extends AppCompatActivity {
 
     private User addMonitoredUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,47 +38,54 @@ public class AddMonitoredByActivity extends AppCompatActivity {
 
     private void setupAddButton() {
         Button button = findViewById(R.id.addMonitoredByBut);
-        button.setOnClickListener((view)-> {
+        button.setOnClickListener((v) -> {
             EditText email = findViewById(R.id.enterdEmailField);
-            if(email.getText().toString().equals("")){
-                Toast.makeText(AddMonitoredByActivity.this,"please enter user email" , Toast.LENGTH_SHORT).show();
-            }else{
-                addMonitoringUser(email.getText().toString());
+            if (email.getText().toString().equals("")) {
+                Toast.makeText(AddMonitoredByActivity.this,
+                        "please enter user email", Toast.LENGTH_SHORT).show();
+                return;
             }
+            addMonitoringUser(email.getText().toString());
         });
     }
 
-    private void addMonitoringUser(String email){
+    private void addMonitoringUser(String email) {
         addMonitoredUser = new User();
         addMonitoredUser.setEmail(email);
-        new GetUserAsyncTask(GET_USER_BY_EMAIL, addMonitoredUser, null, null,null, new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                addMonitoredUser = (User) result;
-                createMonitoring();
-            }
+        new GetUserAsyncTask(GET_USER_BY_EMAIL, addMonitoredUser, null, null, null,
+                new OnTaskComplete() {
+                    public void onSuccess(Object result) {
+                        addMonitoredUser = (User) result;
+                        createMonitoring();
+                    }
 
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(AddMonitoredByActivity.this,"unable to find this email" , Toast.LENGTH_SHORT).show();
-                Toast.makeText(AddMonitoredByActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
-            }
-        }).execute();
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(AddMonitoredByActivity.this,
+                                "unable to find this email", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddMonitoredByActivity.this,
+                                "Error :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }).execute();
     }
 
-    private void createMonitoring(){
-        new GetUserAsyncTask(CREATE_MONITORING, addMonitoredUser, User.getLoginUser(),null,null, new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                Toast.makeText(AddMonitoredByActivity.this,"user added" , Toast.LENGTH_SHORT).show();
-                finish();
-            }
+    private void createMonitoring() {
+        new GetUserAsyncTask(CREATE_MONITORING, addMonitoredUser, User.getLoginUser(), null, null,
+                new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        Toast.makeText(AddMonitoredByActivity.this,
+                                "user added", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
 
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(AddMonitoredByActivity.this,"unable to add user" , Toast.LENGTH_SHORT).show();
-                Toast.makeText(AddMonitoredByActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
-            }
-        }).execute();
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(AddMonitoredByActivity.this,
+                                "unable to add user", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddMonitoredByActivity.this,
+                                "Error :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+            }).execute();
     }
 }

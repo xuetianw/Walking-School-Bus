@@ -111,7 +111,7 @@ public class EditChildDetailActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), EDIT_SUCCESSFULLY_MESSAGE, Toast.LENGTH_SHORT)
                                     .show();
                             System.out.println(result);
-                            if(result.toString().equals("SUCCESSFUL")){
+                            if(result.toString().equals("SUCCESSFUL")) {
                                 MonitoringDetailActivity.userEmail = registerEmail;
                             }
                             finish();

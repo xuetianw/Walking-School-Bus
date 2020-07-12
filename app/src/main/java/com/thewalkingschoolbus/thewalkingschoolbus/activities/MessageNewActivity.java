@@ -34,7 +34,6 @@ import static com.thewalkingschoolbus.thewalkingschoolbus.api_binding.GetUserAsy
 public class MessageNewActivity extends AppCompatActivity {
 
     private GetUserAsyncTask.functionType messageTo;
-    private List<String> strArrOfGroups;
     private List<Group> listOfGroups;
     private User loginUser;
     private RadioGroup radioGroup;
@@ -141,29 +140,29 @@ public class MessageNewActivity extends AppCompatActivity {
 
     private void updateGroupList(){
         new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null,
-                null, new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-               User.setLoginUser((User)result);
-               loginUser = (User) result;
-               stringPrep();
-            }
+                null,
+                new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(Object result) {
+                       User.setLoginUser((User)result);
+                       loginUser = (User) result;
+                       stringPrep();
+                    }
 
-            @Override
-            public void onFailure(Exception e) {
+                    @Override
+                    public void onFailure(Exception e) {
 
-            }
-        }).execute();
-
+                    }
+                }).execute();
     }
     private void stringPrep(){
 
         int i = 0;
         Group tmpGroup;
         listOfGroups = new ArrayList<>();
-        strArrOfGroups = new ArrayList<>();
+        List<String> strArrOfGroups = new ArrayList<>();
 
-        if(loginUser.getLeadsGroups().isEmpty() == false) {
+        if(!loginUser.getLeadsGroups().isEmpty()) {
             for (i = 0; i < loginUser.getLeadsGroups().size(); i++) {
                 tmpGroup = loginUser.getLeadsGroups().get(i);
                 listOfGroups.add(i, tmpGroup);

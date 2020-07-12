@@ -103,44 +103,46 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login() {
-        new GetUserAsyncTask(LOGIN_REQUEST, User.getLoginUser(),null, null, null,new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                if(result == null){
-                    Toast.makeText(getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
-                            .show();
-                    // store user login status so that user can automatically login
-                    storeUserInfoToSharePreferences();
-                    // set up login user information
-                    setLoginUser(User.getLoginUser());
-                }
-            }
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }).execute();
+        new GetUserAsyncTask(LOGIN_REQUEST, User.getLoginUser(),null, null, null,
+                new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        if(result == null) {
+                            Toast.makeText(getApplicationContext(),LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                    .show();
+                        } else {
+                            Toast.makeText(getApplicationContext(),SUCCESSFUL_LOGIN_MESSAGE, Toast.LENGTH_SHORT)
+                                    .show();
+                            // store user login status so that user can automatically login
+                            storeUserInfoToSharePreferences();
+                            // set up login user information
+                            setLoginUser(User.getLoginUser());
+                        }
+                    }
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }).execute();
     }
 
     public void setLoginUser(User user){
-        new GetUserAsyncTask(GET_USER_BY_EMAIL, user, null, null, null,new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                if(result != null){
-                    User.setLoginUser((User)result);
-                    Intent intent = MainActivity.makeIntent(LoginActivity.this);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(LoginActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
-            }
-        }).execute();
+        new GetUserAsyncTask(GET_USER_BY_EMAIL, user, null, null, null,
+                new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        if(result != null){
+                            User.setLoginUser((User)result);
+                            Intent intent = MainActivity.makeIntent(LoginActivity.this);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(LoginActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
+                    }
+                }).execute();
     }
 
 

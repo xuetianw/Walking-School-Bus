@@ -59,7 +59,7 @@ public class MessageViewActivity extends AppCompatActivity {
         int mDate = calendar.get(Calendar.DAY_OF_MONTH);
         int mHour = calendar.get(Calendar.HOUR);
         int mMin = calendar.get(Calendar.MINUTE);
-        textViewFrom.setText(mYear+", "+mMonth+" "+mDate+", "+mHour+":"+mMin); // TODO: check correctness
+        textViewFrom.setText(mYear + ", " + mMonth + " " + mDate + ", " + mHour + ":" + mMin); // TODO: check correctness
     }
 
     private void setText() {

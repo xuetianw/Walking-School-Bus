@@ -27,13 +27,13 @@ public class Group {
     public Group(){
         id = null;
         groupDescription = null;
-        leader=null;
+        leader = null;
         memberUsers = new ArrayList<>();
         routeLatArray = new double[3];
         routeLngArray = new double[3];
         href = null;
     }
-    public Group(String name, double[] routeLatArray,double[] routeLngArray){
+    public Group(String name, double[] routeLatArray, double[] routeLngArray){
         setLeader(User.getLoginUser());
         groupDescription = name;
         this.routeLatArray = routeLatArray;

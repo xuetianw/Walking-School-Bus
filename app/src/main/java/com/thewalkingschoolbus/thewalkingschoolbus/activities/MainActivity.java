@@ -106,38 +106,40 @@ public class MainActivity extends AppCompatActivity
             User.getLoginUser().setEmail(email);
             User.getLoginUser().setPassword(password);
             new GetUserAsyncTask(LOGIN_REQUEST, User.getLoginUser(),null, null,
-                    null,new OnTaskComplete() {
-                @Override
-                public void onSuccess(Object result) {
-                    if(result == null){
-                        Toast.makeText(getApplicationContext(), LoginActivity.LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
-                                .show();
-                    } else {
-                        setLoginUser(User.getLoginUser());
-                    }
-                }
-                @Override
-                public void onFailure(Exception e) {
-                    Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }).execute();
+                    null,
+                    new OnTaskComplete() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            if(result == null){
+                                Toast.makeText(getApplicationContext(), LoginActivity.LOGIN_FAIL_MESSAGE, Toast.LENGTH_SHORT)
+                                        .show();
+                            } else {
+                                setLoginUser(User.getLoginUser());
+                            }
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }).execute();
         }
     }
 
     public void setLoginUser(User user){
-        new GetUserAsyncTask(GET_USER_BY_EMAIL, user, null, null,null, new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                if(result != null){
-                    User.setLoginUser((User)result);
-                    CollectionFragment.setToolbarTheme();
-                }
-            }
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(MainActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
-            }
-        }).execute();
+        new GetUserAsyncTask(GET_USER_BY_EMAIL, user, null, null,null,
+                new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        if(result != null){
+                            User.setLoginUser((User)result);
+                            CollectionFragment.setToolbarTheme();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(MainActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
+                    }
+                }).execute();
     }
 
     private void openDefaultFragment() {

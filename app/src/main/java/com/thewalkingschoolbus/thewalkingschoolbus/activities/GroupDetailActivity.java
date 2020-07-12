@@ -55,7 +55,7 @@ public class GroupDetailActivity extends AppCompatActivity {
 
     public static Intent makeIntent(Context context, Group mGroup, User user) {
         Intent intent = new Intent(context, GroupDetailActivity.class);
-        intent.putExtra(GROUP_ID,mGroup.getId());
+        intent.putExtra(GROUP_ID, mGroup.getId());
         return intent;
     }
 
@@ -67,7 +67,7 @@ public class GroupDetailActivity extends AppCompatActivity {
     }
 
     private void updateLoginUser(){
-        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, null,new OnTaskComplete() {
+        new GetUserAsyncTask(GET_USER_BY_ID, User.getLoginUser(), null, null, null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
                 User.setLoginUser((User)result);
@@ -85,18 +85,21 @@ public class GroupDetailActivity extends AppCompatActivity {
         String groupId = intent.getStringExtra(GROUP_ID);
         mSelectedGroup = new Group();
         mSelectedGroup.setId(groupId);
-        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mSelectedGroup, null,new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                mSelectedGroup = (Group) result;
-                showGroupDetail();
-            }
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(GroupDetailActivity.this, "Unable to get Group data", Toast.LENGTH_LONG).show();
-                Toast.makeText(GroupDetailActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
-            }
-        }).execute();
+        new GetUserAsyncTask(GET_ONE_GROUP, null, null, mSelectedGroup, null,
+                new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        mSelectedGroup = (Group) result;
+                        showGroupDetail();
+                    }
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(GroupDetailActivity.this,
+                                "Unable to get Group data", Toast.LENGTH_LONG).show();
+                        Toast.makeText(GroupDetailActivity.this,
+                                "Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
+                    }
+                }).execute();
     }
 
     private void showGroupDetail() {
@@ -113,19 +116,22 @@ public class GroupDetailActivity extends AppCompatActivity {
     }
 
     private void getMembersOfGroup(){
-        new GetUserAsyncTask(GET_MEMBERS_OF_GROUP, null, null, mSelectedGroup,null, new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                mMembers = (User[]) result;
-                stringsPrep();
-            }
+        new GetUserAsyncTask(GET_MEMBERS_OF_GROUP, null, null, mSelectedGroup,null,
+                new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        mMembers = (User[]) result;
+                        stringsPrep();
+                    }
 
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(GroupDetailActivity.this, "unable to get members of the mSelectedGroup", Toast.LENGTH_LONG).show();
-                Toast.makeText(GroupDetailActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
-            }
-        }).execute();
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(GroupDetailActivity.this,
+                                "unable to get members of the mSelectedGroup", Toast.LENGTH_LONG).show();
+                        Toast.makeText(GroupDetailActivity.this,
+                                "Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
+                    }
+                }).execute();
     }
 
     private void stringsPrep(){
@@ -133,7 +139,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         if(mMembers == null){
             mMemberDisplay = new String[0];
             lengthOfMemberList = 0;
-        }else {
+        } else {
             mMemberDisplay = new String[mMembers.length];
             lengthOfMemberList = mMembers.length;
         }
@@ -161,7 +167,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         // create list of item
         String[] myItems = mGroupDisplay;
         // Build adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupDetailActivity.this, R.layout.group_entry,myItems);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(GroupDetailActivity.this, R.layout.group_entry,myItems);
         // configure the list view
         ListView list = findViewById(R.id.memberListView);
         list.setAdapter(adapter);

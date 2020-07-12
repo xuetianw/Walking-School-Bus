@@ -39,23 +39,21 @@ public class AddMonitoringActivity extends AppCompatActivity {
 
     private void setupAddButton() {
         Button button = findViewById(R.id.btnAdd);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditText email = findViewById(R.id.fieldEmail);
-                if(email.getText().toString().equals("")){
-                    Toast.makeText(AddMonitoringActivity.this,"please enter user email" , Toast.LENGTH_SHORT).show();
-                }else{
-                    addMonitoringUser(email.getText().toString());
-                }
-            }
+        button.setOnClickListener(view -> {
+            EditText email = findViewById(R.id.fieldEmail);
+            if (email.getText().toString().equals(""))
+                Toast.makeText(AddMonitoringActivity.this,
+                        "please enter user email", Toast.LENGTH_SHORT).show();
+            else
+                addMonitoringUser(email.getText().toString());
+
         });
     }
 
-    private void addMonitoringUser(String email){
+    private void addMonitoringUser(String email) {
         addMonitoringUser = new User();
         addMonitoringUser.setEmail(email);
-        new GetUserAsyncTask(GET_USER_BY_EMAIL,addMonitoringUser , null, null,
+        new GetUserAsyncTask(GET_USER_BY_EMAIL, addMonitoringUser, null, null,
                 null, new OnTaskComplete() {
             @Override
             public void onSuccess(Object result) {
@@ -65,26 +63,31 @@ public class AddMonitoringActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(AddMonitoringActivity.this,"unable to find this email" , Toast.LENGTH_SHORT).show();
-                Toast.makeText(AddMonitoringActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddMonitoringActivity.this,
+                        "unable to find this email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddMonitoringActivity.this,
+                        "Error :" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }).execute();
     }
 
-    private void createMonitoring(){
-        new GetUserAsyncTask(CREATE_MONITORING, User.getLoginUser(), addMonitoringUser, null, null,new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                Toast.makeText(AddMonitoringActivity.this,"user added" , Toast.LENGTH_SHORT).show();
-                finish();
-            }
+    private void createMonitoring() {
+        new GetUserAsyncTask(CREATE_MONITORING, User.getLoginUser(), addMonitoringUser, null, null,
+                new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        Toast.makeText(AddMonitoringActivity.this, "user added", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
 
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(AddMonitoringActivity.this,"unable to add user" , Toast.LENGTH_SHORT).show();
-                Toast.makeText(AddMonitoringActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
-            }
-        }).execute();
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(AddMonitoringActivity.this,
+                                "unable to add user", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddMonitoringActivity.this,
+                                "Error :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }).execute();
     }
 }
 

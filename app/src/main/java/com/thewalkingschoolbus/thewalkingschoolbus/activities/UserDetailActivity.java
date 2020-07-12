@@ -96,39 +96,40 @@ public class UserDetailActivity extends AppCompatActivity {
         group.setId(groupId);
         new GetUserAsyncTask(REMOVE_MEMBER_OF_GROUP, user, null, group, null,
                 new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                finish();
-            }
+                    @Override
+                    public void onSuccess(Object result) {
+                        finish();
+                    }
 
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(UserDetailActivity.this,"error :"+e.getMessage(),Toast.LENGTH_SHORT).show();
-            }
-        }).execute();
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(UserDetailActivity.this,"error :"+e.getMessage(),Toast.LENGTH_SHORT).show();
+                    }
+                }).execute();
     }
 
     private void getUserInfoAndUpdateUI(){
         user = new User();
         user.setId(userId);
-        new GetUserAsyncTask(GET_USER_BY_ID, user, null, null, null, new OnTaskComplete() {
-            @Override
-            public void onSuccess(Object result) {
-                user = (User) result;
-                setUserInfo();
-                setUpRemoveFromGroupBut();
-                List<User> monitoredByList = user.getMonitoredByUsers();
-                monitoredByArr = monitoredByList.toArray(new User[0]);
-                if(monitoredByArr.length!= 0){
-                    getUserWithDetail();
-                }
-            }
+        new GetUserAsyncTask(GET_USER_BY_ID, user, null, null, null,
+                new OnTaskComplete() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        user = (User) result;
+                        setUserInfo();
+                        setUpRemoveFromGroupBut();
+                        List<User> monitoredByList = user.getMonitoredByUsers();
+                        monitoredByArr = monitoredByList.toArray(new User[0]);
+                        if(monitoredByArr.length != 0){
+                            getUserWithDetail();
+                        }
+                    }
 
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(UserDetailActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
-            }
-        }).execute();
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(UserDetailActivity.this,"Error :" + e.getMessage() , Toast.LENGTH_SHORT).show();
+                    }
+                }).execute();
     }
 
     private void setUserInfo(){
@@ -149,7 +150,7 @@ public class UserDetailActivity extends AppCompatActivity {
 
     private void populateMonitoredByList(String[] myListMonitoredByStrArr){
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(UserDetailActivity.this, R.layout.user_entry,myListMonitoredByStrArr);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(UserDetailActivity.this, R.layout.user_entry,myListMonitoredByStrArr);
         // configure the list view
         ListView listView = findViewById(R.id.userDetailListView);
         listView.setAdapter(adapter);
@@ -162,7 +163,7 @@ public class UserDetailActivity extends AppCompatActivity {
         String[] arrStr;
         if(monitoredByArr == null || monitoredByArr.length == 0){
             arrStr = new String[0];
-        }else{
+        } else{
             arrStr = new String[monitoredByArr.length];
         }
         for(int i = 0; i < monitoredByArr.length; i++){
@@ -208,7 +209,7 @@ public class UserDetailActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = UserDetailActivity.makeIntent(UserDetailActivity.this,monitoredByArr[i].getId(),groupId);
+                Intent intent = UserDetailActivity.makeIntent(UserDetailActivity.this, monitoredByArr[i].getId(),groupId);
                 startActivity(intent);
             }
         });
